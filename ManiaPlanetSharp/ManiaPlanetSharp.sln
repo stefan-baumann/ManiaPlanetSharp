@@ -5,6 +5,10 @@ VisualStudioVersion = 15.0.26228.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp", "ManiaPlanetSharp\ManiaPlanetSharp.csproj", "{6565EEC8-9830-4318-9D43-96A82345179D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{2DF86578-8CC1-498C-9BF3-668E2D92AFC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp.MetadataTest", "ManiaPlanetSharp.MetadataTest\ManiaPlanetSharp.MetadataTest.csproj", "{A6A712CF-2F70-43AF-97AD-742784B74B73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,8 +19,15 @@ Global
 		{6565EEC8-9830-4318-9D43-96A82345179D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6565EEC8-9830-4318-9D43-96A82345179D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6565EEC8-9830-4318-9D43-96A82345179D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6A712CF-2F70-43AF-97AD-742784B74B73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6A712CF-2F70-43AF-97AD-742784B74B73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6A712CF-2F70-43AF-97AD-742784B74B73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6A712CF-2F70-43AF-97AD-742784B74B73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A6A712CF-2F70-43AF-97AD-742784B74B73} = {2DF86578-8CC1-498C-9BF3-668E2D92AFC6}
 	EndGlobalSection
 EndGlobal

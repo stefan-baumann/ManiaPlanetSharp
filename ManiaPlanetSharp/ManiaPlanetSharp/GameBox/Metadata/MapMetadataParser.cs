@@ -7,12 +7,12 @@ using System.Xml.Linq;
 namespace ManiaPlanetSharp.GameBox.Metadata
 {
     /// <summary>
-    /// Parses the metadata of the specified 
+    /// Parses the metadata of the specified GameBox map.
     /// </summary>
     public class MapMetadataParser
         : GameBoxParser<MapMetadata>
     {
-        protected MapMetadataParser(Stream stream)
+        public MapMetadataParser(Stream stream)
             : base(stream)
         { }
         
