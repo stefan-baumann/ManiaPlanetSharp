@@ -16,5 +16,10 @@ namespace ManiaPlanetSharp.GameBox
         public float X { get; set; }
         public float Y { get; set; }
         public float Z { get; set; }
+
+        public override string ToString()
+        {
+            return $"GbxVec2D {{ X = {this.X}, Y = {this.Y}, Z = {this.Z} }}";
+        }
     }
 }

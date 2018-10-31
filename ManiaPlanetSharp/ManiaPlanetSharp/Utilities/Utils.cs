@@ -193,15 +193,15 @@ namespace ManiaPlanetSharp.Utilities
             }
             else
             {
-                //try
-                //{
-                //    PrintRecursive(property.GetValue(data), level + 1);
-                //}
-                //catch
-                //{
-                //    Debug.WriteLine("Error");
-                //}
-                builder.Append(obj.ToString());
+                try
+                {
+                    builder.Append(property.GetValue(obj).ToString());
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"Error ({ex.GetType().Name})");
+                }
+                
             }
 
             return builder.ToString();
