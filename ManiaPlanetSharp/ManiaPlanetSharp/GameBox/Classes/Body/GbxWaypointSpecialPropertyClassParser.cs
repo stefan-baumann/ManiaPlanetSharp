@@ -34,8 +34,8 @@ namespace ManiaPlanetSharp.GameBox
                     waypoint.Order = reader.ReadUInt32();
                     break;
                 default: //Test Fix
-                    waypoint.Tag = reader.ReadLoopbackString();
-                    reader.ReadRaw(5);
+                    //waypoint.Tag = reader.ReadLoopbackString();
+                    //reader.ReadRaw(5);
                     //waypoint.Order = reader.ReadUInt32();
                     break;
             }

@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Text;
 
+#pragma warning disable CS0618 //Disable obsoleteness-warnings
+
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxTimeLimitClass
         : GbxBodyClass
     {
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTimeLimitClass.TimeLimit instead", false)]
         public uint TimeLimitU { get; set; }
         public TimeSpan TimeLimit { get => TimeSpan.FromMilliseconds(this.TimeLimitU); }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTimeLimitClass.AuthorScore instead", false)]
         public uint AuthorScoreU { get; set; }
         public TimeSpan AuthorScore { get => TimeSpan.FromMilliseconds(this.AuthorScoreU); }
     }

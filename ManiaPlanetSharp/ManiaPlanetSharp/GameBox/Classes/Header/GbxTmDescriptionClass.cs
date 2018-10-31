@@ -12,11 +12,11 @@ namespace ManiaPlanetSharp.GameBox
         public byte Version { get; set; }
 
         //Map metadata, only used in version 1 and 2
-        [Obsolete("", false)]
+        [Obsolete("Old field, not used anymore", false)]
         public string Uid { get; set; }
-        [Obsolete("", false)]
+        [Obsolete("Old field, not used anymore", false)]
         public string Environment { get; set; }
-        [Obsolete("", false)]
+        [Obsolete("Old field, not used anymore", false)]
         public string MapAuthor { get; set; }
 
         public uint BronzeTime { get; set; }
@@ -30,14 +30,14 @@ namespace ManiaPlanetSharp.GameBox
 
         public uint Cost { get; set; }
         public bool Multilap { get; set; }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTmDescriptionClass.TrackType instead", false)]
         public uint TrackTypeU { get; set; }
         public GbxTrackType TrackType { get => (GbxTrackType)this.TrackTypeU; }
         public uint AuthorScore { get; set; }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTmDescriptionClass.AdvancedEditor and GbxTmDescriptionClass.HasGhostblocks instead", false)]
         public uint EditorMode { get; set; }
-        public bool AdvancedEditor { get => (this.EditorMode & 1) == 1; }
-        public bool HasGhostBlocks { get => (this.EditorMode & 2) == 1; }
+        public bool AdvancedEditor { get => (this.EditorMode & 1) > 0; }
+        public bool HasGhostBlocks { get => (this.EditorMode & 2) > 0; }
         public uint Checkpoints { get; set; }
         public uint Laps { get; set; }
     }

@@ -14,11 +14,11 @@ namespace ManiaPlanetSharp.GameBox
         public string MapEnvironment { get; set; }
         public string MapAuthor { get; set; }
         public string MapName { get; set; }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxCommonClass.Kind instead", false)]
         public byte KindB { get; set; }
         public GbxMapKind Kind { get => (GbxMapKind)this.KindB; }
         public bool Locked { get; set; }
-        [Obsolete("", false)]
+        [Obsolete("Legacy value, use GbxPasswordClass.Password instead", false)]
         public string Password { get; set; }
         public string DecorationTimeOfDay { get; set; }
         public string DecorationEnvironment { get; set; }

@@ -7,7 +7,7 @@ namespace ManiaPlanetSharp.GameBox
     public class GbxCheckpointsClass
         : GbxBodyClass
     {
-        public uint CheckpointCount { get; set; }
+        public int CheckpointCount { get => this.Checkpoints?.Length ?? 0; }
         public Checkpoint[] Checkpoints { get; set; }
     }
 
@@ -27,9 +27,11 @@ namespace ManiaPlanetSharp.GameBox
 
         protected override GbxCheckpointsClass ParseChunkInternal(GbxReader reader)
         {
-            GbxCheckpointsClass checkpoints = new GbxCheckpointsClass();
-            checkpoints.CheckpointCount = reader.ReadUInt32();
-            checkpoints.Checkpoints = new Checkpoint[checkpoints.CheckpointCount];
+            GbxCheckpointsClass checkpoints = new GbxCheckpointsClass()
+            {
+                Checkpoints = new Checkpoint[reader.ReadUInt32()]
+            };
+
             for (int i = 0; i < checkpoints.CheckpointCount; i++)
             {
                 checkpoints.Checkpoints[i] = new Checkpoint() { Value1 = reader.ReadUInt32(), Value2 = reader.ReadUInt32(), Value3 = reader.ReadUInt32() };

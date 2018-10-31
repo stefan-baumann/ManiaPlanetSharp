@@ -22,15 +22,15 @@ namespace ManiaPlanetSharp.GameBox
 
         public override GbxAuthorClass ParseChunk(GbxReader reader)
         {
-            GbxAuthorClass author = new GbxAuthorClass();
-            author.Version = reader.ReadUInt32();
-            author.AuthorVersion = reader.ReadUInt32();
-            author.Login = reader.ReadString();
-            author.Nick = reader.ReadString();
-            author.Zone = reader.ReadString();
-            author.ExtraInfo = reader.ReadString();
-
-            return author;
+            return new GbxAuthorClass()
+            {
+                Version = reader.ReadUInt32(),
+                AuthorVersion = reader.ReadUInt32(),
+                Login = reader.ReadString(),
+                Nick = reader.ReadString(),
+                Zone = reader.ReadString(),
+                ExtraInfo = reader.ReadString()
+            };
         }
     }
 }

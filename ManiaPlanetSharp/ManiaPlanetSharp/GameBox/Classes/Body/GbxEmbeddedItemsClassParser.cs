@@ -12,8 +12,8 @@ namespace ManiaPlanetSharp.GameBox
         public uint Version { get; set; }
         public uint Unknown { get; set; }
         public uint ChunkSize { get; set; }
-        public uint ItemCount { get; set; }
-        public uint ZipSize { get; set; }
+        public int ItemCount { get; set; }
+        public int ZipSize { get => this.ZipFile?.Length ?? 0; }
         public byte[] ZipFile { get; set; }
         public GbxEmbeddedItem[] Items { get; set; }
     }
@@ -37,9 +37,9 @@ namespace ManiaPlanetSharp.GameBox
             GbxEmbeddedItemsClass embeddedItems = new GbxEmbeddedItemsClass();
             embeddedItems.Version = reader.ReadUInt32();
             embeddedItems.Unknown = reader.ReadUInt32();
-            embeddedItems.ZipSize = reader.ReadUInt32();
-            embeddedItems.ItemCount = reader.ReadUInt32();
-            embeddedItems.ZipFile = reader.ReadRaw((int)embeddedItems.ZipSize);
+            uint size = reader.ReadUInt32();
+            embeddedItems.ItemCount = (int)reader.ReadUInt32();
+            embeddedItems.ZipFile = reader.ReadRaw((int)size);
 
             embeddedItems.Items = this.ParseItems(embeddedItems.ZipFile, (int)embeddedItems.ItemCount);
 

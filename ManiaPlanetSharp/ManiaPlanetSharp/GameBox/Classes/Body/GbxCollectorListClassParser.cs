@@ -7,7 +7,7 @@ namespace ManiaPlanetSharp.GameBox
     public class GbxCollectorListClass
         : GbxBodyClass
     {
-        public uint ArchiveCount { get; set; }
+        public int ArchiveCount { get => this.Archive?.Length ?? 0; }
         public CollectorStock[] Archive { get; set; }
     }
 
@@ -26,13 +26,7 @@ namespace ManiaPlanetSharp.GameBox
 
         protected override GbxCollectorListClass ParseChunkInternal(GbxReader reader)
         {
-            GbxCollectorListClass collector = new GbxCollectorListClass();
-            collector.ArchiveCount = reader.ReadUInt32();
-            //while (collector.ArchiveCount == this.Chunk)
-            //{
-            //    collector.ArchiveCount = reader.ReadUInt32();
-            //}
-            collector.Archive = new CollectorStock[collector.ArchiveCount];
+            GbxCollectorListClass collector = new GbxCollectorListClass() { Archive = new CollectorStock[reader.ReadUInt32()] };
             for (int i = 0; i < collector.ArchiveCount; i++)
             {
                 collector.Archive[i] = new CollectorStock()

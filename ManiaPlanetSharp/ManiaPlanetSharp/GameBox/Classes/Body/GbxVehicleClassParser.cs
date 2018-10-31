@@ -20,13 +20,13 @@ namespace ManiaPlanetSharp.GameBox
 
         protected override GbxVehicleClass ParseChunkInternal(GbxReader reader)
         {
-            GbxVehicleClass vehicle = new GbxVehicleClass();
-            vehicle.Version = reader.ReadUInt32();
-            vehicle.Name = reader.ReadLoopbackString();
-            vehicle.Collection = reader.ReadLoopbackString();
-            vehicle.Author = reader.ReadLoopbackString();
-
-            return vehicle;
+            return new GbxVehicleClass()
+            {
+                Version = reader.ReadUInt32(),
+                Name = reader.ReadLoopbackString(),
+                Collection = reader.ReadLoopbackString(),
+                Author = reader.ReadLoopbackString()
+            };
         }
     }
 }

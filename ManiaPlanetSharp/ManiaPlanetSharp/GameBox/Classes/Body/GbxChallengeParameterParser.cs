@@ -11,7 +11,7 @@ namespace ManiaPlanetSharp.GameBox
     {
         public GbxNode CollectorList { get; set; }
         public GbxNode ChallengeParameters { get; set; }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxChallengeParameterClass.Kind instead", false)]
         public uint KindU { get; set; }
         public GbxMapKind Kind { get => (GbxMapKind)(byte)this.KindU; }
     }
@@ -23,14 +23,12 @@ namespace ManiaPlanetSharp.GameBox
 
         protected override GbxChallengeParameterClass ParseChunkInternal(GbxReader reader)
         {
-            GbxChallengeParameterClass challengeParams = new GbxChallengeParameterClass();
-            //challengeParams.CollectorList = new GbxNodeParser().ParseNode(reader);
-            //challengeParams.ChallengeParameters = new GbxNodeParser().ParseNode(reader);
-            challengeParams.CollectorList = reader.ReadNodeReference();
-            challengeParams.ChallengeParameters = reader.ReadNodeReference();
-            challengeParams.KindU = reader.ReadUInt32();
-
-            return challengeParams;
+            return new GbxChallengeParameterClass()
+            {
+                CollectorList = reader.ReadNodeReference(),
+                ChallengeParameters = reader.ReadNodeReference(),
+                KindU = reader.ReadUInt32()
+            };
         }
     }
 }

@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 
+#pragma warning disable CS0618 //Disable obsoleteness-warnings
+
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxPlaymodeClass
         : GbxBodyClass
     {
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxPlaymodeClass.Playmode instead", false)]
         public uint PlaymodeU { get; set; }
 
         public GbxTrackType Playmode { get => (GbxTrackType)this.PlaymodeU; }

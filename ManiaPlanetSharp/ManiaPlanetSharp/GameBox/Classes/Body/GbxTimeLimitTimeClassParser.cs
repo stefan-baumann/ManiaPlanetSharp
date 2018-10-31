@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
+#pragma warning disable CS0618 //Disable obsoleteness-warnings
+
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxTimeLimitTimeClass
@@ -9,22 +11,22 @@ namespace ManiaPlanetSharp.GameBox
     {
         public uint Unknown { get; set; }
 
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTimeLimitTimeClass.BronzeTime instead", false)]
         public uint BronzeTimeU { get; set; }
         public TimeSpan BronzeTime { get => TimeSpan.FromMilliseconds(this.BronzeTimeU); }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTimeLimitTimeClass.SilverTime instead", false)]
         public uint SilverTimeU { get; set; }
         public TimeSpan SilverTime { get => TimeSpan.FromMilliseconds(this.SilverTimeU); }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTimeLimitTimeClass.GoldTime instead", false)]
         public uint GoldTimeU { get; set; }
         public TimeSpan GoldTime { get => TimeSpan.FromMilliseconds(this.GoldTimeU); }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTimeLimitTimeClass.AuthorTime instead", false)]
         public uint AuthorTimeU { get; set; }
         public TimeSpan AuthorTime { get => TimeSpan.FromMilliseconds(this.AuthorTimeU); }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTimeLimitTimeClass.TimeLimit instead", false)]
         public uint TimeLimitU { get; set; }
         public TimeSpan TimeLimit { get => TimeSpan.FromMilliseconds(this.TimeLimitU); }
-        [Obsolete("", false)]
+        [Obsolete("Raw Value, use GbxTimeLimitTimeClass.AuthorScore instead", false)]
         public uint AuthorScoreU { get; set; }
         public TimeSpan AuthorScore { get => TimeSpan.FromMilliseconds(this.AuthorScoreU); }
     }

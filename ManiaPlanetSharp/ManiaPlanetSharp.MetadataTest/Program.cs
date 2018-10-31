@@ -14,6 +14,12 @@ namespace ManiaPlanetSharp.MetadataTest
 {
     class Program
     {
+        /* TODO:
+         * - [ ] Check if 0x03043018 (GbxLapCountClass) actually counts laps or checkpoints
+         * 
+         * 
+         */
+
         static void Main(string[] args)
         {
             //Print all Debug output to console
@@ -41,8 +47,8 @@ namespace ManiaPlanetSharp.MetadataTest
                             Console.Write("Result: ");
 
                             Console.WriteLine(Utils.PrintNodeTree(result));
-                        }
 #if !DEBUG
+                        }
                         catch (Exception ex)
                         {
                             Console.WriteLine("Invalid file");
