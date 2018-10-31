@@ -9,12 +9,17 @@ using System.Xml.Serialization;
 
 namespace ManiaPlanetSharp.GameBox
 {
-    [XmlRoot(ElementName = "header")]
     public class GbxCommunityClass
         : GbxChallengeClass
     {
         public string XmlString { get; set; }
 
+        public CommunityRoot Root { get; set; }
+    }
+
+    [XmlRoot(ElementName = "header")]
+    public class CommunityRoot
+    {
         [XmlElement(ElementName = "ident")]
         public Identity Identity { get; set; }
         [XmlElement(ElementName = "desc")]
@@ -125,15 +130,18 @@ namespace ManiaPlanetSharp.GameBox
     {
         protected override int Chunk => 5;
 
-        protected override GbxCommunityClass ParseChunk(GbxReader reader)
+        public override GbxCommunityClass ParseChunk(GbxReader reader)
         {
             string xmlString = reader.ReadString();
-            XmlSerializer serializer = new XmlSerializer(typeof(GbxCommunityClass));
-            using (StringReader stringReader = new StringReader(xmlString))
+            XmlSerializer serializer = new XmlSerializer(typeof(CommunityRoot));
+            using (StringReader stringReader = new StringReader(xmlString.Replace("&", "&amp;")))
             {
-                GbxCommunityClass result = (GbxCommunityClass)serializer.Deserialize(stringReader);
-                result.XmlString = xmlString;
-                return result;
+                CommunityRoot root = (CommunityRoot)serializer.Deserialize(stringReader);
+                return new GbxCommunityClass()
+                {
+                    Root = root,
+                    XmlString = xmlString
+                };
             }
         }
     }

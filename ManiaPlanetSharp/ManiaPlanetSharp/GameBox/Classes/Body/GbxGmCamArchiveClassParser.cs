@@ -9,8 +9,8 @@ namespace ManiaPlanetSharp.GameBox
     {
         public bool HasGmCamArchive { get; set; }
         public byte Unknown1 { get; set; }
-        public Vec3D[] Unknown2 { get; set; }
-        public Vec3D Unknown3 { get; set; }
+        public GbxVec3D[] Unknown2 { get; set; }
+        public GbxVec3D Unknown3 { get; set; }
         public float Unknown4 { get; set; }
         public float Unknown5 { get; set; }
         public float Unknown6 { get; set; }

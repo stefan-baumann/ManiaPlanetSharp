@@ -7,8 +7,8 @@ namespace ManiaPlanetSharp.GameBox
     public class GbxMapCoordinateClass
         : GbxBodyClass
     {
-        public Vec2D Origin { get; set; }
-        public Vec2D Target { get; set; }
+        public GbxVec2D Origin { get; set; }
+        public GbxVec2D Target { get; set; }
     }
 
     public class GbxMapCoordinateClassParser

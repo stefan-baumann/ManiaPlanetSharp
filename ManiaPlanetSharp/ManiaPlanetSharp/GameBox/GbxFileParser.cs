@@ -7,13 +7,13 @@ using ManiaPlanetSharp.Utilities;
 
 namespace ManiaPlanetSharp.GameBox
 {
-    public class GbxParser
+    public class GbxFileParser
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GbxParser"/> class.
+        /// Initializes a new instance of the <see cref="GbxFileParser"/> class.
         /// </summary>
         /// <param name="stream">The gbx file stream.</param>
-        public GbxParser(Stream stream)
+        public GbxFileParser(Stream stream)
         {
             this.Reader = new GbxReader(stream);
         }
@@ -26,13 +26,13 @@ namespace ManiaPlanetSharp.GameBox
         /// </value>
         protected internal GbxReader Reader { get; private set; }
 
-        public virtual Tuple<GbxHeader, GbxReferenceTable, GbxChallengeClass[], GbxBody> Parse()
+        public virtual GbxFile Parse()
         {
-            GbxHeader header = this.ParseHeader(this.Reader);
-            GbxReferenceTable referenceTable = this.ParseReferenceTable(this.Reader);
-            GbxChallengeClass[] chunks = header.Chunks.Select(chunk => (GbxChallengeClassParser.GetParser(chunk.Class))?.ParseChunk(chunk)).Where(data => data != null).ToArray();
-            GbxBody body = this.ParseBody(this.Reader, header);
-            return Tuple.Create(header, referenceTable, chunks, body);
+            GbxFile result = new GbxFile();
+            result.Header = this.ParseHeader(this.Reader);
+            result.ReferenceTable = this.ParseReferenceTable(this.Reader);
+            result.Body = this.ParseBody(this.Reader, result.Header);
+            return result;
         }
 
         #region Header
@@ -64,7 +64,7 @@ namespace ManiaPlanetSharp.GameBox
                 {
                     header.UserDataSize = reader.ReadUInt32();
                     header.UserData = reader.ReadRaw((int)header.UserDataSize);
-                    header.Chunks = this.ParseChunks(header.UserData);
+                    header.JoinWith(this.ParseChunks(header.UserData));
                 }
 
                 header.NodeCount = reader.ReadUInt32();
@@ -95,9 +95,19 @@ namespace ManiaPlanetSharp.GameBox
                 GbxNode chunks = new GbxNode(67);
                 foreach (var chunk in chunkMetadata.OrderBy(c => c.Key))
                 {
-                    GbxNode chunkNode = new GbxNode(chunk.Key);
-                    chunkNode.Data = reader.ReadRaw(chunk.Value);
-                    chunks.Add(chunkNode);
+                    byte[] data = reader.ReadRaw(chunk.Value);
+                    var parser = GbxChallengeClassParser.GetParser(chunk.Key);
+                    if (parser != null)
+                    {
+                        using (MemoryStream stream = new MemoryStream(data))
+                        using (GbxReader chunkReader = new GbxReader(stream))
+                        {
+                            var node = parser.ParseChunk(chunkReader);
+                            node.Class = chunk.Key;
+                            node.Data = data;
+                            chunks.Add(node);
+                        }
+                    }
                 }
                 return chunks;
             }
@@ -166,18 +176,18 @@ namespace ManiaPlanetSharp.GameBox
 
         #region Body
 
-        protected GbxBody ParseBody(GbxReader reader, GbxHeader header)
+        protected GbxNode ParseBody(GbxReader reader, GbxHeader header)
         {
-            GbxBody body = new GbxBody();
-            body.RawData = this.GetUncompressedData(reader, header.CompressedBody);
-
-            using (MemoryStream stream = new MemoryStream(body.RawData))
+            byte[] rawData = this.GetUncompressedData(reader, header.CompressedBody);
+            using (MemoryStream stream = new MemoryStream(rawData))
             using (GbxReader bodyReader = new GbxReader(stream))
             {
-                body.Chunks = new GbxNodeParser().ParseBody(bodyReader, header.MainClassID);
-            }
+                GbxNode body = new GbxNodeParser().ParseBody(bodyReader, header.MainClassID);
+                body.Class = header.MainClassID;
+                body.Data = rawData;
 
-            return body;
+                return body;
+            }
         }
 
         protected byte[] GetUncompressedData(GbxReader reader, bool bodyCompressed)

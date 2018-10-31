@@ -45,12 +45,12 @@ namespace ManiaPlanetSharp.Utilities
             {
                 Debug.Write("null");
             }
-            else if (typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type))
+            else if (typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type) && type != typeof(GbxNode))
             {
                 if (type != typeof(byte[]))
                 {
                     object[] items = ((IEnumerable)data).OfType<object>().ToArray();
-                    if (items.Length > 100 && type != typeof(GbxNode)) return;
+                    if (items.Length > 100) return;
                     foreach (object item in items)
                     {
                         Debug.Write(Indent("", level + 1));
@@ -103,6 +103,99 @@ namespace ManiaPlanetSharp.Utilities
                     }
                 }
             }
+
+            if (data is GbxNode node)
+            {
+                foreach (object subNode in node)
+                {
+                    Debug.Write(Indent("", level + 1));
+                    PrintRecursive(subNode, level + 1);
+                }
+            }
+        }
+
+        public static string PrintNodeTree(GbxNode root)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            PrintNodeTreeRecursive(root, builder, 0);
+
+            return builder.ToString();
+        }
+
+        private static void PrintNodeTreeRecursive(GbxNode node, StringBuilder builder, int level)
+        {
+            Type type = node.GetType();
+            builder.AppendLine(Indent(type.Name, level));
+
+            foreach (var property in type.GetTypeInfo().GetProperties())
+            {
+                builder.AppendLine(Indent(FormatPropertyValue(node, property), level + 1));
+            }
+
+            builder.AppendLine(Indent("--------------", level + 1));
+
+            if (node.Count > 0)
+            {
+                foreach (GbxNode subnode in node)
+                {
+                    PrintNodeTreeRecursive(subnode, builder, level + 1);
+                }
+            }
+        }
+
+        private static string FormatPropertyValue(object obj, PropertyInfo property)
+        {
+            if (property.GetAccessors().All(mi => mi.GetParameters().Length > 0))
+            {
+                return string.Empty;
+            }
+
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append(property.Name + ": ");
+
+            if (property.PropertyType.GetTypeInfo().IsPrimitive || (new[] { typeof(string), typeof(TimeSpan) }).Contains(property.PropertyType))
+            {
+                object value = property.GetValue(obj);
+                if (value == null)
+                {
+                    Debug.WriteLine("null");
+                }
+                else
+                {
+                    switch (value)
+                    {
+                        case byte b:
+                            builder.Append(b);
+                            break;
+                        case string s:
+                            builder.Append($"\"{s}\"");
+                            break;
+                        default:
+                            builder.Append(value);
+                            break;
+                    }
+                }
+            }
+            else if (property.PropertyType.GetTypeInfo().IsEnum)
+            {
+                builder.Append(Enum.GetName(property.PropertyType, property.GetValue(obj)));
+            }
+            else
+            {
+                //try
+                //{
+                //    PrintRecursive(property.GetValue(data), level + 1);
+                //}
+                //catch
+                //{
+                //    Debug.WriteLine("Error");
+                //}
+                builder.Append(obj.ToString());
+            }
+
+            return builder.ToString();
         }
 
         public static string Indent(string text, int level, string intendation = "    ")

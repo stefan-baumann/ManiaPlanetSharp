@@ -23,8 +23,8 @@ namespace ManiaPlanetSharp.GameBox
         public string DecorationTimeOfDay { get; set; }
         public string DecorationEnvironment { get; set; }
         public string DecorationEnvironmentAuthor { get; set; }
-        public Vec2D MapOrigin { get; set; }
-        public Vec2D MapTarget { get; set; }
+        public GbxVec2D MapOrigin { get; set; }
+        public GbxVec2D MapTarget { get; set; }
         public string MapType { get; set; }
         public string MapStyle { get; set; }
         public ulong LightmapCacheUid { get; set; }
@@ -59,9 +59,8 @@ namespace ManiaPlanetSharp.GameBox
         : GbxChallengeClassParser<GbxCommonClass>
     {
         protected override int Chunk => 3;
-
-        //Has some serious problems right now
-        protected override GbxCommonClass ParseChunk(GbxReader reader)
+        
+        public override GbxCommonClass ParseChunk(GbxReader reader)
         {
             GbxCommonClass common = new GbxCommonClass();
             common.Version = reader.ReadByte();

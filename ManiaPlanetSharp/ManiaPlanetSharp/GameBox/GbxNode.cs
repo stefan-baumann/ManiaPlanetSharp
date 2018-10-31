@@ -19,13 +19,13 @@ namespace ManiaPlanetSharp.GameBox
             this.Class = @class;
         }
 
-        public uint Class { get; set; }
+        public virtual uint Class { get; set; }
 
-        public byte[] Data { get; set; }
+        public virtual byte[] Data { get; set; }
 
-        protected List<GbxNode> Nodes { get; private set; } = new List<GbxNode>();
+        protected virtual List<GbxNode> Nodes { get; private set; } = new List<GbxNode>();
 
-        public GbxNode this[uint id]
+        public virtual GbxNode this[uint id]
         {
             get
             {
@@ -38,21 +38,11 @@ namespace ManiaPlanetSharp.GameBox
             }
         }
 
-        public int Count { get => this.Nodes.Count; }
+        public virtual int Count { get => this.Nodes.Count; }
 
-        public void Add(GbxNode chunk)
+        public virtual void Add(GbxNode chunk)
         {
             this.Nodes.Add(chunk);
-        }
-
-        IEnumerator<GbxNode> IEnumerable<GbxNode>.GetEnumerator()
-        {
-            return this.Nodes.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.Nodes.GetEnumerator();
         }
 
         public MemoryStream GetDataStream()
@@ -62,6 +52,21 @@ namespace ManiaPlanetSharp.GameBox
                 throw new ArgumentNullException();
             }
             return new MemoryStream(this.Data);
+        }
+
+        public virtual void JoinWith(GbxNode other)
+        {
+            this.Nodes.AddRange(other);
+        }
+
+        public virtual IEnumerator<GbxNode> GetEnumerator()
+        {
+            return ((IEnumerable<GbxNode>)Nodes).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable<GbxNode>)this).GetEnumerator();
         }
     }
 }

@@ -204,19 +204,14 @@ namespace ManiaPlanetSharp.GameBox
 
 
 
-        public Vec2D ReadVec2D()
+        public GbxVec2D ReadVec2D()
         {
-            return new Vec2D(this.ReadFloat(), this.ReadFloat());
+            return new GbxVec2D(this.ReadFloat(), this.ReadFloat());
         }
 
-        public Vec3D ReadVec3D()
+        public GbxVec3D ReadVec3D()
         {
-            return new Vec3D(this.ReadFloat(), this.ReadFloat(), this.ReadFloat());
-        }
-
-        public Color ReadColor()
-        {
-            return new Color(this.ReadFloat(), this.ReadFloat(), this.ReadFloat());
+            return new GbxVec3D(this.ReadFloat(), this.ReadFloat(), this.ReadFloat());
         }
 
         public void Dispose()

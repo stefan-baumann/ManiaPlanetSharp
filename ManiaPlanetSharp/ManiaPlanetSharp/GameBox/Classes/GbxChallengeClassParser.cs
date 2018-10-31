@@ -7,6 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public abstract class GbxChallengeClass
+        : GbxNode
     { }
 
     public abstract class GbxChallengeClassParser<TChallengeClass>
@@ -14,29 +15,13 @@ namespace ManiaPlanetSharp.GameBox
         where TChallengeClass : GbxChallengeClass, new()
     {
         protected abstract int Chunk { get; }
-
-        protected abstract TChallengeClass ParseChunk(GbxReader reader);
-
+        
         public /*override*/ bool CanParse(uint chunkId)
         {
             return ((chunkId >> 24) & 0xff) == 3 && ((chunkId >> 12) & 0xfff) == 0x43 && (chunkId & 0xfff) == this.Chunk;
         }
 
-        public /*override*/ TChallengeClass ParseChunk(GbxNode chunk)
-        {
-            using (MemoryStream chunkStream = chunk.GetDataStream())
-            using (GbxReader reader = new GbxReader(chunkStream))
-            {
-                try
-                {
-                    return this.ParseChunk(reader);
-                }
-                catch
-                {
-                    return new TChallengeClass();
-                }
-            }
-        }
+        public abstract TChallengeClass ParseChunk(GbxReader chunk);
     }
 
     public static class GbxChallengeClassParser

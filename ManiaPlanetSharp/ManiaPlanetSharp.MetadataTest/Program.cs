@@ -34,7 +34,7 @@ namespace ManiaPlanetSharp.MetadataTest
                         try
                         {
 #endif
-                            var result = new GbxParser(stream).Parse();
+                            var result = new GbxFileParser(stream).Parse();
 
                             //Output all parsed data to the console
                             Console.WriteLine(new string('=', Console.WindowWidth));

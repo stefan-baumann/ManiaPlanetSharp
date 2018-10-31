@@ -17,7 +17,7 @@ namespace ManiaPlanetSharp.GameBox
     {
         protected override int Chunk => 7;
 
-        protected override GbxThumbnailClass ParseChunk(GbxReader reader)
+        public override GbxThumbnailClass ParseChunk(GbxReader reader)
         {
             GbxThumbnailClass thumbnail = new GbxThumbnailClass();
             thumbnail.Version = reader.ReadUInt32();

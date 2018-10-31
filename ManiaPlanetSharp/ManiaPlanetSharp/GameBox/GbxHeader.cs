@@ -5,6 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxHeader
+        : GbxNode
     {
         public GbxHeader()
         { }
@@ -16,7 +17,6 @@ namespace ManiaPlanetSharp.GameBox
         public uint MainClassID { get; set; }
         public uint UserDataSize { get; set; }
         public byte[] UserData { get; set; }
-        public GbxNode Chunks { get; set; }
         public uint NodeCount { get; set; }
     }
 }

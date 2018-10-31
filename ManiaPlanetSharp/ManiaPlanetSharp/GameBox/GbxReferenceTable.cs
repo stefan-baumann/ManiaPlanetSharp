@@ -18,6 +18,7 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxReferenceTableFolder
+        : GbxNode
     {
         public string Name { get; set; }
         public uint SubFolderCount { get; set; }
