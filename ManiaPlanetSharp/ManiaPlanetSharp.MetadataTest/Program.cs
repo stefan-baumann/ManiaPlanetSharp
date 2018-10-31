@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using ManiaPlanetSharp.Utilities;
 using System.Diagnostics;
+using ManiaPlanetSharp.GameBox;
+using System.Reflection;
 
 namespace ManiaPlanetSharp.MetadataTest
 {
@@ -44,11 +46,15 @@ Compatible with MP4: {map.IsMp4Playable}");*/
                         
                         //MapMetadata map = new MapMetadataParser(stream).Parse();
                         //stream.Seek(0, SeekOrigin.Begin);
-                        var result = new GameBox.GbxParser(stream).Parse();
+                        var result = new GbxParser(stream).Parse();
                         //Output all parsed data to the console
+                        byte[] embeddedItems = result.Item4.Chunks.OfType<GbxEmbeddedItemsClass>().First().ZipFile;
+                        //File.WriteAllBytes(path + ".Items", embeddedItems);
+                        var itemMetadata = result.Item4.Chunks.OfType<GbxEmbeddedItemsClass>().First();
                         Console.WriteLine(new string('=', Console.WindowWidth));
                         Console.Write("Result: ");
                         Utils.PrintRecursive(result);
+                        Console.WriteLine(typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(typeof(GbxNode)));
 #if !DEBUG
                         }
                         catch (Exception ex)

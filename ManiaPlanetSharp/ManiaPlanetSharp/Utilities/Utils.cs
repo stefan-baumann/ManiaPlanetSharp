@@ -5,6 +5,7 @@ using System.Text;
 using System.Reflection;
 using System.Linq;
 using System.Diagnostics;
+using ManiaPlanetSharp.GameBox;
 
 namespace ManiaPlanetSharp.Utilities
 {
@@ -31,6 +32,12 @@ namespace ManiaPlanetSharp.Utilities
             if (level > 10) return;
 
             Type type = data.GetType();
+
+            if ((new[] { typeof(byte) }).Any(t => t == type))
+            {
+                Console.WriteLine(data);
+            }
+
             Debug.WriteLine(type.Name);
 
             if (data == null)
@@ -39,12 +46,15 @@ namespace ManiaPlanetSharp.Utilities
             }
             else if (typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type))
             {
-                object[] items = ((IEnumerable)data).OfType<object>().ToArray();
-                if (items.Length > 20) return;
-                foreach (object item in items)
+                if (type != typeof(byte[]))
                 {
-                    Debug.Write(Indent("", level + 1));
-                    PrintRecursive(item, level + 1);
+                    object[] items = ((IEnumerable)data).OfType<object>().ToArray();
+                    if (items.Length > 100 && type != typeof(GbxNode)) return;
+                    foreach (object item in items)
+                    {
+                        Debug.Write(Indent("", level + 1));
+                        PrintRecursive(item, level + 1);
+                    }
                 }
             }
             else

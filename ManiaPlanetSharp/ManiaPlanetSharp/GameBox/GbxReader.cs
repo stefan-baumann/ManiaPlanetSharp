@@ -152,14 +152,14 @@ namespace ManiaPlanetSharp.GameBox
             }
 
             int storedIndex = (int)(index & 0x3fffffff);
-            if (storedIndex >= this.LbsStrings.Count)
+            if (storedIndex > this.LbsStrings.Count)
             {
                 Debug.WriteLine($"Loopback String with Index {storedIndex} could not be found.");
                 return string.Empty;
             }
             else
             {
-                return this.LbsStrings[storedIndex];
+                return this.LbsStrings[storedIndex - 1];
             }
         }
 

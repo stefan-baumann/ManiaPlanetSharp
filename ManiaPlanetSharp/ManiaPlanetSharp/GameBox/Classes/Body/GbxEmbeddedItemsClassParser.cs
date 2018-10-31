@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Text;
 
 namespace ManiaPlanetSharp.GameBox
@@ -11,8 +13,16 @@ namespace ManiaPlanetSharp.GameBox
         public uint Unknown { get; set; }
         public uint ChunkSize { get; set; }
         public uint ItemCount { get; set; }
-        //public uint ZipSize { get; set; }
+        public uint ZipSize { get; set; }
         public byte[] ZipFile { get; set; }
+        public GbxEmbeddedItem[] Items { get; set; }
+    }
+
+    public class GbxEmbeddedItem
+    {
+        public string Path { get; set; }
+        public string Collection { get; set; }
+        public string Author { get; set; }
     }
 
     public class GbxEmbeddedItemsClassParser
@@ -24,14 +34,39 @@ namespace ManiaPlanetSharp.GameBox
 
         protected override GbxEmbeddedItemsClass ParseChunkInternal(GbxReader reader)
         {
-            return new GbxEmbeddedItemsClass()
+            GbxEmbeddedItemsClass embeddedItems = new GbxEmbeddedItemsClass();
+            embeddedItems.Version = reader.ReadUInt32();
+            embeddedItems.Unknown = reader.ReadUInt32();
+            embeddedItems.ZipSize = reader.ReadUInt32();
+            embeddedItems.ItemCount = reader.ReadUInt32();
+            embeddedItems.ZipFile = reader.ReadRaw((int)embeddedItems.ZipSize);
+
+            embeddedItems.Items = this.ParseItems(embeddedItems.ZipFile, (int)embeddedItems.ItemCount);
+
+            return embeddedItems;
+        }
+
+        protected GbxEmbeddedItem[] ParseItems(byte[] zipFile, int itemCount)
+        {
+            using (MemoryStream stream = new MemoryStream(zipFile))
+            using (GbxReader reader = new GbxReader(stream))
             {
-                Version = reader.ReadUInt32(),
-                Unknown = reader.ReadUInt32(),
-                ChunkSize = reader.ReadUInt32(),
-                ItemCount = reader.ReadUInt32(),
-                ZipFile = reader.ReadRaw((int)reader.ReadUInt32())
-            };
+                GbxEmbeddedItem[] items = new GbxEmbeddedItem[itemCount];
+                for (int i = 0; i < itemCount; i++)
+                {
+                    GbxEmbeddedItem item = new GbxEmbeddedItem();
+
+                    item.Path = reader.ReadLoopbackString();
+                    item.Collection = reader.ReadLoopbackString();
+                    item.Author = reader.ReadLoopbackString();
+                    
+                    items[i] = item;
+                }
+
+                Debug.WriteLine($"    Done with parsing embedded item metadata, {stream.Position} of {stream.Length} bytes read.");
+
+                return items;
+            }
         }
     }
 }

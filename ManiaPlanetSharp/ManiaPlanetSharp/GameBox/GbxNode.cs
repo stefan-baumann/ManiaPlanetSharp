@@ -8,7 +8,7 @@ using System.IO;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxNode
-        : IEnumerable<GbxChunk>
+        : IEnumerable<GbxChunk>, IEnumerable
     {
         public GbxNode(int @class)
         {

@@ -163,7 +163,7 @@ namespace ManiaPlanetSharp.GameBox
                 for (; reader.Stream.Position + 4 < reader.Stream.Length;)
                 {
                     uint chunkId = reader.ReadUInt32();
-                    Debug.WriteLine($"  Chunk 0x{chunkId:X8}");
+                    //Debug.WriteLine($"  Chunk 0x{chunkId:X8}");
                     if (chunkId == EndMarkerClassId)
                     {
                         Debug.WriteLine($"  -> End of Node");
@@ -184,7 +184,7 @@ namespace ManiaPlanetSharp.GameBox
                         }
                         else
                         {
-                            Debug.WriteLine($"  -> Non-parseable chunk");
+                            //Debug.WriteLine($"  -> Non-parseable chunk");
                             reader.Stream.Position -= 3; //Continue with next byte
                         }
                     }
@@ -194,7 +194,7 @@ namespace ManiaPlanetSharp.GameBox
             return node;
         }
 
-        private GbxChunk ParseChunk(GbxReader reader, uint chunkId)
+        private GbxChunk ParseChunk(GbxReader reader, uint chunkId, bool skipIfPossible = false)
         {
             if (chunkId == EndMarkerClassId)
             {
@@ -209,12 +209,22 @@ namespace ManiaPlanetSharp.GameBox
             if (parser != null)
             {
                 long startPosition = reader.Stream.Position;
-                if (parser.Skippable && this.TrySkipChunk(reader, out GbxChunk skipped))
+                if (parser.Skippable)
                 {
-                    skipped.Id = (int)chunkId;
-                    Debug.WriteLine($"  -> Skipped known skippable chunk with id 0x{chunkId:X8} ({parser.GetType().Name.Replace("Parser", "")})");
-                    return skipped;
+                    if (skipIfPossible && this.TrySkipChunk(reader, out GbxChunk skipped))
+                    {
+                        skipped.Id = (int)chunkId;
+                        Debug.WriteLine($"  -> Skipped known skippable chunk with id 0x{chunkId:X8} ({parser.GetType().Name.Replace("Parser", "")})");
+                        return skipped;
+                    }
+                    else
+                    {
+                        //Read metadata from skippable chunk
+                        uint skip = reader.ReadUInt32();
+                        uint length = reader.ReadUInt32();
+                    }
                 }
+                
                 GbxChunk parsed = parser.ParseChunk(reader);
                 long endPosition = reader.Stream.Position;
                 parsed.Id = (int)chunkId;
