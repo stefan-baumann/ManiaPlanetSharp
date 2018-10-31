@@ -4,11 +4,12 @@ using System.Text;
 
 namespace ManiaPlanetSharp.ManiaExchange
 {
-    public enum Environment
+    public enum ReplayType
     {
-        All = 0,
-        Canyon = 1,
-        Stadium = 2,
-        Valley = 3
+        All = -1,
+        Normal = 0,
+        Classic = 1,
+        Nadeo = 2,
+        Useless = 3
     }
 }

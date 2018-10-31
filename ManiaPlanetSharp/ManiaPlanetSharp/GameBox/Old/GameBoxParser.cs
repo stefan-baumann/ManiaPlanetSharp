@@ -68,7 +68,7 @@ namespace ManiaPlanetSharp.GameBox
         /// <value>
         /// The chunks in this gbx file.
         /// </value>
-        public List<GameBoxChunk> Chunks { get; private set; }
+        public List<GbxChunk> Chunks { get; private set; }
 
         //public GameBoxChunk Body { get; private set; }
 
@@ -99,15 +99,15 @@ namespace ManiaPlanetSharp.GameBox
                 this.HeaderLength = this.Reader.ReadLong();
                 
                 //Read all the chunk metrics
-                this.Chunks = new List<GameBoxChunk>();
+                this.Chunks = new List<GbxChunk>();
                 for (int chunks = this.Reader.ReadLong(); chunks > 0; chunks--)
                 {
-                    this.Chunks.Add(new GameBoxChunk(this.Reader.ReadLong(), this.Reader.ReadLong() & 0x7fffffff, null));
+                    this.Chunks.Add(new GbxChunk(this.Reader.ReadLong(), this.Reader.ReadLong() & 0x7fffffff, null));
                 }
                 this.Chunks = this.Chunks.OrderBy(chunk => chunk.Id).ToList();
 
                 //Read all the chunks
-                foreach (GameBoxChunk chunk in this.Chunks)
+                foreach (GbxChunk chunk in this.Chunks)
                 {
                     chunk.Data = this.Reader.ReadRaw(chunk.Length);
                 }

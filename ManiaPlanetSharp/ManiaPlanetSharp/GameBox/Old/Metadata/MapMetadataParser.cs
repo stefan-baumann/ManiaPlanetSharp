@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
@@ -25,7 +26,7 @@ namespace ManiaPlanetSharp.GameBox.Metadata
 
             //Parse the data of all relevant chunks
             MapMetadata result = new MapMetadata();
-            foreach (GameBoxChunk chunk in this.Chunks)
+            foreach (GbxChunk chunk in this.Chunks)
             {
                 switch (chunk.Id & 0xfff)
                 {
@@ -44,6 +45,9 @@ namespace ManiaPlanetSharp.GameBox.Metadata
                             this.ReadChunk8(new GameBoxStreamReader(chunkStream), result);
                         }
                         break;
+                    default:
+                        string dataString = new string(Encoding.UTF8.GetChars(chunk.Data));
+                        break;
                 }
             }
 
@@ -60,6 +64,17 @@ namespace ManiaPlanetSharp.GameBox.Metadata
             XElement ident = header.Element("ident");
             XElement desc = header.Element("desc");
             XElement times = header.Element("times");
+
+            //Parse metadata about the client
+            mapMetadata.ExecutableVersion = header.Attribute("exever")?.Value;
+            string[] buildDateParts = header.Attribute("exebuild")?.Value.Split('-', '_');
+            if (buildDateParts != null && buildDateParts.Length == 5 
+                && int.TryParse(buildDateParts[0], out int y) && int.TryParse(buildDateParts[1], out int m) && int.TryParse(buildDateParts[2], out int d)
+                && int.TryParse(buildDateParts[3], out int h) && int.TryParse(buildDateParts[4], out int mn))
+            {
+                mapMetadata.ExecutableBuildTime = new DateTime(y, m, d, h, mn, 0);
+            }
+            mapMetadata.LightmapVersion = int.Parse(header.Attribute("lightmap")?.Value ?? "-1");
 
             //Parse all the values given in the xml data
             mapMetadata.Title = header.Attribute("title")?.Value;

@@ -7,15 +7,15 @@ namespace ManiaPlanetSharp.GameBox
     /// <summary>
     /// Represents a gbx file chunk.
     /// </summary>
-    public class GameBoxChunk
+    public class GbxChunk
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameBoxChunk"/> class.
+        /// Initializes a new instance of the <see cref="GbxChunk"/> class.
         /// </summary>
         /// <param name="id">The chunk identifier.</param>
         /// <param name="length">The chunk size.</param>
         /// <param name="data">The chunk data.</param>
-        public GameBoxChunk(int id, int length, byte[] data)
+        public GbxChunk(int id, int length, byte[] data)
         {
             this.Id = id;
             this.Length = length;

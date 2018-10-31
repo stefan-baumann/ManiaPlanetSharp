@@ -15,7 +15,14 @@ namespace ManiaPlanetSharp.GameBox.Metadata
         public int LapCount { get; set; }
         public string Comment { get; set; }
         //public Image Thumbnail { get; set; }
+
         public string Uid { get; set; }
+        public string ExecutableVersion { get; set; }
+        public DateTime ExecutableBuildTime { get; set; }
+        public int? LightmapVersion { get; set; }
+
+        public bool HasLightmap => this.LightmapVersion.HasValue;
+        public bool IsMp4Playable => this.HasLightmap && this.LightmapVersion >= 7 && this.ExecutableBuildTime.Year >= 2017;
 
         public string Title { get; set; }
         public string Environment { get; set; }

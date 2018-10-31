@@ -217,3 +217,5 @@ pip-log.txt
 *.jrs
 *.ide
 AeroSuite.sln.GhostDoc.xml
+/ManiaPlanetSharp/.vs/ManiaPlanetSharp
+/ManiaPlanetSharp.zip

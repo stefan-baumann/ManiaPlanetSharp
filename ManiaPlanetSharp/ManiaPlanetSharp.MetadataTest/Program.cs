@@ -1,10 +1,13 @@
-﻿using ManiaPlanetSharp.GameBox.Metadata;
+﻿using ManiaPlanetSharp.GameBox.Metadata; 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ManiaPlanetSharp.Utilities;
+using System.Diagnostics;
 
 namespace ManiaPlanetSharp.MetadataTest
 {
@@ -12,6 +15,8 @@ namespace ManiaPlanetSharp.MetadataTest
     {
         static void Main(string[] args)
         {
+            //Print all Debug output to console
+            Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
             while (true)
             {
                 Console.Write("Please enter a path to a GameBox map file: ");
@@ -24,21 +29,32 @@ namespace ManiaPlanetSharp.MetadataTest
                 {
                     using (var stream = File.OpenRead(path))
                     {
+#if !DEBUG
                         try
                         {
-                            MapMetadata map = new MapMetadataParser(stream).Parse();
-                            Console.WriteLine($@"{map.Name} by {map.AuthorName} ({map.AuthorLogin})
+#endif
+                        /*MapMetadata map = new MapMetadataParser(stream).Parse();
+                        Console.WriteLine($@"{map.Name} by {map.AuthorName} ({map.AuthorLogin})
 Uid: {map.Uid}
 Built in {map.Environment} ({map.Title})
 Times: {map.AuthorTime}; {map.GoldTime}; {map.SilverTime}; {map.BronzeTime}
 Display Cost: {map.DisplayCost}
 Laps: {map.LapCount}
-");
+Compatible with MP4: {map.IsMp4Playable}");*/
+                        
+                        //MapMetadata map = new MapMetadataParser(stream).Parse();
+                        //stream.Seek(0, SeekOrigin.Begin);
+                        var result = new GameBox.GbxParser(stream).Parse();
+                        //Output all parsed data to the console
+                        Utils.PrintRecursive(result);
+#if !DEBUG
                         }
-                        catch
+                        catch (Exception ex)
                         {
                             Console.WriteLine("Invalid file");
+                            Console.WriteLine($"{ex.GetType().Name}\n{ex.Message} {(ex.InnerException != null ? $"\n\nInner Exception: {ex.InnerException.GetType().Name}\n{ex.InnerException.Message}" : "")}");
                         }
+#endif
                     }
                 }
             }
