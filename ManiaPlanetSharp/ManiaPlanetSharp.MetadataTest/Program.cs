@@ -46,6 +46,8 @@ Compatible with MP4: {map.IsMp4Playable}");*/
                         //stream.Seek(0, SeekOrigin.Begin);
                         var result = new GameBox.GbxParser(stream).Parse();
                         //Output all parsed data to the console
+                        Console.WriteLine(new string('=', Console.WindowWidth));
+                        Console.Write("Result: ");
                         Utils.PrintRecursive(result);
 #if !DEBUG
                         }

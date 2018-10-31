@@ -23,6 +23,8 @@ namespace ManiaPlanetSharp.GameBox
         : IGbxClassParser<TChunk>
         where TChunk : class
     {
+        bool Skippable { get; }
+
         TChunk ParseChunk(GbxReader chunk);
     }
 }

@@ -87,7 +87,7 @@ namespace ManiaPlanetSharp.GameBox
             new GbxUnusedBodyClassParser(0x03043021, reader => {
                 GbxNode clipIntro = reader.ReadNodeReference();
                 GbxNode clipGroupInGame = reader.ReadNodeReference();
-                GbxNode clipGrpupEndRace = reader.ReadNodeReference();
+                GbxNode clipGroupEndRace = reader.ReadNodeReference();
             }),
             new GbxUnusedBodyClassParser(0x03043022, reader => reader.ReadUInt32()),
             new GbxUnusedBodyClassParser(0x03043024, reader => {
@@ -111,12 +111,11 @@ namespace ManiaPlanetSharp.GameBox
                     Utils.Repeat(reader.ReadFloat, 3);
                 }
             }),
-            new GbxUnusedBodyClassParser(0x03043028, reader => {
-                //Use for something
-                new GbxMapClassParser().ParseChunk(reader);
-                string comment = reader.ReadString();
-            }),
-            new GbxBodyClassReferenceParser<GbxMapClass>(0x03043028, new GbxMapClassParser()),
+            //new GbxUnusedBodyClassParser(0x03043028, reader => { //Commented out for testing purposes
+            //    //Use for something
+            //    Parsers[0x03043027].ParseChunk(reader);
+            //    string comment = reader.ReadString();
+            //}),
             new GbxUnusedBodyClassParser(0x03043029, true, reader => {
                 ulong[] passwordHash = reader.ReadUInt128();
                 uint crc = reader.ReadUInt32();
@@ -180,12 +179,12 @@ namespace ManiaPlanetSharp.GameBox
                 uint zipSize = reader.ReadUInt32();
                 byte[] zipFile = reader.ReadRaw((int)zipSize);
             }),
-            new GbxUnusedBodyClassParser(0x03043048, reader =>{
-                throw new NotImplementedException();
-            }),
-            new GbxUnusedBodyClassParser(0x03043049, reader =>{
-                throw new NotImplementedException();
-            }),
+            //new GbxUnusedBodyClassParser(0x03043048, reader =>{
+            //    throw new NotImplementedException();
+            //}),
+            //new GbxUnusedBodyClassParser(0x03043049, reader =>{
+            //    throw new NotImplementedException();
+            //}),
 
             //new GbxUnusedBodyClassParser(0x, true, reader => ),
             //new GbxUnusedBodyClassParser(0x, true, reader => {

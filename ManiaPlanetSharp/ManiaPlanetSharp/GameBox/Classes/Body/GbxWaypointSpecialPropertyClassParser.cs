@@ -22,7 +22,7 @@ namespace ManiaPlanetSharp.GameBox
         {
             GbxWaypointSpecialPropertyClass waypoint = new GbxWaypointSpecialPropertyClass();
             waypoint.Version = reader.ReadUInt32();
-            if (waypoint.Version == this.Chunk) waypoint.Version = reader.ReadUInt32();
+            //if (waypoint.Version == this.Chunk) waypoint.Version = reader.ReadUInt32();
             switch (waypoint.Version)
             {
                 case 1:

@@ -77,7 +77,7 @@ namespace ManiaPlanetSharp.GameBox
                 block.Flags = map.Version == 0 ? reader.ReadUInt16() : reader.ReadUInt32();
                 if (block.Flags == uint.MaxValue)
                 {
-                    //i--; //These blocks are not counted for the block count
+                    i--; //These blocks are not counted for the block count
                     continue;
                 }
                 if ((block.Flags & 0x8000) != 0) //Custom Block

@@ -196,7 +196,8 @@ namespace ManiaPlanetSharp.GameBox
             }
             if (!this.Nodes.ContainsKey(index))
             {
-                this.Nodes.Add(index, new GbxNodeParser().ParseSingleNode(this));
+                //this.Nodes.Add(index, new GbxNodeParser().ParseSingleNode(this));
+                this.Nodes.Add(index, new GbxNodeParser().ParseNode(this));
             }
             return this.Nodes[index];
         }

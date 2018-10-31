@@ -74,7 +74,7 @@ namespace ManiaPlanetSharp.GameBox
         /// <value>
         /// The chunk identifier.
         /// </value>
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         public int Chunk { get => this.Id & 0xfff; }
 
@@ -88,7 +88,7 @@ namespace ManiaPlanetSharp.GameBox
         /// <value>
         /// The size of this chunk.
         /// </value>
-        public int Length { get; private set; }
+        public int Length { get; set; }
 
         /// <summary>
         /// Returns the version of this chunk.

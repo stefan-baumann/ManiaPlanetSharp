@@ -31,7 +31,7 @@ namespace ManiaPlanetSharp.GameBox
             GbxHeader header = this.ParseHeader(this.Reader);
             GbxReferenceTable referenceTable = this.ParseReferenceTable(this.Reader);
             GbxChallengeClass[] chunks = header.Chunks.Select(chunk => (GbxChallengeClassParser.GetParser(chunk.Id))?.ParseChunk(chunk)).Where(data => data != null).ToArray();
-            GbxBody body = this.ParseBody(this.Reader, header.CompressedBody);
+            GbxBody body = this.ParseBody(this.Reader, header);
             return Tuple.Create(header, referenceTable, chunks, body);
         }
 
@@ -164,15 +164,15 @@ namespace ManiaPlanetSharp.GameBox
 
         #region Body
 
-        protected GbxBody ParseBody(GbxReader reader, bool bodyCompressed)
+        protected GbxBody ParseBody(GbxReader reader, GbxHeader header)
         {
             GbxBody body = new GbxBody();
-            body.RawData = this.GetUncompressedData(reader, bodyCompressed);
+            body.RawData = this.GetUncompressedData(reader, header.CompressedBody);
 
             using (MemoryStream stream = new MemoryStream(body.RawData))
             using (GbxReader bodyReader = new GbxReader(stream))
             {
-                body.Chunks = new GbxNodeParser().ParseNode(bodyReader, true);
+                body.Chunks = new GbxNodeParser().ParseBody(bodyReader, header.MainClassID);
             }
 
             return body;
