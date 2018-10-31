@@ -17,12 +17,12 @@ namespace ManiaPlanetSharp.GameBox
 
         protected abstract TChallengeClass ParseChunk(GbxReader reader);
 
-        public /*override*/ bool CanParse(int chunkId)
+        public /*override*/ bool CanParse(uint chunkId)
         {
             return ((chunkId >> 24) & 0xff) == 3 && ((chunkId >> 12) & 0xfff) == 0x43 && (chunkId & 0xfff) == this.Chunk;
         }
 
-        public /*override*/ TChallengeClass ParseChunk(GbxChunk chunk)
+        public /*override*/ TChallengeClass ParseChunk(GbxNode chunk)
         {
             using (MemoryStream chunkStream = chunk.GetDataStream())
             using (GbxReader reader = new GbxReader(chunkStream))
@@ -51,7 +51,7 @@ namespace ManiaPlanetSharp.GameBox
             new GbxAuthorClassParser()
         };
 
-        public static IGbxChallengeClassParser<GbxChallengeClass> GetParser(int chunkId)
+        public static IGbxChallengeClassParser<GbxChallengeClass> GetParser(uint chunkId)
         {
             return GbxChallengeClassParser.Parsers.FirstOrDefault(parser => parser.CanParse(chunkId));
         }

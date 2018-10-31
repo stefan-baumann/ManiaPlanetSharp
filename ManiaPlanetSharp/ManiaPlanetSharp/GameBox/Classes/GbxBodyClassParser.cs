@@ -8,10 +8,9 @@ using ManiaPlanetSharp.Utilities;
 namespace ManiaPlanetSharp.GameBox
 {
     public /*abstract*/ class GbxBodyClass
-        : GbxChunk
+        : GbxNode
     {
         public GbxBodyClass()
-            : base(0, 0, new byte[0])
         { }
     }
 
@@ -25,12 +24,12 @@ namespace ManiaPlanetSharp.GameBox
 
         protected abstract TChallengeClass ParseChunkInternal(GbxReader reader);
 
-        public /*override*/ bool CanParse(int chunkId)
+        public /*override*/ bool CanParse(uint chunkId)
         {
             return chunkId == this.Chunk;
         }
 
-        public /*override*/ TChallengeClass ParseChunk(GbxChunk chunk)
+        public /*override*/ TChallengeClass ParseChunk(GbxNode chunk)
         {
             using (MemoryStream chunkStream = chunk.GetDataStream())
             using (GbxReader reader = new GbxReader(chunkStream))
@@ -130,7 +129,7 @@ namespace ManiaPlanetSharp.GameBox
             //}),
         };
 
-        public static IGbxBodyClassParser<GbxBodyClass> GetParser(int chunkId)
+        public static IGbxBodyClassParser<GbxBodyClass> GetParser(uint chunkId)
         {
             return GbxBodyClassParser.Parsers.FirstOrDefault(parser => parser.CanParse(chunkId));
         }

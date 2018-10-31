@@ -7,16 +7,16 @@ namespace ManiaPlanetSharp.GameBox
     public interface IGbxClassParser<out TChunk>
         where TChunk : class
     {
-        bool CanParse(int chunkId);
+        bool CanParse(uint chunkId);
 
-        //TChunk ParseChunk(GbxChunk chunk);
+        //TChunk ParseChunk(GbxNode chunk);
     }
 
     public interface IGbxChallengeClassParser<out TChunk>
         : IGbxClassParser<TChunk>
         where TChunk : class
     {
-        TChunk ParseChunk(GbxChunk chunk);
+        TChunk ParseChunk(GbxNode chunk);
     }
 
     public interface IGbxBodyClassParser<out TChunk>

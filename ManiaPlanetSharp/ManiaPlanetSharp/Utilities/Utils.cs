@@ -27,6 +27,7 @@ namespace ManiaPlanetSharp.Utilities
             }
         }
 
+        //Fairly specific method to this project - could be adapted to a more general usecase but it's good enough for this project
         public static void PrintRecursive(object data, int level = 0)
         {
             if (level > 10) return;

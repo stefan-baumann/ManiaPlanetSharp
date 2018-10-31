@@ -30,7 +30,7 @@ namespace ManiaPlanetSharp.GameBox
         {
             GbxHeader header = this.ParseHeader(this.Reader);
             GbxReferenceTable referenceTable = this.ParseReferenceTable(this.Reader);
-            GbxChallengeClass[] chunks = header.Chunks.Select(chunk => (GbxChallengeClassParser.GetParser(chunk.Id))?.ParseChunk(chunk)).Where(data => data != null).ToArray();
+            GbxChallengeClass[] chunks = header.Chunks.Select(chunk => (GbxChallengeClassParser.GetParser(chunk.Class))?.ParseChunk(chunk)).Where(data => data != null).ToArray();
             GbxBody body = this.ParseBody(this.Reader, header);
             return Tuple.Create(header, referenceTable, chunks, body);
         }
@@ -85,17 +85,19 @@ namespace ManiaPlanetSharp.GameBox
             using (GbxReader reader = new GbxReader(userDataStream))
             {
                 uint chunkCount = reader.ReadUInt32();
-                Dictionary<int, int> chunkMetadata = new Dictionary<int, int>();
+                Dictionary<uint, int> chunkMetadata = new Dictionary<uint, int>();
                 for (int i = 0; i < chunkCount; i++)
                 {
-                    chunkMetadata.Add((int)reader.ReadUInt32(), (int)(reader.ReadUInt32() & 0x7fffffff));
+                    chunkMetadata.Add(reader.ReadUInt32(), (int)(reader.ReadUInt32() & 0x7fffffff));
                 }
 
                 //Parse chunks sorted by id (because they are layed out that way in the file)
                 GbxNode chunks = new GbxNode(67);
                 foreach (var chunk in chunkMetadata.OrderBy(c => c.Key))
                 {
-                    chunks.Add(new GbxChunk(chunk.Key, chunk.Value, reader.ReadRaw(chunk.Value)));
+                    GbxNode chunkNode = new GbxNode(chunk.Key);
+                    chunkNode.Data = reader.ReadRaw(chunk.Value);
+                    chunks.Add(chunkNode);
                 }
                 return chunks;
             }
