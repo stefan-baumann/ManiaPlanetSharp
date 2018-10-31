@@ -1,5 +1,4 @@
-﻿using ManiaPlanetSharp.GameBox.Metadata; 
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -35,26 +34,12 @@ namespace ManiaPlanetSharp.MetadataTest
                         try
                         {
 #endif
-                        /*MapMetadata map = new MapMetadataParser(stream).Parse();
-                        Console.WriteLine($@"{map.Name} by {map.AuthorName} ({map.AuthorLogin})
-Uid: {map.Uid}
-Built in {map.Environment} ({map.Title})
-Times: {map.AuthorTime}; {map.GoldTime}; {map.SilverTime}; {map.BronzeTime}
-Display Cost: {map.DisplayCost}
-Laps: {map.LapCount}
-Compatible with MP4: {map.IsMp4Playable}");*/
-                        
-                        //MapMetadata map = new MapMetadataParser(stream).Parse();
-                        //stream.Seek(0, SeekOrigin.Begin);
-                        var result = new GbxParser(stream).Parse();
-                        //Output all parsed data to the console
-                        byte[] embeddedItems = result.Item4.Chunks.OfType<GbxEmbeddedItemsClass>().First().ZipFile;
-                        //File.WriteAllBytes(path + ".Items", embeddedItems);
-                        var itemMetadata = result.Item4.Chunks.OfType<GbxEmbeddedItemsClass>().First();
-                        Console.WriteLine(new string('=', Console.WindowWidth));
-                        Console.Write("Result: ");
-                        Utils.PrintRecursive(result);
-                        Console.WriteLine(typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(typeof(GbxNode)));
+                            var result = new GbxParser(stream).Parse();
+
+                            //Output all parsed data to the console
+                            Console.WriteLine(new string('=', Console.WindowWidth));
+                            Console.Write("Result: ");
+                            Utils.PrintRecursive(result);
 #if !DEBUG
                         }
                         catch (Exception ex)
