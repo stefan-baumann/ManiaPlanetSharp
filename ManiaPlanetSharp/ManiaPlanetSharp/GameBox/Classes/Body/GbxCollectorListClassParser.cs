@@ -28,10 +28,10 @@ namespace ManiaPlanetSharp.GameBox
         {
             GbxCollectorListClass collector = new GbxCollectorListClass();
             collector.ArchiveCount = reader.ReadUInt32();
-            while (collector.ArchiveCount == this.Chunk)
-            {
-                collector.ArchiveCount = reader.ReadUInt32();
-            }
+            //while (collector.ArchiveCount == this.Chunk)
+            //{
+            //    collector.ArchiveCount = reader.ReadUInt32();
+            //}
             collector.Archive = new CollectorStock[collector.ArchiveCount];
             for (int i = 0; i < collector.ArchiveCount; i++)
             {

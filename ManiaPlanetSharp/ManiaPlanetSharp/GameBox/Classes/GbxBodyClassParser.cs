@@ -68,61 +68,27 @@ namespace ManiaPlanetSharp.GameBox
             new GbxUnusedBodyClassParser(0x03043012, reader => reader.ReadString()),
             //new GbxUnusedBodyClassParser(0x03043013, reader => throw new NotImplementedException("ReadChunk(0x0304301F)")),
             new GbxBodyClassReferenceParser<GbxMapClass>(0x03043013, new GbxMapClassParser()),
-            new GbxUnusedBodyClassParser(0x03043014, true, reader => {
-                reader.ReadUInt32();
-                reader.ReadString();
-            }),
+            new GbxOldPasswordClassParser(),
             new GbxCheckpointsClassParser(),
-            new GbxUnusedBodyClassParser(0x03043018, true, reader => {
-                reader.ReadBool();
-                uint lapCount = reader.ReadUInt32();
-            }),
-            new GbxUnusedBodyClassParser(0x03043019, true, reader => {
-                GbxFileReference modPackDescriptor = reader.ReadFileRef();
-            }),
-            new GbxUnusedBodyClassParser(0x0304301C, true, reader => {
-                uint playMode = reader.ReadUInt32();
-            }),
+            new GbxLapCountClassParser(),
+            new GbxModpackClassParser(),
+            new GbxPlaymodeClassParser(),
             new GbxMapClassParser(),
-            new GbxUnusedBodyClassParser(0x03043021, reader => {
-                GbxNode clipIntro = reader.ReadNodeReference();
-                GbxNode clipGroupInGame = reader.ReadNodeReference();
-                GbxNode clipGroupEndRace = reader.ReadNodeReference();
-            }),
+            new GbxMediaTrackerClassParser(),
             new GbxUnusedBodyClassParser(0x03043022, reader => reader.ReadUInt32()),
-            new GbxUnusedBodyClassParser(0x03043024, reader => {
-                GbxFileReference customMusicPackDescriptor = reader.ReadFileRef();
-            }),
-            new GbxUnusedBodyClassParser(0x03043025, reader => {
-                Vec2D mapCoordinateOrigin = reader.ReadVec2D();
-                Vec2D mapCoordinateTarget = reader.ReadVec2D();
-            }),
-            new GbxUnusedBodyClassParser(0x03043026, reader => {
-                GbxNode clipGlobal = reader.ReadNodeReference();
-            }),
-            new GbxUnusedBodyClassParser(0x03043027, reader => {
-                bool archiveGmCamVal = reader.ReadBool();
-                if (archiveGmCamVal)
-                {
-                    reader.ReadByte();
-                    Utils.Repeat(reader.ReadVec3D, 3);
-
-                    reader.ReadVec3D();
-                    Utils.Repeat(reader.ReadFloat, 3);
-                }
-            }),
+            new GbxCustomMusicClassParser(),
+            new GbxMapCoordinateClassParser(),
+            new GbxGlobalClipClassParser(),
+            new GbxGmCamArchiveClassParser(),
             //new GbxUnusedBodyClassParser(0x03043028, reader => { //Commented out for testing purposes
             //    //Use for something
             //    Parsers[0x03043027].ParseChunk(reader);
             //    string comment = reader.ReadString();
             //}),
-            new GbxUnusedBodyClassParser(0x03043029, true, reader => {
-                ulong[] passwordHash = reader.ReadUInt128();
-                uint crc = reader.ReadUInt32();
-            }),
+            new GbxPasswordClassParser(),
             new GbxUnusedBodyClassParser(0x0304302A, reader => reader.ReadBool()),
             new GbxUnusedBodyClassParser(0x0305B000, reader => Utils.Repeat(reader.ReadUInt32, 8)),
-            new GbxUnusedBodyClassParser(0x0305B001, reader => Utils.Repeat(reader.ReadString, 4)),
+            new GbxTipClassParser(),
             new GbxUnusedBodyClassParser(0x0305B002, reader => {
                 Utils.Repeat(reader.ReadUInt32, 3);
                 Utils.Repeat(reader.ReadFloat, 3);
@@ -134,51 +100,23 @@ namespace ManiaPlanetSharp.GameBox
                 Utils.Repeat(reader.ReadUInt32, 3);
                 reader.ReadUInt32();
             }),
-            new GbxUnusedBodyClassParser(0x0305B004, reader => {
-                uint bronzeTime = reader.ReadUInt32();
-                uint silverTime = reader.ReadUInt32();
-                uint goldTime = reader.ReadUInt32();
-                uint authorTime = reader.ReadUInt32();
-                reader.ReadUInt32();
-            }),
+            new GbxTimeClassParser(),
             new GbxUnusedBodyClassParser(0x0305B005, reader => Utils.Repeat(reader.ReadUInt32, 3)),
-            new GbxUnusedBodyClassParser(0x0305B006, reader => {
+            new GbxUnusedBodyClassParser(0x0305B006, reader => { //Maybe move to separate class
                 uint count = reader.ReadUInt32();
                 Utils.Repeat(reader.ReadUInt32, (int)count);
             }),
             new GbxUnusedBodyClassParser(0x0305B007, reader => reader.ReadUInt32()),
-            new GbxUnusedBodyClassParser(0x0305B008, reader => {
-                uint timeLimit = reader.ReadUInt32();
-                uint authorScore = reader.ReadUInt32();
-            }),
-            new GbxUnusedBodyClassParser(0x0305B00A, true, reader => {
-                reader.ReadUInt32();
-                uint bronzeTime = reader.ReadUInt32();
-                uint silverTime = reader.ReadUInt32();
-                uint goldTime = reader.ReadUInt32();
-                uint authorTime = reader.ReadUInt32();
-                uint timeLimit = reader.ReadUInt32();
-                uint authorScore = reader.ReadUInt32();
-            }),
+            new GbxTimeLimitClassParser(),
+            new GbxTimeLimitTimeClassParser(),
             new GbxUnusedBodyClassParser(0x0305B00D, reader => reader.ReadUInt32()),
             new GbxUnusedBodyClassParser(0x0305B00E, true, reader => Utils.Repeat(reader.ReadUInt32, 3)),
             //new GbxCollectorListClassParser(),
             new GbxWaypointSpecialPropertyClassParser(),
             //Maybe this is the right one for the job?
             new GbxBodyClassReferenceParser<GbxWaypointSpecialPropertyClass>(0x2E009001, new GbxWaypointSpecialPropertyClassParser()),
-            new GbxUnusedBodyClassParser(0x03059002, reader => {
-                string text = reader.ReadString();
-                GbxFileReference packDescriptor = reader.ReadFileRef();
-                GbxFileReference parentPackDescriptor = reader.ReadFileRef();
-            }),
-            new GbxUnusedBodyClassParser(0x03043054, true, reader => {
-                uint version = reader.ReadUInt32();
-                reader.ReadUInt32();
-                uint chunkSize = reader.ReadUInt32();
-                uint itemCount = reader.ReadUInt32();
-                uint zipSize = reader.ReadUInt32();
-                byte[] zipFile = reader.ReadRaw((int)zipSize);
-            }),
+            new GbxPackDescriptorClassParser(),
+           new GbxEmbeddedItemsClassParser(),
             //new GbxUnusedBodyClassParser(0x03043048, reader =>{
             //    throw new NotImplementedException();
             //}),
