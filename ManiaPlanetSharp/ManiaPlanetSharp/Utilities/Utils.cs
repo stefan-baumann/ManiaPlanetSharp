@@ -125,18 +125,27 @@ namespace ManiaPlanetSharp.Utilities
 
         private static void PrintNodeTreeRecursive(GbxNode node, StringBuilder builder, int level)
         {
+            if (node == null) return;
             Type type = node.GetType();
             builder.AppendLine(Indent(type.Name, level));
 
             foreach (var property in type.GetTypeInfo().GetProperties())
             {
-                builder.AppendLine(Indent(FormatPropertyValue(node, property), level + 1));
-            }
+                if (typeof(GbxNode).GetTypeInfo().IsAssignableFrom(property.PropertyType) && property.GetAccessors().Any(mi => mi.GetParameters().Length == 0))
+                {
+                    builder.AppendLine(Indent(property.Name, level + 1));
+                    PrintNodeTreeRecursive((GbxNode)property.GetValue(node), builder, level + 2);
+                }
+                else
+                {
+                    builder.AppendLine(Indent(FormatPropertyValue(node, property), level + 1));
+                }
 
-            builder.AppendLine(Indent("--------------", level + 1));
+            }
 
             if (node.Count > 0)
             {
+                builder.AppendLine(Indent("--------------", level + 1));
                 foreach (GbxNode subnode in node)
                 {
                     PrintNodeTreeRecursive(subnode, builder, level + 1);

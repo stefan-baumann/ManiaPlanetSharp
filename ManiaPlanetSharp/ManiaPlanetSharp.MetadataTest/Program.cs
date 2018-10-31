@@ -39,7 +39,8 @@ namespace ManiaPlanetSharp.MetadataTest
                             //Output all parsed data to the console
                             Console.WriteLine(new string('=', Console.WindowWidth));
                             Console.Write("Result: ");
-                            Utils.PrintRecursive(result);
+                            //Utils.PrintRecursive(result);
+                            Console.WriteLine(Utils.PrintNodeTree(result));
 #if !DEBUG
                         }
                         catch (Exception ex)
