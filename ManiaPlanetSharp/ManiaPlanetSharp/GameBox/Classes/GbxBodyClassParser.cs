@@ -14,22 +14,22 @@ namespace ManiaPlanetSharp.GameBox
         { }
     }
 
-    public abstract class GbxBodyClassParser<TChallengeClass>
-        : IGbxBodyClassParser<TChallengeClass>
-        where TChallengeClass : GbxBodyClass, new()
+    public abstract class GbxBodyClassParser<TBodyClass>
+        : IGbxBodyClassParser<TBodyClass>
+        where TBodyClass : GbxBodyClass, new()
     {
         protected abstract int Chunk { get; }
 
         public virtual bool Skippable { get; } = false;
 
-        protected abstract TChallengeClass ParseChunkInternal(GbxReader reader);
+        protected abstract TBodyClass ParseChunkInternal(GbxReader reader);
 
         public /*override*/ bool CanParse(uint chunkId)
         {
             return chunkId == this.Chunk;
         }
 
-        public /*override*/ TChallengeClass ParseChunk(GbxNode chunk)
+        public /*override*/ TBodyClass ParseChunk(GbxNode chunk)
         {
             using (MemoryStream chunkStream = chunk.GetDataStream())
             using (GbxReader reader = new GbxReader(chunkStream))
@@ -45,7 +45,7 @@ namespace ManiaPlanetSharp.GameBox
             }
         }
 
-        public /*override*/ TChallengeClass ParseChunk(GbxReader reader)
+        public /*override*/ TBodyClass ParseChunk(GbxReader reader)
         {
             //try
             //{
