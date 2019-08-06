@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Linq;
 using ManiaPlanetSharp.Utilities;
+using System.Diagnostics;
 
 namespace ManiaPlanetSharp.GameBox
 {
@@ -96,6 +97,7 @@ namespace ManiaPlanetSharp.GameBox
                 foreach (var chunk in chunkMetadata.OrderBy(c => c.Key))
                 {
                     byte[] data = reader.ReadRaw(chunk.Value);
+                    Debug.WriteLine($"Starting parsing of header chunk with id 0x{chunk.Key:X8}");
                     var parser = GbxHeaderClassParser.GetParser(chunk.Key);
                     if (parser != null)
                     {

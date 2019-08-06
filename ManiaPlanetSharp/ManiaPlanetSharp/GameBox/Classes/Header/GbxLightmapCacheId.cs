@@ -13,7 +13,7 @@ namespace ManiaPlanetSharp.GameBox
     public class GbxLightmapCacheIdParser
         : GbxHeaderClassParser<GbxLightmapCacheId>
     {
-        protected override int Chunk => 6; // 2E00106
+        protected override int Chunk => 0x2E001006;
 
         public override GbxLightmapCacheId ParseChunk(GbxReader chunk)
         {

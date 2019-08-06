@@ -18,7 +18,7 @@ namespace ManiaPlanetSharp.GameBox
         
         public /*override*/ bool CanParse(uint chunkId)
         {
-            return /*((chunkId >> 24) & 0xff) == 3 && ((chunkId >> 12) & 0xfff) == 0x43 &&*/ (chunkId & 0xfff) == this.Chunk;
+            return chunkId == this.Chunk;
         }
 
         public abstract THeaderClass ParseChunk(GbxReader chunk);
@@ -28,15 +28,15 @@ namespace ManiaPlanetSharp.GameBox
     {
         private static IGbxHeaderClassParser<GbxHeaderClass>[] Parsers = new IGbxHeaderClassParser<GbxHeaderClass>[]
         {
-            //Maps
-            /*new GbxTmDescriptionClassParser(),
+            //Map
+            new GbxTmDescriptionClassParser(),
             new GbxCommonClassParser(),
             new GbxVersionClassParser(),
             new GbxCommunityClassParser(),
             new GbxThumbnailClassParser(),
-            new GbxAuthorClassParser(),*/
+            new GbxAuthorClassParser(),
 
-            //Objects
+            //Object
             new GbxObjectTypeParser(),
             new GbxUnusedHeaderClassParser(0x2E002001, reader => reader.ReadUInt32()),
 

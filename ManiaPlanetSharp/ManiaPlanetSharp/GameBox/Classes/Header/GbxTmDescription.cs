@@ -57,7 +57,7 @@ namespace ManiaPlanetSharp.GameBox
     public class GbxTmDescriptionClassParser
         : GbxHeaderClassParser<GbxTmDescriptionClass>
     {
-        protected override int Chunk => 2;
+        protected override int Chunk => 0x30430002;
 
         public override GbxTmDescriptionClass ParseChunk(GbxReader reader)
         {

@@ -26,7 +26,7 @@ namespace ManiaPlanetSharp.GameBox
     public class GbxCollectorDescriptionParser
         : GbxHeaderClassParser<GbxCollectorDescription>
     {
-        protected override int Chunk => 3; //0x2E001003
+        protected override int Chunk => 0x2E001003;
 
         public override GbxCollectorDescription ParseChunk(GbxReader chunk)
         {

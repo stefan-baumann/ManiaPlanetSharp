@@ -16,7 +16,7 @@ namespace ManiaPlanetSharp.GameBox
     public class GbxIconParser
         : GbxHeaderClassParser<GbxIcon>
     {
-        protected override int Chunk => 4; //2E001004
+        protected override int Chunk => 0x2E001004;
 
         public override GbxIcon ParseChunk(GbxReader chunk)
         {
