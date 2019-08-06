@@ -127,13 +127,13 @@ namespace ManiaPlanetSharp.Utilities
         {
             if (node == null) return;
             Type type = node.GetType();
-            builder.AppendLine(Indent(type.Name, level));
+            builder.AppendLine(Indent((level == 0 ? "# " : "- ") + type.Name, level));
 
             foreach (var property in type.GetTypeInfo().GetProperties())
             {
                 if (typeof(GbxNode).GetTypeInfo().IsAssignableFrom(property.PropertyType) && property.GetAccessors().Any(mi => mi.GetParameters().Length == 0))
                 {
-                    builder.AppendLine(Indent(property.Name, level + 1));
+                    builder.AppendLine(Indent("- " + property.Name, level + 1));
                     PrintNodeTreeRecursive((GbxNode)property.GetValue(node), builder, level + 2);
                 }
                 else if (property.Name == "Data" || property.Name == "Class" || (property.Name == "Count" && (int)property.GetValue(node) == 0))
@@ -142,14 +142,18 @@ namespace ManiaPlanetSharp.Utilities
                 }
                 else
                 {
-                    builder.AppendLine(Indent(FormatPropertyValue(node, property), level + 1));
+                    string value = FormatPropertyValue(node, property);
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        builder.AppendLine(Indent("- " + value, level + 1));
+                    }
                 }
 
             }
 
             if (node.Count > 0)
             {
-                builder.AppendLine(Indent("--------------", level + 1));
+                //builder.AppendLine(Indent("--------------", level + 1));
                 foreach (GbxNode subnode in node)
                 {
                     PrintNodeTreeRecursive(subnode, builder, level + 1);
