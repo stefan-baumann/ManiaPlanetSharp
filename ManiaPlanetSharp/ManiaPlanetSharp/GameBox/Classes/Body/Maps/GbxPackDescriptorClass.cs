@@ -22,8 +22,8 @@ namespace ManiaPlanetSharp.GameBox
             return new GbxPackDescriptorClass()
             {
                 Text = reader.ReadString(),
-                PackDescriptor = reader.ReadFileRef(),
-                ParentPackDescriptor = reader.ReadFileRef()
+                PackDescriptor = reader.ReadFileReference(),
+                ParentPackDescriptor = reader.ReadFileReference()
             };
         }
     }

@@ -168,7 +168,7 @@ namespace ManiaPlanetSharp.GameBox
             this.LbsStrings.Clear();
         }
 
-        public GbxFileReference ReadFileRef()
+        public GbxFileReference ReadFileReference()
         {
             GbxFileReference reference = new GbxFileReference();
             reference.Version = this.ReadByte();

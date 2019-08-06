@@ -21,7 +21,7 @@ namespace ManiaPlanetSharp.GameBox
         {
             return new GbxModpackClass()
             {
-                Modpack = reader.ReadFileRef()
+                Modpack = reader.ReadFileReference()
             };
         }
     }

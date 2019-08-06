@@ -23,7 +23,7 @@ namespace ManiaPlanetSharp.GameBox
             result.Fids = new GbxFileReference[result.NadeoSkinFidCount];
             for (int i = 0; i < result.NadeoSkinFidCount; i++)
             {
-                result.Fids[i] = reader.ReadFileRef();
+                result.Fids[i] = reader.ReadFileReference();
             }
             return result;
         }

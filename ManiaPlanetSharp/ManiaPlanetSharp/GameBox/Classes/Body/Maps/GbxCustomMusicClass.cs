@@ -19,7 +19,7 @@ namespace ManiaPlanetSharp.GameBox
         {
             return new GbxCustomMusicClass()
             {
-                CustomMusic = reader.ReadFileRef()
+                CustomMusic = reader.ReadFileReference()
             };
         }
     }

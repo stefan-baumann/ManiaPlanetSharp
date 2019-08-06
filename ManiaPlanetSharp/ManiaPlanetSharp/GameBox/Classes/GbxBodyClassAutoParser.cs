@@ -47,7 +47,7 @@ namespace ManiaPlanetSharp.GameBox
             { typeof(ulong[]), reader => reader.ReadUInt128() },
             { typeof(float), reader => reader.ReadFloat() },
             { typeof(string), reader => reader.ReadString() },
-            { typeof(GbxFileReference), reader => reader.ReadFileRef() },
+            { typeof(GbxFileReference), reader => reader.ReadFileReference() },
             { typeof(GbxNode), reader => reader.ReadNodeReference() },
             { typeof(GbxVec2D), reader => reader.ReadVec2D() },
             { typeof(GbxVec3D), reader => reader.ReadVec3D() }
