@@ -134,6 +134,26 @@ namespace ManiaPlanetSharp.GameBox
             new GbxObjectCameraIndexClassParser(),
             new GbxNadeoSkinFidsClassParser(),
             new GbxObjectCameraClassParser(),
+            new GbxBodyClassAutoParser<GbxDecoratorSolidClass>(0x2E00200A),
+            new GbxBodyClassAutoParser<GbxStemMaterialClass>(0x2E00200B),
+            new GbxBodyClassAutoParser<GbxRaceInterfaceClass>(0x2E00200C),
+            new GbxBodyClassAutoParser<GbxBannerProfileClass>(0x2E002010),
+            new GbxBodyClassAutoParser<GbxGroundPointClass>(0x2E002012),
+            new GbxBodyClassAutoParser<GbxAudioEnvironmentClass>(0x2E002013),
+            new GbxBodyClassAutoParser<GbxObjectBaseAttributeClass>(0x2E002014),
+            new GbxBodyClassAutoParser<GbxObjectTypeInfoClass>(0x2E002015),
+            new GbxBodyClassAutoParser<GbxDefaultSkinClass>(0x2E002016),
+            new GbxBodyClassAutoParser<GbxFreelyAnchorableClass>(0x2E002017),
+            new GbxBodyClassAutoParser<GbxObjectUsabilityClass>(0x2E002018),
+            new GbxObjectModelClassParser(),
+            //0x2E00201A
+            //0x2E00201B
+            //0x2E00201C
+            //0x2E00201E
+            //0x2E00201F
+            //0x2E002020
+
+            //Collector Files
             new GbxBodyClassAutoParser<GbxCollectorCatalogClass>(0x2E001007),
             new GbxCollectorBrowserMetadataClassParser(),
             new GbxBodyClassAutoParser<GbxCollectorBasicMetadataClass>(0x2E00100B),
@@ -141,6 +161,12 @@ namespace ManiaPlanetSharp.GameBox
             new GbxBodyClassAutoParser<GbxCollectorDescriptionClass>(0x2E00100D),
             new GbxBodyClassAutoParser<GbxCollectorIconMetadataClass>(0x2E00100E),
             new GbxBodyClassAutoParser<GbxCollectorDefaultSkinClass>(0x2E00100F),
+            //0x2E001010
+            //0x2E001011
+
+            //Other
+            //0x2E006001 (Physical Model?)
+            //0x2E007001 (Visual Model?)
         };
 
         public static IGbxBodyClassParser<GbxBodyClass> GetParser(uint chunkId)

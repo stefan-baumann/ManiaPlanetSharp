@@ -8,7 +8,7 @@ namespace ManiaPlanetSharp.GameBox
         : GbxBodyClass
     {
         public uint NadeoSkinFidCount { get; set; }
-        public GbxFileReference[] Fids { get; set; }
+        public GbxNode[] Fids { get; set; }
     }
 
     public class GbxNadeoSkinFidsClassParser
@@ -20,10 +20,10 @@ namespace ManiaPlanetSharp.GameBox
         {
             var result = new GbxNadeoSkinFidsClass();
             result.NadeoSkinFidCount = reader.ReadUInt32();
-            result.Fids = new GbxFileReference[result.NadeoSkinFidCount];
+            result.Fids = new GbxNode[result.NadeoSkinFidCount];
             for (int i = 0; i < result.NadeoSkinFidCount; i++)
             {
-                result.Fids[i] = reader.ReadFileReference();
+                result.Fids[i] = reader.ReadNodeReference();
             }
             return result;
         }

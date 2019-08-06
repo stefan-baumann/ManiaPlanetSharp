@@ -134,6 +134,12 @@ namespace ManiaPlanetSharp.GameBox
 
         private bool TrySkipChunk(GbxReader reader, out GbxNode skippedChunk)
         {
+            if (reader.Stream.Position + 4 >= reader.Stream.Length)
+            {
+                skippedChunk = null;
+                return false;
+            }
+
             uint skip = reader.ReadUInt32();
             if (skip == SkipMarker)
             {
