@@ -10,6 +10,6 @@ namespace ManiaPlanetSharp.GameBox
         public GbxRaceInterfaceClass() { }
 
         [GbxAutoProperty(0)]
-        GbxNode RaceInterface { get; set; } //Might be NodeRef?
+        public GbxNode RaceInterface { get; set; }
     }
 }

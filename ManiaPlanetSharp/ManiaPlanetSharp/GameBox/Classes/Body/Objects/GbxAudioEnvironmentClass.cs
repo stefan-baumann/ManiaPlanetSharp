@@ -10,6 +10,6 @@ namespace ManiaPlanetSharp.GameBox
         public GbxAudioEnvironmentClass() { }
 
         [GbxAutoProperty(0)]
-        GbxNode InCarAudioEnvironment { get; set; }
+        public GbxNode InCarAudioEnvironment { get; set; }
     }
 }

@@ -136,6 +136,10 @@ namespace ManiaPlanetSharp.Utilities
                     builder.AppendLine(Indent(property.Name, level + 1));
                     PrintNodeTreeRecursive((GbxNode)property.GetValue(node), builder, level + 2);
                 }
+                else if (property.Name == "Data" || property.Name == "Class" || (property.Name == "Count" && (int)property.GetValue(node) == 0))
+                {
+                    //Do nothing
+                }
                 else
                 {
                     builder.AppendLine(Indent(FormatPropertyValue(node, property), level + 1));
@@ -199,7 +203,8 @@ namespace ManiaPlanetSharp.Utilities
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine($"Error ({ex.GetType().Name})");
+                    //Debug.WriteLine($"Error ({ex.GetType().Name})");
+                    builder.Append($"Error ({ex.GetType().Name})");
                 }
                 
             }

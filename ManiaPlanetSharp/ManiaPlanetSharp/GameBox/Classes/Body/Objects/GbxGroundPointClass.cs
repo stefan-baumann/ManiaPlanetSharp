@@ -10,14 +10,14 @@ namespace ManiaPlanetSharp.GameBox
         public GbxGroundPointClass() { }
 
         [GbxAutoProperty(0)]
-        GbxVec3D GroundPoint { get; set; }
+        public GbxVec3D GroundPoint { get; set; }
         [GbxAutoProperty(1)]
-        float PainterGroundMargin { get; set; }
+        public float PainterGroundMargin { get; set; }
         [GbxAutoProperty(2)]
-        float OrbitalCenterHeightFromGround { get; set; }
+        public float OrbitalCenterHeightFromGround { get; set; }
         [GbxAutoProperty(3)]
-        float OrbitalRadiusBase { get; set; }
+        public float OrbitalRadiusBase { get; set; }
         [GbxAutoProperty(4)]
-        float OrbitalPreviewAngle { get; set; }
+        public float OrbitalPreviewAngle { get; set; }
     }
 }
