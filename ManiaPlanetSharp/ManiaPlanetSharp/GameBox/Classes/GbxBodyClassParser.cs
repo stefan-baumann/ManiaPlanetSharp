@@ -127,6 +127,13 @@ namespace ManiaPlanetSharp.GameBox
             //new GbxUnusedBodyClassParser(0x, true, reader => {
             //
             //}),
+
+
+
+            //Objects
+            new GbxObjectCameraIndexClassParser(),
+            new GbxNadeoSkinFidsClassParser(),
+            new GbxObjectCameraClassParser(),
         };
 
         public static IGbxBodyClassParser<GbxBodyClass> GetParser(uint chunkId)

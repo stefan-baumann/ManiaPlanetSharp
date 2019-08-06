@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxCommonClass
-        : GbxChallengeClass
+        : GbxHeaderClass
     {
         public byte Version { get; set; }
         public string MapUid { get; set; }
@@ -56,7 +56,7 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxCommonClassParser
-        : GbxChallengeClassParser<GbxCommonClass>
+        : GbxHeaderClassParser<GbxCommonClass>
     {
         protected override int Chunk => 3;
         

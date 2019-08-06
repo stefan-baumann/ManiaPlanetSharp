@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxAuthorClass
-        : GbxChallengeClass
+        : GbxHeaderClass
     {
         public uint Version { get; set; }
         public uint AuthorVersion { get; set; }
@@ -16,7 +16,7 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxAuthorClassParser
-        : GbxChallengeClassParser<GbxAuthorClass>
+        : GbxHeaderClassParser<GbxAuthorClass>
     {
         protected override int Chunk => 8;
 

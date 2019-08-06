@@ -9,7 +9,7 @@ namespace ManiaPlanetSharp.GameBox
     /// <summary>
     /// Provides basic methods used for reading information from .gbx files.
     /// </summary>
-    [DebuggerNonUserCode]
+    //[DebuggerNonUserCode]
     public class GbxReader
         : IDisposable
     {

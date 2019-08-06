@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxCommunityClass
-        : GbxChallengeClass
+        : GbxHeaderClass
     {
         public string XmlString { get; set; }
 
@@ -126,7 +126,7 @@ namespace ManiaPlanetSharp.GameBox
     }
     
     public class GbxCommunityClassParser
-        : GbxChallengeClassParser<GbxCommunityClass>
+        : GbxHeaderClassParser<GbxCommunityClass>
     {
         protected override int Chunk => 5;
 

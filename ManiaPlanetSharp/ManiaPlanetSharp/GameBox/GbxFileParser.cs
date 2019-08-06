@@ -96,7 +96,7 @@ namespace ManiaPlanetSharp.GameBox
                 foreach (var chunk in chunkMetadata.OrderBy(c => c.Key))
                 {
                     byte[] data = reader.ReadRaw(chunk.Value);
-                    var parser = GbxChallengeClassParser.GetParser(chunk.Key);
+                    var parser = GbxHeaderClassParser.GetParser(chunk.Key);
                     if (parser != null)
                     {
                         using (MemoryStream stream = new MemoryStream(data))

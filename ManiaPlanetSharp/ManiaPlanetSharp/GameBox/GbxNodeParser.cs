@@ -56,7 +56,7 @@ namespace ManiaPlanetSharp.GameBox
                 for (; reader.Stream.Position + 4 < reader.Stream.Length;)
                 {
                     uint chunkId = reader.ReadUInt32();
-                    //Debug.WriteLine($"  Chunk 0x{chunkId:X8}");
+                    Debug.WriteLine($"  Chunk 0x{chunkId:X8}");
                     if (chunkId == EndMarkerClassId)
                     {
                         Debug.WriteLine($"  -> End of Node");

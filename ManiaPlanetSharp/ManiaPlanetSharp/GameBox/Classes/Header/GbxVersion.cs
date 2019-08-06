@@ -5,13 +5,13 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxVersionClass
-        : GbxChallengeClass
+        : GbxHeaderClass
     {
         public uint Version { get; set; }
     }
 
     public class GbxVersionClassParser
-        : GbxChallengeClassParser<GbxVersionClass>
+        : GbxHeaderClassParser<GbxVersionClass>
     {
         protected override int Chunk => 4;
 

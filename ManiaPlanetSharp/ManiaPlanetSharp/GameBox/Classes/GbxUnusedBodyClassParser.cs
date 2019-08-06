@@ -4,12 +4,12 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox
 {
-    public class GbxUnusedClass
+    public class GbxUnusedBodyClass
         : GbxBodyClass
     { }
 
     public class GbxUnusedBodyClassParser
-        : GbxBodyClassParser<GbxUnusedClass>
+        : GbxBodyClassParser<GbxUnusedBodyClass>
     {
         public GbxUnusedBodyClassParser(int chunk, Action<GbxReader> parser)
             : this(chunk, false, parser)
@@ -29,10 +29,10 @@ namespace ManiaPlanetSharp.GameBox
         public override bool Skippable => this.skippable;
 
         private Action<GbxReader> parser;
-        protected override GbxUnusedClass ParseChunkInternal(GbxReader reader)
+        protected override GbxUnusedBodyClass ParseChunkInternal(GbxReader reader)
         {
             this.parser(reader);
-            return new GbxUnusedClass();
+            return new GbxUnusedBodyClass();
         }
     }
 }
