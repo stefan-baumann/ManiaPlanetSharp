@@ -43,10 +43,10 @@ namespace ManiaPlanetSharp.MetadataTest
                             var result = new GbxFileParser(stream).Parse();
 
                             //Output all parsed data to the console
-                            Console.WriteLine(new string('=', Console.WindowWidth));
-                            Console.Write("Result: ");
+                            Console.WriteLine(new string('=', Console.WindowWidth / 2));
 
                             Console.WriteLine(Utils.PrintNodeTree(result));
+                            Console.WriteLine(new string('=', Console.WindowWidth / 2));
 #if !DEBUG
                         }
                         catch (Exception ex)

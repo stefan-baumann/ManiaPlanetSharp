@@ -27,92 +27,7 @@ namespace ManiaPlanetSharp.Utilities
             }
         }
 
-        //Fairly specific method to this project - could be adapted to a more general usecase but it's good enough for this project
-        public static void PrintRecursive(object data, int level = 0)
-        {
-            if (level > 10) return;
 
-            Type type = data.GetType();
-
-            if ((new[] { typeof(byte) }).Any(t => t == type))
-            {
-                Console.WriteLine(data);
-            }
-
-            Debug.WriteLine(type.Name);
-
-            if (data == null)
-            {
-                Debug.Write("null");
-            }
-            else if (typeof(IEnumerable).GetTypeInfo().IsAssignableFrom(type) && type != typeof(GbxNode))
-            {
-                if (type != typeof(byte[]))
-                {
-                    object[] items = ((IEnumerable)data).OfType<object>().ToArray();
-                    if (items.Length > 100) return;
-                    foreach (object item in items)
-                    {
-                        Debug.Write(Indent("", level + 1));
-                        PrintRecursive(item, level + 1);
-                    }
-                }
-            }
-            else
-            {
-                foreach (var property in type.GetTypeInfo().GetProperties())
-                {
-                    Debug.Write(Indent($"{(property.CustomAttributes.Any(cad => cad.AttributeType == typeof(ObsoleteAttribute)) ? "(Obsolete/Unused) " : "")}{property.Name}: ", level + 1));
-                    if (property.PropertyType.GetTypeInfo().IsPrimitive || (new[] { typeof(string), typeof(TimeSpan) }).Contains(property.PropertyType))
-                    {
-                        object value = property.GetValue(data);
-                        if (value == null)
-                        {
-                            Debug.WriteLine("null");
-                        }
-                        else
-                        {
-                            switch (value)
-                            {
-                                case byte b:
-                                    Debug.WriteLine(b);
-                                    break;
-                                case string s:
-                                    Debug.WriteLine($"\"{s}\"");
-                                    break;
-                                default:
-                                    Debug.WriteLine(value);
-                                    break;
-                            }
-                        }
-                    }
-                    else if (property.PropertyType.GetTypeInfo().IsEnum)
-                    {
-                        Debug.WriteLine(Enum.GetName(property.PropertyType, property.GetValue(data)));
-                    }
-                    else
-                    {
-                        try
-                        {
-                            PrintRecursive(property.GetValue(data), level + 1);
-                        }
-                        catch
-                        {
-                            Debug.WriteLine("Error");
-                        }
-                    }
-                }
-            }
-
-            if (data is GbxNode node && !(data is GbxFile))
-            {
-                foreach (object subNode in node)
-                {
-                    Debug.Write(Indent("", level + 1));
-                    PrintRecursive(subNode, level + 1);
-                }
-            }
-        }
 
         public static string PrintNodeTree(GbxNode root)
         {
@@ -136,9 +51,13 @@ namespace ManiaPlanetSharp.Utilities
                     builder.AppendLine(Indent("- " + property.Name, level + 1));
                     PrintNodeTreeRecursive((GbxNode)property.GetValue(node), builder, level + 2);
                 }
-                else if (property.Name == "Data" || property.Name == "Class" || (property.Name == "Count" && (int)property.GetValue(node) == 0))
+                else if (property.Name == "Data" || (property.Name == "Count" && (int)property.GetValue(node) == 0))
                 {
                     //Do nothing
+                }
+                else if (property.Name == "Class")
+                {
+                    builder.AppendLine(Indent($"- {property.Name}: 0x{(uint)property.GetValue(node):X8}", level + 1));
                 }
                 else
                 {
@@ -177,7 +96,7 @@ namespace ManiaPlanetSharp.Utilities
                 object value = property.GetValue(obj);
                 if (value == null)
                 {
-                    Debug.WriteLine("null");
+                    //Debug.WriteLine("null");
                 }
                 else
                 {

@@ -65,7 +65,10 @@ namespace ManiaPlanetSharp.GameBox
                 {
                     header.UserDataSize = reader.ReadUInt32();
                     header.UserData = reader.ReadRaw((int)header.UserDataSize);
-                    header.JoinWith(this.ParseChunks(header.UserData));
+                    if (header.UserDataSize > 0)
+                    {
+                        header.JoinWith(this.ParseChunks(header.UserData));
+                    }
                 }
 
                 header.NodeCount = reader.ReadUInt32();
