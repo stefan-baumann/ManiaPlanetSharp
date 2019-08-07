@@ -104,7 +104,7 @@ namespace ManiaPlanetSharp.Utilities
                 }
             }
 
-            if (data is GbxNode node)
+            if (data is GbxNode node && !(data is GbxFile))
             {
                 foreach (object subNode in node)
                 {
@@ -151,7 +151,7 @@ namespace ManiaPlanetSharp.Utilities
 
             }
 
-            if (node.Count > 0)
+            if (node.Count > 0 && !(node is GbxFile))
             {
                 //builder.AppendLine(Indent("--------------", level + 1));
                 foreach (GbxNode subnode in node)
