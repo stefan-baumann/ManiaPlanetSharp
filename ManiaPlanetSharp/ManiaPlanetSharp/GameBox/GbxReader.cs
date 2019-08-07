@@ -128,7 +128,7 @@ namespace ManiaPlanetSharp.GameBox
             }
 
             uint index = this.ReadUInt32();
-            if (((index & 0xc0000000) != 0 && (index & 0x3fffffff) == 0) || index == 0)
+            if (((index & 0xc0000000) != 0 && (index & 0x3fffffff) == 0) || index == 0 /*|| (index & 0xc0000000) == 0*/)
             {
                 string newString = this.ReadString();
                 LbsStrings.Add(newString);

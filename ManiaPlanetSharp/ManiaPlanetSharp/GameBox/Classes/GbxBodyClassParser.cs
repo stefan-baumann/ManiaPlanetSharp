@@ -164,6 +164,9 @@ namespace ManiaPlanetSharp.GameBox
             //0x2E001010
             //0x2E001011
 
+            //Replays
+            new ReplayMapClassParser(),
+
             //Other
             //0x2E006001 (Physical Model?)
             //0x2E007001 (Visual Model?)
