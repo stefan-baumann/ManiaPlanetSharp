@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace ManiaPlanetSharp.GameBox
@@ -50,13 +51,13 @@ namespace ManiaPlanetSharp.GameBox
             GbxMapClass map = new GbxMapClass();
 
             //Parse Metadata
-            map.Uid = reader.ReadLoopbackString();
-            map.Environment = reader.ReadLoopbackString();
-            map.Author = reader.ReadLoopbackString();
+            map.Uid = reader.ReadLookbackString();
+            map.Environment = reader.ReadLookbackString();
+            map.Author = reader.ReadLookbackString();
             map.MapName = reader.ReadString();
-            map.TimeOfDay = reader.ReadLoopbackString();
-            map.DecorationEnvironment = reader.ReadLoopbackString();
-            map.DecorationEnvironmentAuthor = reader.ReadLoopbackString();
+            map.TimeOfDay = reader.ReadLookbackString();
+            map.DecorationEnvironment = reader.ReadLookbackString();
+            map.DecorationEnvironmentAuthor = reader.ReadLookbackString();
             map.SizeX = reader.ReadUInt32();
             map.SizeY = reader.ReadUInt32();
             map.SizeZ = reader.ReadUInt32();
@@ -65,16 +66,19 @@ namespace ManiaPlanetSharp.GameBox
             //if chunkId != 03043013
             map.Version = reader.ReadUInt32();
             map.BlockCount = reader.ReadUInt32();
+            //Debug.WriteLine($"        Blocks: {map.BlockCount}");
             map.Blocks = new Block[map.BlockCount];
             for (int i = 0; i < map.BlockCount; i++)
             {
                 Block block = new Block();
-                block.Name = reader.ReadLoopbackString();
+                block.Name = reader.ReadLookbackString();
                 block.Rotation = reader.ReadByte();
                 block.X = reader.ReadByte();
                 block.Y = reader.ReadByte();
                 block.Z = reader.ReadByte();
-                block.Flags = map.Version == 0 ? reader.ReadUInt16() : reader.ReadUInt32();
+                block.Flags = map.Version == 0 ? reader.ReadUInt16() : map.Version > 0 ? reader.ReadUInt32() : 0;
+
+                //Debug.WriteLine($"        Block #{i} ({block.Name} at [{block.X}, {block.Y}, {block.Z}])");
                 if (block.Flags == uint.MaxValue)
                 {
                     i--; //These blocks are not counted for the block count
@@ -82,7 +86,7 @@ namespace ManiaPlanetSharp.GameBox
                 }
                 if ((block.Flags & 0x8000) != 0) //Custom Block
                 {
-                    block.Author = reader.ReadLoopbackString();
+                    block.Author = reader.ReadLookbackString();
                     block.Skin = reader.ReadNodeReference();
                 }
                 if ((block.Flags & 0x100000) != 0)

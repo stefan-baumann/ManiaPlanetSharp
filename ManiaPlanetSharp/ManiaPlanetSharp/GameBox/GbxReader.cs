@@ -120,7 +120,7 @@ namespace ManiaPlanetSharp.GameBox
 
         private uint? LbsVersion { get; set; }
         private List<string> LbsStrings { get; set; } = new List<string>();
-        public string ReadLoopbackString()
+        public string ReadLookbackString()
         {
             if (LbsVersion == null)
             {
@@ -142,19 +142,58 @@ namespace ManiaPlanetSharp.GameBox
             {
                 switch (index)
                 {
+                    case 0: return "Desert";
+                    case 1: return "Snow";
+                    case 2: return "Rally";
+                    case 3: return "Island";
+                    case 4: return "Bay";
+                    case 5: return "Coast";
+                    case 6: return "Stadium";
+                    case 7: return "Basic";
+                    case 8: return "Plain";
+                    case 9: return "Moon";
+                    case 10: return "Toy";
                     case 11: return "Valley";
                     case 12: return "Canyon";
+                    case 13: return "Lagoon";
+                    case 14: return "Deprecated_Arena";
+
                     case 17: return "TMCommon";
+                    case 18: return "Canyon4";
+                    case 19: return "Canyon256";
+                    case 20: return "Valley4";
+                    case 21: return "Valley256";
+                    case 22: return "Lagoon4";
+                    case 23: return "Lagoon256";
+                    case 24: return "Stadium4";
+                    case 25: return "Stadium256";
+
+                    case 100: return "History";
+                    case 101: return "Society";
+                    case 102: return "Galaxy";
+
+                    case 200: return "Gothic";
+                    case 201: return "Paris";
                     case 202: return "Storm";
+                    case 203: return "Cryo";
+                    case 204: return "Meteor";
+                    case 205: return "Meteor4";
+                    case 206: return "Meteor256";
                     case 299: return "SMCommon";
+
+                    case 10000: return "Vehicles";
+                    case 10001: return "Orbital";
+                    case 10002: return "Actors";
                     case 10003: return "Common";
+
+                    case uint.MaxValue: return "Unassigned";
                 }
             }
 
             int storedIndex = (int)(index & 0x3fffffff);
             if (storedIndex > this.LbsStrings.Count)
             {
-                Debug.WriteLine($"Loopback String with Index {storedIndex} could not be found.");
+                Debug.WriteLine($"Lookback String with Index {storedIndex} (0x{storedIndex:X8}) could not be found.");
                 return string.Empty;
             }
             else

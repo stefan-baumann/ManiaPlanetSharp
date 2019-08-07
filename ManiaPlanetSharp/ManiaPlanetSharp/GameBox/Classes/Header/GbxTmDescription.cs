@@ -66,9 +66,9 @@ namespace ManiaPlanetSharp.GameBox
 
             if (description.Version < 3)
             {
-                description.Uid = reader.ReadLoopbackString();
-                description.Environment = reader.ReadLoopbackString();
-                description.MapAuthor = reader.ReadLoopbackString();
+                description.Uid = reader.ReadLookbackString();
+                description.Environment = reader.ReadLookbackString();
+                description.MapAuthor = reader.ReadLookbackString();
             }
 
             if (description.Version >= 1)

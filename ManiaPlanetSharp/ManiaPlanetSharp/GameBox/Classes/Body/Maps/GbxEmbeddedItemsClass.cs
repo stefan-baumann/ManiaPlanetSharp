@@ -56,9 +56,9 @@ namespace ManiaPlanetSharp.GameBox
                 {
                     GbxEmbeddedItem item = new GbxEmbeddedItem();
 
-                    item.Path = reader.ReadLoopbackString();
-                    item.Collection = reader.ReadLoopbackString();
-                    item.Author = reader.ReadLoopbackString();
+                    item.Path = reader.ReadLookbackString();
+                    item.Collection = reader.ReadLookbackString();
+                    item.Author = reader.ReadLookbackString();
                     
                     items[i] = item;
                 }

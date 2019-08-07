@@ -31,9 +31,9 @@ namespace ManiaPlanetSharp.GameBox
             {
                 collector.Archive[i] = new CollectorStock()
                 {
-                    BlockName = reader.ReadLoopbackString(),
-                    Collection = reader.ReadLoopbackString(),
-                    Author = reader.ReadLoopbackString(),
+                    BlockName = reader.ReadLookbackString(),
+                    Collection = reader.ReadLookbackString(),
+                    Author = reader.ReadLookbackString(),
                     Data = reader.ReadUInt32()
                 };
             }

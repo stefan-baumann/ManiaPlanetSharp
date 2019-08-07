@@ -23,9 +23,9 @@ namespace ManiaPlanetSharp.GameBox
             return new GbxVehicleClass()
             {
                 Version = reader.ReadUInt32(),
-                Name = reader.ReadLoopbackString(),
-                Collection = reader.ReadLoopbackString(),
-                Author = reader.ReadLoopbackString()
+                Name = reader.ReadLookbackString(),
+                Collection = reader.ReadLookbackString(),
+                Author = reader.ReadLookbackString()
             };
         }
     }

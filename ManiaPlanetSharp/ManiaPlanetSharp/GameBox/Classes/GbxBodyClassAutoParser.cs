@@ -54,7 +54,7 @@ namespace ManiaPlanetSharp.GameBox
         };
         protected virtual void ParseField(GbxReader reader, Field field, TBodyClass target)
         {
-            field.Property.SetValue(target, field.IsLoopbackString ? reader.ReadLoopbackString() : supportedTypes[field.Property.PropertyType](reader));
+            field.Property.SetValue(target, field.IsLookbackString ? reader.ReadLookbackString() : supportedTypes[field.Property.PropertyType](reader));
         }
 
         protected internal class Field
@@ -67,7 +67,7 @@ namespace ManiaPlanetSharp.GameBox
                 {
                     if (attribute is GbxAutoStringPropertyAttribute stringAttribute)
                     {
-                        this.IsLoopbackString = stringAttribute.IsLoopbackString;
+                        this.IsLookbackString = stringAttribute.IsLookbackString;
                     }
                     else
                     {
@@ -82,7 +82,7 @@ namespace ManiaPlanetSharp.GameBox
             }
 
             public int Index { get; set; }
-            public bool IsLoopbackString { get; set; }
+            public bool IsLookbackString { get; set; }
             public PropertyInfo Property { get; set; }
         }
     }
@@ -105,9 +105,9 @@ namespace ManiaPlanetSharp.GameBox
         public GbxAutoStringPropertyAttribute(int index, bool isLoopback)
             : base(index)
         {
-            this.IsLoopbackString = isLoopback;
+            this.IsLookbackString = isLoopback;
         }
 
-        public bool IsLoopbackString { get; private set; }
+        public bool IsLookbackString { get; private set; }
     }
 }

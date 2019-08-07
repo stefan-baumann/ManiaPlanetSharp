@@ -32,7 +32,7 @@ namespace ManiaPlanetSharp.GameBox
             {
                 result.Icon = reader.ReadFileReference();
             }
-            result.Unused = reader.ReadLoopbackString();
+            result.Unused = reader.ReadLookbackString();
 
             return result;
         }

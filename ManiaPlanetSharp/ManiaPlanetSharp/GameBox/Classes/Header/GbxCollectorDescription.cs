@@ -31,18 +31,18 @@ namespace ManiaPlanetSharp.GameBox
         public override GbxCollectorDescription ParseChunk(GbxReader chunk)
         {
             var result = new GbxCollectorDescription();
-            result.Name = chunk.ReadLoopbackString();
-            result.Collection = chunk.ReadLoopbackString();
-            result.Author = chunk.ReadLoopbackString();
+            result.Name = chunk.ReadLookbackString();
+            result.Collection = chunk.ReadLookbackString();
+            result.Author = chunk.ReadLookbackString();
             result.Version = chunk.ReadUInt32();
             result.Path = chunk.ReadString();
             if (result.Version == 5)
             {
-                result.Unused1 = chunk.ReadLoopbackString();
+                result.Unused1 = chunk.ReadLookbackString();
             }
             if (result.Version >= 4)
             {
-                result.Unused2 = chunk.ReadLoopbackString();
+                result.Unused2 = chunk.ReadLookbackString();
             }
             if (result.Version >= 3)
             {

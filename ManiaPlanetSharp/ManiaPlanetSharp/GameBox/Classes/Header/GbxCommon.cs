@@ -64,9 +64,9 @@ namespace ManiaPlanetSharp.GameBox
         {
             GbxCommonClass common = new GbxCommonClass();
             common.Version = reader.ReadByte();
-            common.MapUid = reader.ReadLoopbackString();
-            common.MapEnvironment = reader.ReadLoopbackString();
-            common.MapAuthor = reader.ReadLoopbackString();
+            common.MapUid = reader.ReadLookbackString();
+            common.MapEnvironment = reader.ReadLookbackString();
+            common.MapAuthor = reader.ReadLookbackString();
             common.MapName = reader.ReadString();
             common.KindB = reader.ReadByte();
             if (common.Version >= 1)
@@ -75,9 +75,9 @@ namespace ManiaPlanetSharp.GameBox
                 common.Password = reader.ReadString();
                 if (common.Version >= 2)
                 {
-                    common.DecorationTimeOfDay = reader.ReadLoopbackString();
-                    common.DecorationEnvironment = reader.ReadLoopbackString();
-                    common.DecorationEnvironmentAuthor = reader.ReadLoopbackString();
+                    common.DecorationTimeOfDay = reader.ReadLookbackString();
+                    common.DecorationEnvironment = reader.ReadLookbackString();
+                    common.DecorationEnvironmentAuthor = reader.ReadLookbackString();
                     if (common.Version >= 3)
                     {
                         common.MapOrigin = reader.ReadVec2D();
@@ -101,7 +101,7 @@ namespace ManiaPlanetSharp.GameBox
                                             common.LightmapVersion = reader.ReadByte();
                                             if (common.Version >= 11)
                                             {
-                                                common.TitleUid = reader.ReadLoopbackString();
+                                                common.TitleUid = reader.ReadLookbackString();
                                             }
                                         }
                                     }
