@@ -113,13 +113,21 @@ namespace ManiaPlanetSharp.GameBox
                         uint length = reader.ReadUInt32();
                     }
                 }
-                
-                GbxNode parsed = parser.ParseChunk(reader);
-                long endPosition = reader.Stream.Position;
-                parsed.Class = chunkId;
-                reader.Stream.Position = startPosition;
-                parsed.Data = reader.ReadRaw((int)(endPosition - startPosition));
-                return parsed;
+
+                try
+                {
+                    GbxNode parsed = parser.ParseChunk(reader);
+                    long endPosition = reader.Stream.Position;
+                    parsed.Class = chunkId;
+                    reader.Stream.Position = startPosition;
+                    parsed.Data = reader.ReadRaw((int)(endPosition - startPosition));
+                    return parsed;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[!] Internal Exception of type {ex.GetType()} while parsing chunk {chunkId:X8} with {parser.GetType()}. Terminating parsing.");
+                    return null;
+                }
             }
             else if (this.TrySkipChunk(reader, out GbxNode skipped))
             {
