@@ -220,6 +220,7 @@ namespace ManiaPlanetSharp.GameBox
             new AutoClassParser<CollectionMenuIconFolder>(0x03033003),
             new GameSkinParser(),
             new AutoClassParser<PlayerProfile>(0x0308C000),
+            new AutoClassParser<FolderDependency>(0x01001000),
             //0x2E006001 (Physical Model?)
             //0x2E007001 (Visual Model?)
         };

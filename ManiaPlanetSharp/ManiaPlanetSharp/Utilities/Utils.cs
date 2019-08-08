@@ -40,8 +40,12 @@ namespace ManiaPlanetSharp.Utilities
 
         private static void PrintNodeTreeRecursive(Node node, StringBuilder builder, int level)
         {
-            if (node == null) return;
-            Type type = node.GetType();
+            if (node == null)
+            {
+                builder.AppendLine(Indent("null", level));
+                return;
+            }
+                Type type = node.GetType();
             builder.AppendLine(Indent((level == 0 ? "# " : "- ") + type.Name, level));
 
             foreach (var property in type.GetTypeInfo().GetProperties())

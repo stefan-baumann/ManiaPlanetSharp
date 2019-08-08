@@ -8,7 +8,23 @@ namespace ManiaPlanetSharp.GameBox.Classes.Object
         : Node
     {
         public uint NadeoSkinFidCount { get; set; }
-        public Node[] Fids { get; set; }
+        private Node[] fids;
+        public Node[] Fids
+        {
+            get
+            {
+                return this.fids;
+            }
+            set
+            {
+                this.fids = value;
+                if (this.fids != null)
+                {
+                    this.Nodes.Clear();
+                    this.Nodes.AddRange(this.fids);
+                }
+            }
+        }
     }
 
     public class ObjectNadeoSkinFilesParser

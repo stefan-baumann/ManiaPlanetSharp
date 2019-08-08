@@ -9,7 +9,23 @@ namespace ManiaPlanetSharp.GameBox.Classes.Object
     {
         public uint Version { get; set; }
         public uint CameraCount { get; set; }
-        public Node[] Cameras { get; set; }
+        private Node[] cameras;
+        public Node[] Cameras
+        {
+            get
+            {
+                return this.cameras;
+            }
+            set
+            {
+                this.cameras = value;
+                if (this.cameras != null)
+                {
+                    this.Nodes.Clear();
+                    this.Nodes.AddRange(this.cameras);
+                }
+            }
+        }
     }
 
     public class ObjectCamerassParser
