@@ -54,12 +54,37 @@ namespace ManiaPlanetSharp.GameBox
         };
         protected virtual void ParseField(GameBoxReader reader, Field field, TBodyClass target)
         {
-            field.Property.SetValue(target, field.IsLookbackString ? reader.ReadLookbackString() : supportedTypes[field.Property.PropertyType](reader));
+            if (field.IsLookbackString)
+            {
+                field.Property.SetValue(target, reader.ReadLookbackString());
+            }
+            else if (field.IsArray)
+            {
+                var countField = this.Fields.FirstOrDefault(f => f.Index == field.ArrayCountIndex);
+                if (countField == null)
+                {
+                    throw new InvalidOperationException("Referenced field for auto parser array does not exist.");
+                }
+                else
+                {
+                    var count = (int)countField.Property.GetValue(target);
+                    var array = Array.CreateInstance(field.ArrayType, count);
+                    for (int i = 0; i < count; i++)
+                    {
+                        array.SetValue(supportedTypes[field.ArrayType](reader), i);
+                    }
+                    field.Property.SetValue(target, array);
+                }
+            }
+            else
+            {
+                field.Property.SetValue(target, supportedTypes[field.Property.PropertyType](reader));
+            }
+            
         }
 
         protected internal class Field
         {
-            
             public Field(AutoParserPropertyAttribute attribute, PropertyInfo property)
             {
                 this.Index = attribute.Index;
@@ -71,18 +96,34 @@ namespace ManiaPlanetSharp.GameBox
                     }
                     else
                     {
-                        throw new InvalidOperationException("GbxAutoPropertyAttribute cannot be used on a string property. Use GbxAutoStringPropertyAttribute instead.");
+                        throw new InvalidOperationException($"AutoParserPropertyAttribute cannot be used on a string property. Use AutoParserStringPropertyAttribute instead. Property is {property.DeclaringType.FullName}.{property.Name}.");
                     }
                 }
                 else if (!supportedTypes.ContainsKey(property.PropertyType))
                 {
-                    throw new InvalidOperationException("GbxAutoPropertyAttribute cannot be used on properties of this type.");
+                    if (attribute is AutoParserArrayPropertyAttribute arrayAttribute)
+                    {
+                        if (!property.PropertyType.IsArray || !supportedTypes.ContainsKey(property.PropertyType.GetElementType()))
+                        {
+                            throw new InvalidOperationException($"AutoParserArrayPropertyAttribute cannot be used on properties of this type. Property is {property.DeclaringType.FullName}.{property.Name}.");
+                        }
+                        this.IsArray = true;
+                        this.ArrayCountIndex = arrayAttribute.CountIndex;
+                        this.ArrayType = property.PropertyType.GetElementType();
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException($"AutoParserPropertyAttribute cannot be used on properties of this type. Property is {property.DeclaringType.FullName}.{property.Name}.");
+                    }
                 }
                 this.Property = property;
             }
 
             public int Index { get; set; }
             public bool IsLookbackString { get; set; }
+            public bool IsArray { get; set; }
+            public int ArrayCountIndex { get; set; } = -1;
+            public Type ArrayType { get; set; }
             public PropertyInfo Property { get; set; }
         }
     }
@@ -109,5 +150,21 @@ namespace ManiaPlanetSharp.GameBox
         }
 
         public bool IsLookbackString { get; private set; }
+    }
+
+    public class AutoParserArrayPropertyAttribute
+        : AutoParserPropertyAttribute
+    {
+        public AutoParserArrayPropertyAttribute(int index, int countIndex)
+            : base(index)
+        {
+            if (index <= countIndex)
+            {
+                throw new InvalidOperationException("The count index must refer to an element that is parsed before the array.");
+            }
+            this.CountIndex = countIndex;
+        }
+
+        public int CountIndex { get; private set; }
     }
 }
