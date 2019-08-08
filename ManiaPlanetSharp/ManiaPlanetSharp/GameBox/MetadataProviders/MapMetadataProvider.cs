@@ -33,7 +33,6 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         public int? Laps => (int?)this.GetHeaderNode<GbxTmDescriptionClass>()?.Laps ?? this.GetHeaderNode<GbxMapCommunityClass>()?.Root?.Description?.LapCount;
         public int? DisplayCost => (int?)this.GetHeaderNode<GbxTmDescriptionClass>()?.Cost ?? this.GetHeaderNode<GbxMapCommunityClass>()?.Root?.Description?.DisplayCost;
         public bool? Validated => this.GetHeaderNode<GbxMapCommunityClass>()?.Root?.Description?.Validated;
-        public string Playermodel => this.GetHeaderNode<GbxMapCommunityClass>()?.Root?.PlayerModel?.Id;
         public string Type => this.GetHeaderNode<GbxCommonClass>()?.MapType ?? this.GetHeaderNode<GbxTmDescriptionClass>()?.TrackType.ToString();
         public GbxMapKind? Kind => this.GetHeaderNode<GbxCommonClass>()?.Kind;
         public bool? Locked => this.GetHeaderNode<GbxCommonClass>()?.Locked ?? this.GetBodyNode<GbxMapClass>()?.NeedsUnlock;
@@ -41,6 +40,10 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public byte[] Thumbnail => this.GetHeaderNode<GbxThumbnailClass>()?.ThumbnailData;
         public string Comment => this.GetHeaderNode<GbxThumbnailClass>()?.Comment;
+
+        public string Vehicle => this.GetBodyNode<GbxVehicleClass>()?.Name ?? this.GetHeaderNode<GbxMapCommunityClass>()?.Root?.PlayerModel?.Id;
+        public string VehicleAuthor => this.GetBodyNode<GbxVehicleClass>()?.Author;
+        public string VehicleCollection => this.GetBodyNode<GbxVehicleClass>()?.Collection;
 
         //Times & Scores
         public TimeSpan? BronzeTime => this.GetHeaderNode<GbxTmDescriptionClass>()?.BronzeTimeSpan ?? this.GetHeaderNode<GbxMapCommunityClass>()?.Root?.Times?.BronzeTimeSpan;
