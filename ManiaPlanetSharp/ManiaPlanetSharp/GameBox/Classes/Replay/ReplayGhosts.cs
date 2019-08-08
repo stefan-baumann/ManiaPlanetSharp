@@ -11,8 +11,24 @@ namespace ManiaPlanetSharp.GameBox.Classes.Replay
         public uint Ignored1 { get; set; }
         [AutoParserProperty(1)]
         public uint GhostCount { get; set; }
+        private Node[] ghosts;
         [AutoParserArrayProperty(2, 1)]
-        public Node[] Ghosts { get; set; }
+        public Node[] Ghosts
+        {
+            get
+            {
+                return this.ghosts;
+            }
+            set
+            {
+                this.ghosts = value;
+                if (this.ghosts != null)
+                {
+                    this.Nodes.Clear();
+                    this.Nodes.AddRange(this.ghosts);
+                }
+            }
+        }
         [AutoParserProperty(3)]
         public uint Ignored2 { get; set; }
         [AutoParserProperty(4)]

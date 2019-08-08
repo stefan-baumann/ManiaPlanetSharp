@@ -71,7 +71,7 @@ namespace ManiaPlanetSharp.GameBox
                 }
                 else
                 {
-                    var count = (int)countField.Property.GetValue(target);
+                    var count = countField.Property.PropertyType == typeof(uint) ? (int)((uint)countField.Property.GetValue(target)) : (int)countField.Property.GetValue(target);
                     var array = Array.CreateInstance(field.ArrayType, count);
                     for (int i = 0; i < count; i++)
                     {
