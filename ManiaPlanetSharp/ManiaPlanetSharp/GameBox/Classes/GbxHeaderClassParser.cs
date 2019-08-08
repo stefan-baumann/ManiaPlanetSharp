@@ -32,7 +32,7 @@ namespace ManiaPlanetSharp.GameBox
             new GbxTmDescriptionClassParser(),
             new GbxCommonClassParser(),
             new GbxVersionClassParser(),
-            new GbxCommunityClassParser(),
+            new GbxMapCommunityClassParser(),
             new GbxThumbnailClassParser(),
             new GbxAuthorClassParser(),
 

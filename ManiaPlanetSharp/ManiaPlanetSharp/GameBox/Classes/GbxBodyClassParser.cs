@@ -127,6 +127,12 @@ namespace ManiaPlanetSharp.GameBox
             //new GbxUnusedBodyClassParser(0x, true, reader => {
             //
             //}),
+            new GbxLightmapClassParser(),
+            //0x03043044 (ManiaScript)
+            //0x21080001 (Virtual Skipper metadata)
+            new GbxBlockSkinClassParserA(),
+            new GbxBlockSkinClassParserB(),
+            new GbxBlockSkinClassParserC(),
 
 
 
@@ -165,7 +171,9 @@ namespace ManiaPlanetSharp.GameBox
             //0x2E001011
 
             //Replays
-            new ReplayMapClassParser(),
+            new GbxReplayMapClassParser(),
+            new GbxReplayBasicMetadataClassParser(),
+            new GbxReplayCommunityClassParser(), //Implement XML parsing
 
             //Other
             //0x2E006001 (Physical Model?)

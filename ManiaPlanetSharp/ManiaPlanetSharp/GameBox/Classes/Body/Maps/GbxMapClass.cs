@@ -97,6 +97,8 @@ namespace ManiaPlanetSharp.GameBox
                 map.Blocks[i] = block;
             }
 
+            //There might be additional blocks with flags uint.MaxValue after
+
             return map;
         }
     }

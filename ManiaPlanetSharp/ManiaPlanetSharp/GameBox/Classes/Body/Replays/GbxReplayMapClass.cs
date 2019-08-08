@@ -4,23 +4,23 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox
 {
-    public class ReplayMapClass
+    public class GbxReplayMapClass
         : GbxBodyClass
     {
-        public ReplayMapClass() { }
+        public GbxReplayMapClass() { }
 
         public int Size { get; set; }
         public byte[] Map { get; set; }
     }
 
-    public class ReplayMapClassParser
-        : GbxBodyClassParser<ReplayMapClass>
+    public class GbxReplayMapClassParser
+        : GbxBodyClassParser<GbxReplayMapClass>
     {
         protected override int Chunk => 0x3093002;
 
-        protected override ReplayMapClass ParseChunkInternal(GbxReader reader)
+        protected override GbxReplayMapClass ParseChunkInternal(GbxReader reader)
         {
-            var result = new ReplayMapClass();
+            var result = new GbxReplayMapClass();
             result.Size = (int)reader.ReadUInt32();
             result.Map = reader.ReadRaw(result.Size);
             return result;
