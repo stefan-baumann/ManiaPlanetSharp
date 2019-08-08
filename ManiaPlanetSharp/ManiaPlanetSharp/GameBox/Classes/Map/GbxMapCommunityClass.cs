@@ -69,7 +69,7 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
         [XmlAttribute(AttributeName = "mapstyle")]
         public string MapStyle { get; set; }
         [XmlAttribute(AttributeName = "validated")]
-        [Obsolete("Use the property Validated instead of ValidatedB.", false)]
+        //[Obsolete("Use the property Validated instead of ValidatedB.", false)] //The obsolete-attribute prevents the xml parser to parse
         public string ValidatedB { get; set; }
         [XmlIgnore()]
         public bool Validated { get => this.ValidatedB == "1"; }
@@ -80,7 +80,7 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
         [XmlAttribute(AttributeName = "mod")]
         public string Mod { get; set; }
         [XmlAttribute(AttributeName = "hasghostblocks")]
-        [Obsolete("Use the property HasGhostBlocks instead of HasGhostBlocksB.", false)]
+        //[Obsolete("Use the property HasGhostBlocks instead of HasGhostBlocksB.", false)] //The obsolete-attribute prevents the xml parser to parse
         public string HasGhostBlocksB { get; set; }
         [XmlIgnore()]
         public bool HasGhostBlocks { get => this.HasGhostBlocksB == "1"; }
@@ -99,12 +99,20 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     {
         [XmlAttribute(AttributeName = "bronze")]
         public int Bronze { get; set; }
+        [XmlIgnore()]
+        public TimeSpan BronzeTimeSpan { get => TimeSpan.FromMilliseconds(this.Bronze); }
         [XmlAttribute(AttributeName = "silver")]
         public int Silver { get; set; }
+        [XmlIgnore()]
+        public TimeSpan SilverTimeSpan { get => TimeSpan.FromMilliseconds(this.Silver); }
         [XmlAttribute(AttributeName = "gold")]
         public int Gold { get; set; }
+        [XmlIgnore()]
+        public TimeSpan GoldTimeSpan { get => TimeSpan.FromMilliseconds(this.Gold); }
         [XmlAttribute(AttributeName = "authortime")]
         public int AuthorTime { get; set; }
+        [XmlIgnore()]
+        public TimeSpan AuthorTimeSpan { get => TimeSpan.FromMilliseconds(this.AuthorTime); }
         [XmlAttribute(AttributeName = "authorscore")]
         public int AuthorScore { get; set; }
     }

@@ -9,6 +9,7 @@ using ManiaPlanetSharp.Utilities;
 using System.Diagnostics;
 using ManiaPlanetSharp.GameBox;
 using System.Reflection;
+using ManiaPlanetSharp.GameBox.MetadataProviders;
 
 namespace ManiaPlanetSharp.MetadataTest
 {
@@ -43,10 +44,11 @@ namespace ManiaPlanetSharp.MetadataTest
                             var result = new GameBoxFileParser(stream).Parse();
 
                             //Output all parsed data to the console
-                            Console.WriteLine(new string('=', Console.WindowWidth / 2));
+                            Console.WriteLine(new string('-', Console.WindowWidth / 2));
 
                             Console.WriteLine(Utils.PrintNodeTree(result));
-                            Console.WriteLine(new string('=', Console.WindowWidth / 2));
+                            var metadata = new MapMetadataProvider(result);
+                            Console.WriteLine(new string('-', Console.WindowWidth / 2));
 #if !DEBUG
                         }
                         catch (Exception ex)

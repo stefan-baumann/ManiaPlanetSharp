@@ -4,6 +4,15 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Classes.Collector
 {
+    public enum ProductState
+        : byte
+    {
+        Aborted = 0,
+        GameBox = 1,
+        DevelopmentBuild = 2,
+        Release = 3
+    }
+
     public class GbxCollectorMainDescriptionClass
         : Node
     {
@@ -20,7 +29,7 @@ namespace ManiaPlanetSharp.GameBox.Classes.Collector
         //public uint IconDescription { get; set; }
         //public uint Unused4 { get; set; }
         public ushort CatalogPosition { get; set; }
-        public byte ProductState { get; set; }
+        public ProductState ProductState { get; set; }
     }
 
     public class GbxCollectorMainDescriptionClassParser
@@ -59,7 +68,7 @@ namespace ManiaPlanetSharp.GameBox.Classes.Collector
             }
             if (result.Version >= 8)
             {
-                result.ProductState = chunk.ReadByte();
+                result.ProductState = (ProductState)chunk.ReadByte();
             }
 
             return result;

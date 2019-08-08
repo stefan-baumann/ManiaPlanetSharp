@@ -68,10 +68,5 @@ namespace ManiaPlanetSharp.GameBox
         {
             return ((IEnumerable<Node>)this).GetEnumerator();
         }
-
-        public override string ToString()
-        {
-            return $"GbxNode[0x{this.Class:X8}]";
-        }
     }
 }

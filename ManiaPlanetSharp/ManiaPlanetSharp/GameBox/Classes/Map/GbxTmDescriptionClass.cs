@@ -19,6 +19,8 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
         [Obsolete("Old field, not used anymore", false)]
         public string MapAuthor { get; set; }
 
+        public string TrackName { get; set; }
+
         public uint BronzeTime { get; set; }
         public TimeSpan BronzeTimeSpan { get => TimeSpan.FromMilliseconds(this.BronzeTime); }
         public uint SilverTime { get; set; }
@@ -29,17 +31,17 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
         public TimeSpan AuthorTimeSpan { get => TimeSpan.FromMilliseconds(this.AuthorTime); }
 
         public uint Cost { get; set; }
-        public bool Multilap { get; set; }
+        public bool? Multilap { get; set; }
         [Obsolete("Raw Value, use GbxTmDescriptionClass.TrackType instead", false)]
         public uint TrackTypeU { get; set; }
         public GbxTrackType TrackType { get => (GbxTrackType)this.TrackTypeU; }
-        public uint AuthorScore { get; set; }
+        public uint? AuthorScore { get; set; }
         [Obsolete("Raw Value, use GbxTmDescriptionClass.AdvancedEditor and GbxTmDescriptionClass.HasGhostblocks instead", false)]
-        public uint EditorMode { get; set; }
-        public bool AdvancedEditor { get => (this.EditorMode & 1) > 0; }
-        public bool HasGhostBlocks { get => (this.EditorMode & 2) > 0; }
-        public uint Checkpoints { get; set; }
-        public uint Laps { get; set; }
+        public uint? EditorMode { get; set; }
+        public bool? AdvancedEditor { get => (this.EditorMode & 1) > 0; }
+        public bool? HasGhostBlocks { get => (this.EditorMode & 2) > 0; }
+        public uint? Checkpoints { get; set; }
+        public uint? Laps { get; set; }
     }
 
     public enum GbxTrackType
@@ -69,7 +71,9 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
                 description.Uid = reader.ReadLookbackString();
                 description.Environment = reader.ReadLookbackString();
                 description.MapAuthor = reader.ReadLookbackString();
+                description.TrackName = reader.ReadString();
             }
+            reader.ReadBool();
 
             if (description.Version >= 1)
             {
@@ -104,9 +108,8 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
                                             reader.ReadBool();
                                             if (description.Version >= 13)
                                             {
-                                                //Different order compared to the ManiaTechWiki entry
-                                                description.Laps = reader.ReadUInt32();
                                                 description.Checkpoints = reader.ReadUInt32();
+                                                description.Laps = reader.ReadUInt32();
                                             }
                                         }
                                     }
