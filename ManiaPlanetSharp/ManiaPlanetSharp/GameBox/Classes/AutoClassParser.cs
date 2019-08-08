@@ -10,9 +10,10 @@ namespace ManiaPlanetSharp.GameBox
         : ClassParser<TBodyClass>
         where TBodyClass : Node, new()
     {
-        public AutoClassParser(int chunk)
+        public AutoClassParser(int chunk, bool skippable = false)
         {
             this.chunk = chunk;
+            this.skippable = skippable;
             this.Fields = typeof(TBodyClass).GetRuntimeProperties()
                 .SelectMany(property => property
                     .GetCustomAttributes<AutoParserPropertyAttribute>()
@@ -22,6 +23,9 @@ namespace ManiaPlanetSharp.GameBox
 
         private readonly int chunk;
         protected override int ChunkId => this.chunk;
+
+        private readonly bool skippable;
+        public override bool Skippable => this.skippable;
 
         protected List<Field> Fields { get; private set; }
 

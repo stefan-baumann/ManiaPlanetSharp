@@ -57,7 +57,7 @@ namespace ManiaPlanetSharp.Utilities
                 }
                 else if (property.Name == "Class")
                 {
-                    builder.AppendLine(Indent($"- {property.Name}: 0x{(uint)property.GetValue(node):X8} {KnownClassIds.GetClassName((uint)property.GetValue(node)) ?? ""}", level + 1));
+                    builder.AppendLine(Indent($"- {property.Name}: 0x{(uint)property.GetValue(node):X8} ({KnownClassIds.GetClassName(((uint)property.GetValue(node)) & ~0xFFFU) ?? "Unknown"})", level + 1));
                 }
                 else
                 {

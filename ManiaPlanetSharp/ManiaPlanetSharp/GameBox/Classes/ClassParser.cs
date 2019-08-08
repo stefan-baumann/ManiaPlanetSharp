@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using ManiaPlanetSharp.GameBox.Classes.Collector;
+using ManiaPlanetSharp.GameBox.Classes.Ghost;
 using ManiaPlanetSharp.GameBox.Classes.Map;
 using ManiaPlanetSharp.GameBox.Classes.Object;
 using ManiaPlanetSharp.GameBox.Classes.Replay;
@@ -176,6 +177,35 @@ namespace ManiaPlanetSharp.GameBox
             new UnusedClassParser(0x03093007, true, reader => reader.ReadUInt32()),
             new AutoClassParser<ReplayGhosts>(0x03093014),
             new UnusedClassParser(0x03093015, reader => reader.ReadNodeReference()),
+
+            //Ghost
+            new GhostParserA(),
+            new GhostParserB(),
+            new AutoClassParser<GhostRaceTime>(0x03092005, true),
+            new AutoClassParser<GhostRespawnCount>(0x03092008, true),
+            new AutoClassParser<GhostLighttrail>(0x03092009, true),
+            new AutoClassParser<GhostStuntScore>(0x0309200A, true),
+            new UnusedClassParser(0x0309200B, true, reader => {
+                uint count = reader.ReadUInt32();
+                ulong[] values = new ulong[count];
+                for (int i = 0; i < count; i++)
+                {
+                    values[i] = reader.ReadUInt64();
+                }
+            }),
+            new UnusedClassParser(0x0309200C, reader => reader.ReadUInt32()),
+            new AutoClassParser<GhostUid>(0x0309200E),
+            new AutoClassParser<GhostLogin>(0x0309200F),
+            new UnusedClassParser(0x03092010, reader => reader.ReadLookbackString()),
+            new UnusedClassParser(0x03092012, reader => {
+                uint a = reader.ReadUInt32();
+                ulong[] b = reader.ReadUInt128();
+            }),
+            new UnusedClassParser(0x03092013, true, reader => Utils.Repeat(reader.ReadUInt32, 2)),
+            new UnusedClassParser(0x03092014, true, reader => reader.ReadUInt32()),
+            new AutoClassParser<GhostPlayerMobilId>(0x03092005, true),
+            new AutoClassParser<GhostSkin>(0x03092017, true),
+            new UnusedClassParser(0x03092018, reader => Utils.Repeat(reader.ReadLookbackString, 3)),
 
             //Other
             //0x2E006001 (Physical Model?)
