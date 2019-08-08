@@ -5,23 +5,23 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Collector
 {
     public class GbxCollectorBrowserMetadataClass
-        : GbxClass
+        : Node
     {
         public GbxCollectorBrowserMetadataClass()
         { }
 
         public string PagePath { get; set; }
         public bool HasIconFid { get; set; }
-        public GbxFileReference Icon { get; set; } //Potentially a NodeRef
+        public FileReference Icon { get; set; } //Potentially a NodeRef
         public string Unused { get; set; }
     }
 
     public class GbxCollectorBrowserMetadataClassParser
-        : GbxClassParser<GbxCollectorBrowserMetadataClass>
+        : ClassParser<GbxCollectorBrowserMetadataClass>
     {
         protected override int ChunkId => 0x2E001009;
 
-        protected override GbxCollectorBrowserMetadataClass ParseChunkInternal(GbxReader reader)
+        protected override GbxCollectorBrowserMetadataClass ParseChunkInternal(GameBoxReader reader)
         {
             var result = new GbxCollectorBrowserMetadataClass()
             {

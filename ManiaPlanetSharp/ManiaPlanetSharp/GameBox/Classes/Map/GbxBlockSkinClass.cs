@@ -5,20 +5,20 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxBlockSkinClass
-        : GbxClass
+        : Node
     {
         public string Text { get; set; }
         public string Ignored { get; set; }
-        public GbxFileReference Pack { get; set; }
-        public GbxFileReference ParentPack { get; set; }
+        public FileReference Pack { get; set; }
+        public FileReference ParentPack { get; set; }
     }
 
     public class GbxBlockSkinClassParserA
-        : GbxClassParser<GbxBlockSkinClass>
+        : ClassParser<GbxBlockSkinClass>
     {
         protected override int ChunkId => 0x03059000;
 
-        protected override GbxBlockSkinClass ParseChunkInternal(GbxReader reader)
+        protected override GbxBlockSkinClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxBlockSkinClass()
             {
@@ -29,11 +29,11 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxBlockSkinClassParserB
-        : GbxClassParser<GbxBlockSkinClass>
+        : ClassParser<GbxBlockSkinClass>
     {
         protected override int ChunkId => 0x03059001;
 
-        protected override GbxBlockSkinClass ParseChunkInternal(GbxReader reader)
+        protected override GbxBlockSkinClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxBlockSkinClass()
             {
@@ -44,11 +44,11 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxBlockSkinClassParserC
-        : GbxClassParser<GbxBlockSkinClass>
+        : ClassParser<GbxBlockSkinClass>
     {
         protected override int ChunkId => 0x03059002;
 
-        protected override GbxBlockSkinClass ParseChunkInternal(GbxReader reader)
+        protected override GbxBlockSkinClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxBlockSkinClass()
             {

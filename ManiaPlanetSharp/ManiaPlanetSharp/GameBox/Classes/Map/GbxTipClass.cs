@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxTipClass
-        : GbxClass
+        : Node
     {
         public string Tip1 { get; set; }
         public string Tip2 { get; set; }
@@ -14,11 +14,11 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxTipClassParser
-        : GbxClassParser<GbxTipClass>
+        : ClassParser<GbxTipClass>
     {
         protected override int ChunkId => 0x0305B001;
 
-        protected override GbxTipClass ParseChunkInternal(GbxReader reader)
+        protected override GbxTipClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxTipClass()
             {

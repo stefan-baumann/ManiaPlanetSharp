@@ -5,19 +5,19 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxModpackClass
-        : GbxClass
+        : Node
     {
-        public GbxFileReference Modpack { get; set; }
+        public FileReference Modpack { get; set; }
     }
 
     public class GbxModpackClassParser
-        : GbxClassParser<GbxModpackClass>
+        : ClassParser<GbxModpackClass>
     {
         protected override int ChunkId => 0x03043019;
 
         public override bool Skippable => true;
 
-        protected override GbxModpackClass ParseChunkInternal(GbxReader reader)
+        protected override GbxModpackClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxModpackClass()
             {

@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxPlaymodeClass
-        : GbxClass
+        : Node
     {
         [Obsolete("Raw Value, use GbxPlaymodeClass.Playmode instead", false)]
         public uint PlaymodeU { get; set; }
@@ -16,13 +16,13 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxPlaymodeClassParser
-        : GbxClassParser<GbxPlaymodeClass>
+        : ClassParser<GbxPlaymodeClass>
     {
         protected override int ChunkId => 0x0304301C;
 
         public override bool Skippable => true;
 
-        protected override GbxPlaymodeClass ParseChunkInternal(GbxReader reader)
+        protected override GbxPlaymodeClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxPlaymodeClass()
             {

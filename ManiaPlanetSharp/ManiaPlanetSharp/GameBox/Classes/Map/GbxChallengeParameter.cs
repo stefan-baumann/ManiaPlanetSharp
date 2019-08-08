@@ -7,21 +7,21 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxChallengeParameterClass
-        : GbxClass
+        : Node
     {
-        public GbxNode CollectorList { get; set; }
-        public GbxNode ChallengeParameters { get; set; }
+        public Node CollectorList { get; set; }
+        public Node ChallengeParameters { get; set; }
         [Obsolete("Raw Value, use GbxChallengeParameterClass.Kind instead", false)]
         public uint KindU { get; set; }
         public GbxMapKind Kind { get => (GbxMapKind)(byte)this.KindU; }
     }
 
     public class GbxChallengeParameterClassParser
-        : GbxClassParser<GbxChallengeParameterClass>
+        : ClassParser<GbxChallengeParameterClass>
     {
         protected override int ChunkId => 0x03043011;
 
-        protected override GbxChallengeParameterClass ParseChunkInternal(GbxReader reader)
+        protected override GbxChallengeParameterClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxChallengeParameterClass()
             {

@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxTimeClass
-        : GbxClass
+        : Node
     {
         [Obsolete("Raw Value, use GbxTimeClass.BronzeTime instead", false)]
         public uint BronzeTimeU { get; set; }
@@ -26,13 +26,13 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxTimeClassParser
-        : GbxClassParser<GbxTimeClass>
+        : ClassParser<GbxTimeClass>
     {
         protected override int ChunkId => 0x0305B004;
 
         public override bool Skippable => true;
 
-        protected override GbxTimeClass ParseChunkInternal(GbxReader reader)
+        protected override GbxTimeClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxTimeClass()
             {

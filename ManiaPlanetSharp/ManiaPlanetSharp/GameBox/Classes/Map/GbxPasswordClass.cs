@@ -5,18 +5,18 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxPasswordClass
-        : GbxClass
+        : Node
     {
         public ulong[] Password { get; set; }
         public uint CRC { get; set; }
     }
 
     public class GbxPasswordClassParser
-        : GbxClassParser<GbxPasswordClass>
+        : ClassParser<GbxPasswordClass>
     {
         protected override int ChunkId => 0x03043029;
 
-        protected override GbxPasswordClass ParseChunkInternal(GbxReader reader)
+        protected override GbxPasswordClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxPasswordClass()
             {

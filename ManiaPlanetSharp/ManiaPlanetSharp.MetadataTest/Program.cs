@@ -40,7 +40,7 @@ namespace ManiaPlanetSharp.MetadataTest
                         try
                         {
 #endif
-                            var result = new GbxFileParser(stream).Parse();
+                            var result = new GameBoxFileParser(stream).Parse();
 
                             //Output all parsed data to the console
                             Console.WriteLine(new string('=', Console.WindowWidth / 2));

@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxMapCommunityClass
-        : GbxClass
+        : Node
     {
         public string XmlString { get; set; }
 
@@ -126,11 +126,11 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
     
     public class GbxMapCommunityClassParser
-        : GbxClassParser<GbxMapCommunityClass>
+        : ClassParser<GbxMapCommunityClass>
     {
         protected override int ChunkId => 0x3043005;
 
-        protected override GbxMapCommunityClass ParseChunkInternal(GbxReader reader)
+        protected override GbxMapCommunityClass ParseChunkInternal(GameBoxReader reader)
         {
             string xmlString = reader.ReadString();
             XmlSerializer serializer = new XmlSerializer(typeof(MapCommunityRoot));

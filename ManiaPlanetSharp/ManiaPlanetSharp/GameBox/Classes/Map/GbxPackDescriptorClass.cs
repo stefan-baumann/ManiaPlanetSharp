@@ -5,19 +5,19 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxPackDescriptorClass
-        : GbxClass
+        : Node
     {
         public string Text { get; set; }
-        public GbxFileReference PackDescriptor { get; set; }
-        public GbxFileReference ParentPackDescriptor { get; set; }
+        public FileReference PackDescriptor { get; set; }
+        public FileReference ParentPackDescriptor { get; set; }
     }
 
     public class GbxPackDescriptorClassParser
-        : GbxClassParser<GbxPackDescriptorClass>
+        : ClassParser<GbxPackDescriptorClass>
     {
         protected override int ChunkId => 0x03059002;
 
-        protected override GbxPackDescriptorClass ParseChunkInternal(GbxReader reader)
+        protected override GbxPackDescriptorClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxPackDescriptorClass()
             {

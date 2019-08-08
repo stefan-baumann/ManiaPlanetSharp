@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxCommonClass
-        : GbxClass
+        : Node
     {
         public byte Version { get; set; }
         public string MapUid { get; set; }
@@ -23,8 +23,8 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
         public string DecorationTimeOfDay { get; set; }
         public string DecorationEnvironment { get; set; }
         public string DecorationEnvironmentAuthor { get; set; }
-        public GbxVec2D MapOrigin { get; set; }
-        public GbxVec2D MapTarget { get; set; }
+        public Vector2D MapOrigin { get; set; }
+        public Vector2D MapTarget { get; set; }
         public string MapType { get; set; }
         public string MapStyle { get; set; }
         public ulong LightmapCacheUid { get; set; }
@@ -56,11 +56,11 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxCommonClassParser
-        : GbxClassParser<GbxCommonClass>
+        : ClassParser<GbxCommonClass>
     {
         protected override int ChunkId => 0x3043003;
 
-        protected override GbxCommonClass ParseChunkInternal(GbxReader reader)
+        protected override GbxCommonClass ParseChunkInternal(GameBoxReader reader)
         {
             GbxCommonClass common = new GbxCommonClass();
             common.Version = reader.ReadByte();

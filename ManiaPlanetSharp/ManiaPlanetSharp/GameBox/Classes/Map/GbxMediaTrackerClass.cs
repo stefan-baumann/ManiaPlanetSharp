@@ -5,19 +5,19 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxMediaTrackerClass
-        : GbxClass
+        : Node
     {
-        public GbxNode IntroClip { get; set; }
-        public GbxNode InGameClip { get; set; }
-        public GbxNode EndRaceClip { get; set; }
+        public Node IntroClip { get; set; }
+        public Node InGameClip { get; set; }
+        public Node EndRaceClip { get; set; }
     }
 
     public class GbxMediaTrackerClassParser
-        : GbxClassParser<GbxMediaTrackerClass>
+        : ClassParser<GbxMediaTrackerClass>
     {
         protected override int ChunkId => 0x03043021;
 
-        protected override GbxMediaTrackerClass ParseChunkInternal(GbxReader reader)
+        protected override GbxMediaTrackerClass ParseChunkInternal(GameBoxReader reader)
         {
             return new GbxMediaTrackerClass()
             {

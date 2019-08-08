@@ -29,7 +29,7 @@ namespace ManiaPlanetSharp.Utilities
 
 
 
-        public static string PrintNodeTree(GbxNode root)
+        public static string PrintNodeTree(Node root)
         {
             StringBuilder builder = new StringBuilder();
 
@@ -38,7 +38,7 @@ namespace ManiaPlanetSharp.Utilities
             return builder.ToString();
         }
 
-        private static void PrintNodeTreeRecursive(GbxNode node, StringBuilder builder, int level)
+        private static void PrintNodeTreeRecursive(Node node, StringBuilder builder, int level)
         {
             if (node == null) return;
             Type type = node.GetType();
@@ -46,10 +46,10 @@ namespace ManiaPlanetSharp.Utilities
 
             foreach (var property in type.GetTypeInfo().GetProperties())
             {
-                if (typeof(GbxNode).GetTypeInfo().IsAssignableFrom(property.PropertyType) && property.GetAccessors().Any(mi => mi.GetParameters().Length == 0))
+                if (typeof(Node).GetTypeInfo().IsAssignableFrom(property.PropertyType) && property.GetAccessors().Any(mi => mi.GetParameters().Length == 0))
                 {
                     builder.AppendLine(Indent("- " + property.Name, level + 1));
-                    PrintNodeTreeRecursive((GbxNode)property.GetValue(node), builder, level + 2);
+                    PrintNodeTreeRecursive((Node)property.GetValue(node), builder, level + 2);
                 }
                 else if (property.Name == "Data" || (property.Name == "Count" && (int)property.GetValue(node) == 0))
                 {
@@ -57,7 +57,7 @@ namespace ManiaPlanetSharp.Utilities
                 }
                 else if (property.Name == "Class")
                 {
-                    builder.AppendLine(Indent($"- {property.Name}: 0x{(uint)property.GetValue(node):X8}", level + 1));
+                    builder.AppendLine(Indent($"- {property.Name}: 0x{(uint)property.GetValue(node):X8} {KnownClassIds.GetClassName((uint)property.GetValue(node)) ?? ""}", level + 1));
                 }
                 else
                 {
@@ -70,10 +70,10 @@ namespace ManiaPlanetSharp.Utilities
 
             }
 
-            if (node.Count > 0 && !(node is GbxFile))
+            if (node.Count > 0 && !(node is GameBoxFile))
             {
                 //builder.AppendLine(Indent("--------------", level + 1));
-                foreach (GbxNode subnode in node)
+                foreach (Node subnode in node)
                 {
                     PrintNodeTreeRecursive(subnode, builder, level + 1);
                 }

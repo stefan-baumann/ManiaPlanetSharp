@@ -5,11 +5,11 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Collector
 {
     public class GbxCollectorDefaultSkinClass
-        : GbxClass
+        : Node
     {
         public GbxCollectorDefaultSkinClass() { }
 
-        [GbxAutoStringProperty(0, false)]
+        [AutoParserStringProperty(0, false)]
         public string DefaultSkinName { get; set; }
     }
 }

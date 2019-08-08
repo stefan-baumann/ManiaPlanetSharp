@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxCollectorListClass
-        : GbxClass
+        : Node
     {
         public int ArchiveCount { get => this.Archive?.Length ?? 0; }
         public CollectorStock[] Archive { get; set; }
@@ -20,11 +20,11 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxCollectorListClassParser
-        : GbxClassParser<GbxCollectorListClass>
+        : ClassParser<GbxCollectorListClass>
     {
         protected override int ChunkId => 0x0301B000;
 
-        protected override GbxCollectorListClass ParseChunkInternal(GbxReader reader)
+        protected override GbxCollectorListClass ParseChunkInternal(GameBoxReader reader)
         {
             GbxCollectorListClass collector = new GbxCollectorListClass() { Archive = new CollectorStock[reader.ReadUInt32()] };
             for (int i = 0; i < collector.ArchiveCount; i++)

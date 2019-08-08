@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxEmbeddedItemsClass
-        : GbxClass
+        : Node
     {
         public uint Version { get; set; }
         public uint Unknown { get; set; }
@@ -26,13 +26,13 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxEmbeddedItemsClassParser
-        : GbxClassParser<GbxEmbeddedItemsClass>
+        : ClassParser<GbxEmbeddedItemsClass>
     {
         protected override int ChunkId => 0x03043054;
 
         public override bool Skippable => true;
 
-        protected override GbxEmbeddedItemsClass ParseChunkInternal(GbxReader reader)
+        protected override GbxEmbeddedItemsClass ParseChunkInternal(GameBoxReader reader)
         {
             GbxEmbeddedItemsClass embeddedItems = new GbxEmbeddedItemsClass();
             embeddedItems.Version = reader.ReadUInt32();
@@ -49,7 +49,7 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
         protected GbxEmbeddedItem[] ParseItems(byte[] zipFile, int itemCount)
         {
             using (MemoryStream stream = new MemoryStream(zipFile))
-            using (GbxReader reader = new GbxReader(stream))
+            using (GameBoxReader reader = new GameBoxReader(stream))
             {
                 GbxEmbeddedItem[] items = new GbxEmbeddedItem[itemCount];
                 for (int i = 0; i < itemCount; i++)

@@ -5,13 +5,13 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Collector
 {
     public class GbxCollectorIconMetadataClass
-        : GbxClass
+        : Node
     {
         public GbxCollectorIconMetadataClass() { }
 
-        [GbxAutoProperty(0)]
+        [AutoParserProperty(0)]
         public bool UseAutoRenderedIcon { get; set; }
-        [GbxAutoProperty(1)]
+        [AutoParserProperty(1)]
         public uint QuarterRotationY { get; set; }
     }
 }

@@ -5,23 +5,23 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxGmCamArchiveClass
-        : GbxClass
+        : Node
     {
         public bool HasGmCamArchive { get; set; }
         public byte Unknown1 { get; set; }
-        public GbxVec3D[] Unknown2 { get; set; }
-        public GbxVec3D Unknown3 { get; set; }
+        public Vector3D[] Unknown2 { get; set; }
+        public Vector3D Unknown3 { get; set; }
         public float Unknown4 { get; set; }
         public float Unknown5 { get; set; }
         public float Unknown6 { get; set; }
     }
 
     public class GbxGmCamArchiveClassParser
-        : GbxClassParser<GbxGmCamArchiveClass>
+        : ClassParser<GbxGmCamArchiveClass>
     {
         protected override int ChunkId => 0x03043027;
 
-        protected override GbxGmCamArchiveClass ParseChunkInternal(GbxReader reader)
+        protected override GbxGmCamArchiveClass ParseChunkInternal(GameBoxReader reader)
         {
             if (reader.ReadBool())
             {

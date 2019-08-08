@@ -5,22 +5,22 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Collector
 {
     public class GbxCollectorCatalogClass
-        : GbxClass
+        : Node
     {
         public GbxCollectorCatalogClass()
         { }
 
-        [GbxAutoProperty(0)]
+        [AutoParserProperty(0)]
         public bool IsInternal { get; set; }
-        [GbxAutoProperty(1)]
+        [AutoParserProperty(1)]
         public uint Unused1 { get; set; }
-        [GbxAutoProperty(2)]
+        [AutoParserProperty(2)]
         public uint CatalogPosition { get; set; }
-        [GbxAutoProperty(3)]
+        [AutoParserProperty(3)]
         public uint Unused2 { get; set; }
-        [GbxAutoProperty(4)]
+        [AutoParserProperty(4)]
         public uint Unused3 { get; set; }
-        [GbxAutoProperty(5)]
+        [AutoParserProperty(5)]
         public uint Unused4 { get; set; }
     }
 }

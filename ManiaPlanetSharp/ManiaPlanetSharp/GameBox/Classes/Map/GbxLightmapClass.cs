@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxLightmapClass
-        : GbxClass
+        : Node
     {
         public bool Unknown { get; set; }
         public int Version { get; set; }
@@ -21,11 +21,11 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxLightmapClassParser
-        : GbxClassParser<GbxLightmapClass>
+        : ClassParser<GbxLightmapClass>
     {
         protected override int ChunkId => 0x0304303D;
 
-        protected override GbxLightmapClass ParseChunkInternal(GbxReader reader)
+        protected override GbxLightmapClass ParseChunkInternal(GameBoxReader reader)
         {
             //Something might be wrong here - check MT-Wiki for details
             GbxLightmapClass result = new GbxLightmapClass();

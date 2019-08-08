@@ -5,11 +5,11 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Collector
 {
     public class GbxCollectorDescriptionClass
-    : GbxClass
+    : Node
     {
         public GbxCollectorDescriptionClass() { }
 
-        [GbxAutoStringProperty(0, false)]
+        [AutoParserStringProperty(0, false)]
         public string Description { get; set; }
     }
 }

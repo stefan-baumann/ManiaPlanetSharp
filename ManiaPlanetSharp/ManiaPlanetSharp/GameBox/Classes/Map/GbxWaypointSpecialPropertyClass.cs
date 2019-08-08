@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxWaypointSpecialPropertyClass
-        : GbxClass
+        : Node
     {
         public uint Version { get; set; }
         public uint Spawn { get; set; }
@@ -14,11 +14,11 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     }
 
     public class GbxWaypointSpecialPropertyClassParser
-        : GbxClassParser<GbxWaypointSpecialPropertyClass>
+        : ClassParser<GbxWaypointSpecialPropertyClass>
     {
         protected override int ChunkId => 0x2E009000;
 
-        protected override GbxWaypointSpecialPropertyClass ParseChunkInternal(GbxReader reader)
+        protected override GbxWaypointSpecialPropertyClass ParseChunkInternal(GameBoxReader reader)
         {
             GbxWaypointSpecialPropertyClass waypoint = new GbxWaypointSpecialPropertyClass();
             waypoint.Version = reader.ReadUInt32();

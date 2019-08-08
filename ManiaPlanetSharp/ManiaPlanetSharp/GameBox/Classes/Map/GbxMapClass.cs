@@ -6,7 +6,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
     public class GbxMapClass
-        : GbxClass
+        : Node
     {
         public string Uid { get; set; }
         public string Environment { get; set; }
@@ -36,17 +36,17 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
 
         //Custom Blocks Only
         public string Author { get; set; }
-        public GbxNode Skin { get; set; }
+        public Node Skin { get; set; }
          
-        public GbxNode BlockParameters { get; set; }
+        public Node BlockParameters { get; set; }
     }
 
     public class GbxMapClassParser
-        : GbxClassParser<GbxMapClass>
+        : ClassParser<GbxMapClass>
     {
         protected override int ChunkId => 0x0304301F;
 
-        protected override GbxMapClass ParseChunkInternal(GbxReader reader)
+        protected override GbxMapClass ParseChunkInternal(GameBoxReader reader)
         {
             GbxMapClass map = new GbxMapClass();
 

@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Classes.Collector
 {
     public class GbxCollectorIcon
-        : GbxClass
+        : Node
     {
         public ushort Width { get; set; }
         public ushort Height { get; set; }
@@ -14,11 +14,11 @@ namespace ManiaPlanetSharp.GameBox.Classes.Collector
     }
 
     public class GbxCollectorIconParser
-        : GbxClassParser<GbxCollectorIcon>
+        : ClassParser<GbxCollectorIcon>
     {
         protected override int ChunkId => 0x2E001004;
 
-        protected override GbxCollectorIcon ParseChunkInternal(GbxReader chunk)
+        protected override GbxCollectorIcon ParseChunkInternal(GameBoxReader chunk)
         {
             var result = new GbxCollectorIcon()
             {
