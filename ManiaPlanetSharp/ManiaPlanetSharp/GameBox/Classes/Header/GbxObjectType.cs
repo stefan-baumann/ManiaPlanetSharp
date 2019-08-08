@@ -5,17 +5,17 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxObjectType
-        : GbxHeaderClass
+        : GbxClass
     {
         public uint ItemTypeId { get; set; }
     }
 
     public class GbxObjectTypeParser
-        : GbxHeaderClassParser<GbxObjectType>
+        : GbxClassParser<GbxObjectType>
     {
-        protected override int Chunk => 0x2E002000;
+        protected override int ChunkId => 0x2E002000;
 
-        public override GbxObjectType ParseChunk(GbxReader chunk)
+        protected override GbxObjectType ParseChunkInternal(GbxReader chunk)
         {
             return new GbxObjectType()
             {

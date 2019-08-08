@@ -9,18 +9,21 @@ namespace ManiaPlanetSharp.GameBox
     {
         bool CanParse(uint chunkId);
 
+        bool Skippable { get; }
+
         TChunk ParseChunk(GbxReader chunk);
     }
 
-    public interface IGbxHeaderClassParser<out TChunk>
+    /*public interface IGbxClassParser<out TChunk>
         : IGbxClassParser<TChunk>
         where TChunk : class
     { }
 
-    public interface IGbxBodyClassParser<out TChunk>
+    public interface IGbxClassParser<out TChunk>
         : IGbxClassParser<TChunk>
         where TChunk : class
     {
-        bool Skippable { get; }
-    }
+
+    }*/
 }
+ 

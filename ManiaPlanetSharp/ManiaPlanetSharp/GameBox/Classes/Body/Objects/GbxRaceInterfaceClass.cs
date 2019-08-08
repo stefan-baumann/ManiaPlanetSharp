@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxRaceInterfaceClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxRaceInterfaceClass() { }
 

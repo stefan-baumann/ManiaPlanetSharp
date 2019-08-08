@@ -94,7 +94,7 @@ namespace ManiaPlanetSharp.GameBox
                     return skipped;
                 }
             }
-            IGbxBodyClassParser<GbxBodyClass> parser = GbxBodyClassParser.GetParser(chunkId);
+            IGbxClassParser<GbxClass> parser = GbxBodyClassParser.GetParser(chunkId);
             if (parser != null)
             {
                 long startPosition = reader.Stream.Position;

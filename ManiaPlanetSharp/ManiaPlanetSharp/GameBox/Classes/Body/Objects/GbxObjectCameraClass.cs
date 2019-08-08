@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxObjectCameraClass
-    : GbxBodyClass
+    : GbxClass
     {
         public uint Version { get; set; }
         public uint CameraCount { get; set; }
@@ -13,9 +13,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxObjectCameraClassParser
-        : GbxBodyClassParser<GbxObjectCameraClass>
+        : GbxClassParser<GbxObjectCameraClass>
     {
-        protected override int Chunk => 0x2E002009;
+        protected override int ChunkId => 0x2E002009;
 
         protected override GbxObjectCameraClass ParseChunkInternal(GbxReader reader)
         {

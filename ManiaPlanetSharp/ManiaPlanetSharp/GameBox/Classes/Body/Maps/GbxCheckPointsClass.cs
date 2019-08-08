@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxCheckpointsClass
-        : GbxBodyClass
+        : GbxClass
     {
         public int CheckpointCount { get => this.Checkpoints?.Length ?? 0; }
         public Checkpoint[] Checkpoints { get; set; }
@@ -19,9 +19,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxCheckpointsClassParser
-        : GbxBodyClassParser<GbxCheckpointsClass>
+        : GbxClassParser<GbxCheckpointsClass>
     {
-        protected override int Chunk => 0x03043017;
+        protected override int ChunkId => 0x03043017;
 
         public override bool Skippable => true;
 

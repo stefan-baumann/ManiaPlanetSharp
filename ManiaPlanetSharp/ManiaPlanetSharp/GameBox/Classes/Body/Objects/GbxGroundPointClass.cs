@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxGroundPointClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxGroundPointClass() { }
 

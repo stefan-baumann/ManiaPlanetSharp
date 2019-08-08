@@ -5,16 +5,16 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxNadeoSkinFidsClass
-        : GbxBodyClass
+        : GbxClass
     {
         public uint NadeoSkinFidCount { get; set; }
         public GbxNode[] Fids { get; set; }
     }
 
     public class GbxNadeoSkinFidsClassParser
-        : GbxBodyClassParser<GbxNadeoSkinFidsClass>
+        : GbxClassParser<GbxNadeoSkinFidsClass>
     {
-        protected override int Chunk => 0x2E002008;
+        protected override int ChunkId => 0x2E002008;
 
         protected override GbxNadeoSkinFidsClass ParseChunkInternal(GbxReader reader)
         {

@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxGmCamArchiveClass
-        : GbxBodyClass
+        : GbxClass
     {
         public bool HasGmCamArchive { get; set; }
         public byte Unknown1 { get; set; }
@@ -17,9 +17,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxGmCamArchiveClassParser
-        : GbxBodyClassParser<GbxGmCamArchiveClass>
+        : GbxClassParser<GbxGmCamArchiveClass>
     {
-        protected override int Chunk => 0x03043027;
+        protected override int ChunkId => 0x03043027;
 
         protected override GbxGmCamArchiveClass ParseChunkInternal(GbxReader reader)
         {

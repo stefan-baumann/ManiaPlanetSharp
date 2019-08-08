@@ -5,11 +5,11 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxUnusedHeaderClass
-        : GbxHeaderClass
+        : GbxClass
     { }
 
     public class GbxUnusedHeaderClassParser
-        : GbxHeaderClassParser<GbxUnusedHeaderClass>
+        : GbxClassParser<GbxUnusedHeaderClass>
     {
         public GbxUnusedHeaderClassParser(int chunk, Action<GbxReader> parser)
         {
@@ -18,10 +18,10 @@ namespace ManiaPlanetSharp.GameBox
         }
 
         private int chunk;
-        protected override int Chunk => this.chunk;
+        protected override int ChunkId => this.chunk;
 
         private Action<GbxReader> parser;
-        public override GbxUnusedHeaderClass ParseChunk(GbxReader reader)
+        protected override GbxUnusedHeaderClass ParseChunkInternal(GbxReader reader)
         {
             this.parser(reader);
             return new GbxUnusedHeaderClass();

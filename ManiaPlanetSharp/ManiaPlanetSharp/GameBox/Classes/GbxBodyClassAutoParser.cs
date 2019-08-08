@@ -7,8 +7,8 @@ using System.Linq;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxBodyClassAutoParser<TBodyClass>
-        : GbxBodyClassParser<TBodyClass>
-        where TBodyClass : GbxBodyClass, new()
+        : GbxClassParser<TBodyClass>
+        where TBodyClass : GbxClass, new()
     {
         public GbxBodyClassAutoParser(int chunk)
         {
@@ -21,7 +21,7 @@ namespace ManiaPlanetSharp.GameBox
         }
 
         private readonly int chunk;
-        protected override int Chunk => this.chunk;
+        protected override int ChunkId => this.chunk;
 
         protected List<Field> Fields { get; private set; }
 

@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxLightmapClass
-        : GbxBodyClass
+        : GbxClass
     {
         public bool Unknown { get; set; }
         public int Version { get; set; }
@@ -21,9 +21,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxLightmapClassParser
-        : GbxBodyClassParser<GbxLightmapClass>
+        : GbxClassParser<GbxLightmapClass>
     {
-        protected override int Chunk => 0x0304303D;
+        protected override int ChunkId => 0x0304303D;
 
         protected override GbxLightmapClass ParseChunkInternal(GbxReader reader)
         {

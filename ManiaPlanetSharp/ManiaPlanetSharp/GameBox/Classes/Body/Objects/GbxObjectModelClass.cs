@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxObjectModelClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxObjectModelClass() { }
 
@@ -16,9 +16,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxObjectModelClassParser
-        : GbxBodyClassParser<GbxObjectModelClass>
+        : GbxClassParser<GbxObjectModelClass>
     {
-        protected override int Chunk => 0x2E002019;
+        protected override int ChunkId => 0x2E002019;
 
         protected override GbxObjectModelClass ParseChunkInternal(GbxReader reader)
         {

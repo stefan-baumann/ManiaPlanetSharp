@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxEmbeddedItemsClass
-        : GbxBodyClass
+        : GbxClass
     {
         public uint Version { get; set; }
         public uint Unknown { get; set; }
@@ -26,9 +26,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxEmbeddedItemsClassParser
-        : GbxBodyClassParser<GbxEmbeddedItemsClass>
+        : GbxClassParser<GbxEmbeddedItemsClass>
     {
-        protected override int Chunk => 0x03043054;
+        protected override int ChunkId => 0x03043054;
 
         public override bool Skippable => true;
 

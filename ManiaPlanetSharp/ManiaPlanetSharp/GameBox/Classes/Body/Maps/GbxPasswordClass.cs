@@ -5,16 +5,16 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxPasswordClass
-        : GbxBodyClass
+        : GbxClass
     {
         public ulong[] Password { get; set; }
         public uint CRC { get; set; }
     }
 
     public class GbxPasswordClassParser
-        : GbxBodyClassParser<GbxPasswordClass>
+        : GbxClassParser<GbxPasswordClass>
     {
-        protected override int Chunk => 0x03043029;
+        protected override int ChunkId => 0x03043029;
 
         protected override GbxPasswordClass ParseChunkInternal(GbxReader reader)
         {

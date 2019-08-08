@@ -7,18 +7,18 @@ using ManiaPlanetSharp.Utilities;
 
 namespace ManiaPlanetSharp.GameBox
 {
-    public /*abstract*/ class GbxBodyClass
+    public /*abstract*/ class GbxClass
         : GbxNode
     {
-        public GbxBodyClass()
+        public GbxClass()
         { }
     }
 
-    public abstract class GbxBodyClassParser<TBodyClass>
-        : IGbxBodyClassParser<TBodyClass>
-        where TBodyClass : GbxBodyClass, new()
+    public abstract class GbxClassParser<TBodyClass>
+        : IGbxClassParser<TBodyClass>
+        where TBodyClass : GbxClass, new()
     {
-        protected abstract int Chunk { get; }
+        protected abstract int ChunkId { get; }
 
         public virtual bool Skippable { get; } = false;
 
@@ -26,7 +26,7 @@ namespace ManiaPlanetSharp.GameBox
 
         public /*override*/ bool CanParse(uint chunkId)
         {
-            return chunkId == this.Chunk;
+            return chunkId == this.ChunkId;
         }
 
         public /*override*/ TBodyClass ParseChunk(GbxNode chunk)
@@ -60,7 +60,7 @@ namespace ManiaPlanetSharp.GameBox
 
     public static class GbxBodyClassParser
     {
-        private static IGbxBodyClassParser<GbxBodyClass>[] Parsers = new IGbxBodyClassParser<GbxBodyClass>[]
+        private static IGbxClassParser<GbxClass>[] Parsers = new IGbxClassParser<GbxClass>[]
         {
             new GbxVehicleClassParser(),
             new GbxChallengeParameterClassParser(),
@@ -180,7 +180,7 @@ namespace ManiaPlanetSharp.GameBox
             //0x2E007001 (Visual Model?)
         };
 
-        public static IGbxBodyClassParser<GbxBodyClass> GetParser(uint chunkId)
+        public static IGbxClassParser<GbxClass> GetParser(uint chunkId)
         {
             return GbxBodyClassParser.Parsers.FirstOrDefault(parser => parser.CanParse(chunkId));
         }

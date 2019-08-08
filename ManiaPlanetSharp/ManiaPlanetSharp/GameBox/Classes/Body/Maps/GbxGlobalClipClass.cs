@@ -5,15 +5,15 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxGlobalClipClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxNode GlobalClip { get; set; }
     }
 
     public class GbxGlobalClipClassParser
-        : GbxBodyClassParser<GbxGlobalClipClass>
+        : GbxClassParser<GbxGlobalClipClass>
     {
-        protected override int Chunk => 0x03043026;
+        protected override int ChunkId => 0x03043026;
 
         protected override GbxGlobalClipClass ParseChunkInternal(GbxReader reader)
         {

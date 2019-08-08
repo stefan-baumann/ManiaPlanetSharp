@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxTimeLimitClass
-        : GbxBodyClass
+        : GbxClass
     {
         [Obsolete("Raw Value, use GbxTimeLimitClass.TimeLimit instead", false)]
         public uint TimeLimitU { get; set; }
@@ -18,9 +18,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxTimeLimitClassParser
-        : GbxBodyClassParser<GbxTimeLimitClass>
+        : GbxClassParser<GbxTimeLimitClass>
     {
-        protected override int Chunk => 0x0305B008;
+        protected override int ChunkId => 0x0305B008;
 
         public override bool Skippable => true;
 

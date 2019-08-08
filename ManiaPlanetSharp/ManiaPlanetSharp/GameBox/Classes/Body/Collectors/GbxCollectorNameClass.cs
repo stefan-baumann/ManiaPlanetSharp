@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxCollectorNameClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxCollectorNameClass() { }
 

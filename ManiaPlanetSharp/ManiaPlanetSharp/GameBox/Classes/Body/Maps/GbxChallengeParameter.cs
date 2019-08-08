@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxChallengeParameterClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxNode CollectorList { get; set; }
         public GbxNode ChallengeParameters { get; set; }
@@ -17,9 +17,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxChallengeParameterClassParser
-        : GbxBodyClassParser<GbxChallengeParameterClass>
+        : GbxClassParser<GbxChallengeParameterClass>
     {
-        protected override int Chunk => 0x03043011;
+        protected override int ChunkId => 0x03043011;
 
         protected override GbxChallengeParameterClass ParseChunkInternal(GbxReader reader)
         {

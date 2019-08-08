@@ -6,7 +6,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxMapClass
-        : GbxBodyClass
+        : GbxClass
     {
         public string Uid { get; set; }
         public string Environment { get; set; }
@@ -42,9 +42,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxMapClassParser
-        : GbxBodyClassParser<GbxMapClass>
+        : GbxClassParser<GbxMapClass>
     {
-        protected override int Chunk => 0x0304301F;
+        protected override int ChunkId => 0x0304301F;
 
         protected override GbxMapClass ParseChunkInternal(GbxReader reader)
         {

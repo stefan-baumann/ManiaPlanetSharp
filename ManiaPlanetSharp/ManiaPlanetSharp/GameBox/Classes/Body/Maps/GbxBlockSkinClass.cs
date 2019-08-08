@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxBlockSkinClass
-        : GbxBodyClass
+        : GbxClass
     {
         public string Text { get; set; }
         public string Ignored { get; set; }
@@ -14,9 +14,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxBlockSkinClassParserA
-        : GbxBodyClassParser<GbxBlockSkinClass>
+        : GbxClassParser<GbxBlockSkinClass>
     {
-        protected override int Chunk => 0x03059000;
+        protected override int ChunkId => 0x03059000;
 
         protected override GbxBlockSkinClass ParseChunkInternal(GbxReader reader)
         {
@@ -29,9 +29,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxBlockSkinClassParserB
-        : GbxBodyClassParser<GbxBlockSkinClass>
+        : GbxClassParser<GbxBlockSkinClass>
     {
-        protected override int Chunk => 0x03059001;
+        protected override int ChunkId => 0x03059001;
 
         protected override GbxBlockSkinClass ParseChunkInternal(GbxReader reader)
         {
@@ -44,9 +44,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxBlockSkinClassParserC
-        : GbxBodyClassParser<GbxBlockSkinClass>
+        : GbxClassParser<GbxBlockSkinClass>
     {
-        protected override int Chunk => 0x03059002;
+        protected override int ChunkId => 0x03059002;
 
         protected override GbxBlockSkinClass ParseChunkInternal(GbxReader reader)
         {

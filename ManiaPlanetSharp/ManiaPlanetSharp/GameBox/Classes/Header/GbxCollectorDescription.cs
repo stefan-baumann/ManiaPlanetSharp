@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxCollectorDescription
-        : GbxHeaderClass
+        : GbxClass
     {
         public string Name { get; set; }
         public string Collection { get; set; }
@@ -24,11 +24,11 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxCollectorDescriptionParser
-        : GbxHeaderClassParser<GbxCollectorDescription>
+        : GbxClassParser<GbxCollectorDescription>
     {
-        protected override int Chunk => 0x2E001003;
+        protected override int ChunkId => 0x2E001003;
 
-        public override GbxCollectorDescription ParseChunk(GbxReader chunk)
+        protected override GbxCollectorDescription ParseChunkInternal(GbxReader chunk)
         {
             var result = new GbxCollectorDescription();
             result.Name = chunk.ReadLookbackString();

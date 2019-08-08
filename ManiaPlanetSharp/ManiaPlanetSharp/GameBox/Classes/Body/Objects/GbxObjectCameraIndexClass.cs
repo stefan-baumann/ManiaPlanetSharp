@@ -5,15 +5,15 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxObjectCameraIndexClass
-    : GbxBodyClass
+    : GbxClass
     {
         public uint DefaultCameraIndex { get; set; }
     }
 
     public class GbxObjectCameraIndexClassParser
-        : GbxBodyClassParser<GbxObjectCameraIndexClass>
+        : GbxClassParser<GbxObjectCameraIndexClass>
     {
-        protected override int Chunk => 0x2E002006;
+        protected override int ChunkId => 0x2E002006;
 
         protected override GbxObjectCameraIndexClass ParseChunkInternal(GbxReader reader)
         {

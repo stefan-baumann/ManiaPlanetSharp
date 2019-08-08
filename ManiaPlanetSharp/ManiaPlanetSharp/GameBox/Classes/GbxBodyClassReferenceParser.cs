@@ -5,19 +5,19 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxBodyClassReferenceParser<TReferenceClass>
-        : GbxBodyClassParser<TReferenceClass>
-        where TReferenceClass : GbxBodyClass, new()
+        : GbxClassParser<TReferenceClass>
+        where TReferenceClass : GbxClass, new()
     {
-        public GbxBodyClassReferenceParser(int chunk, GbxBodyClassParser<TReferenceClass> parser)
+        public GbxBodyClassReferenceParser(int chunk, GbxClassParser<TReferenceClass> parser)
         {
             this.chunk = chunk;
             this.Parser = parser;
         }
 
         private int chunk;
-        protected override int Chunk => this.chunk;
+        protected override int ChunkId => this.chunk;
 
-        protected GbxBodyClassParser<TReferenceClass> Parser { get; private set; }
+        protected GbxClassParser<TReferenceClass> Parser { get; private set; }
 
         protected override TReferenceClass ParseChunkInternal(GbxReader reader)
         {

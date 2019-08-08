@@ -5,11 +5,11 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxUnusedBodyClass
-        : GbxBodyClass
+        : GbxClass
     { }
 
     public class GbxUnusedBodyClassParser
-        : GbxBodyClassParser<GbxUnusedBodyClass>
+        : GbxClassParser<GbxUnusedBodyClass>
     {
         public GbxUnusedBodyClassParser(int chunk, Action<GbxReader> parser)
             : this(chunk, false, parser)
@@ -23,7 +23,7 @@ namespace ManiaPlanetSharp.GameBox
         }
 
         private int chunk;
-        protected override int Chunk => this.chunk;
+        protected override int ChunkId => this.chunk;
 
         private bool skippable = false;
         public override bool Skippable => this.skippable;

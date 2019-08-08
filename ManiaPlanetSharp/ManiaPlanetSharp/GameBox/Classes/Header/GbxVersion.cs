@@ -5,17 +5,17 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxVersionClass
-        : GbxHeaderClass
+        : GbxClass
     {
         public uint Version { get; set; }
     }
 
     public class GbxVersionClassParser
-        : GbxHeaderClassParser<GbxVersionClass>
+        : GbxClassParser<GbxVersionClass>
     {
-        protected override int Chunk => 0x3043004;
+        protected override int ChunkId => 0x3043004;
 
-        public override GbxVersionClass ParseChunk(GbxReader reader)
+        protected override GbxVersionClass ParseChunkInternal(GbxReader reader)
         {
             return new GbxVersionClass() { Version = reader.ReadUInt32() };
         }

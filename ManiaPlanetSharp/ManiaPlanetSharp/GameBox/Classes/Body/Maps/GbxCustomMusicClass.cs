@@ -5,15 +5,15 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxCustomMusicClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxFileReference CustomMusic { get; set; }
     }
 
     public class GbxCustomMusicClassParser
-        : GbxBodyClassParser<GbxCustomMusicClass>
+        : GbxClassParser<GbxCustomMusicClass>
     {
-        protected override int Chunk => 0x03043024;
+        protected override int ChunkId => 0x03043024;
 
         protected override GbxCustomMusicClass ParseChunkInternal(GbxReader reader)
         {

@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxAuthorClass
-        : GbxHeaderClass
+        : GbxClass
     {
         public uint Version { get; set; }
         public uint AuthorVersion { get; set; }
@@ -16,11 +16,11 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxAuthorClassParser
-        : GbxHeaderClassParser<GbxAuthorClass>
+        : GbxClassParser<GbxAuthorClass>
     {
-        protected override int Chunk => 0x3043008;
+        protected override int ChunkId => 0x3043008;
 
-        public override GbxAuthorClass ParseChunk(GbxReader reader)
+        protected override GbxAuthorClass ParseChunkInternal(GbxReader reader)
         {
             return new GbxAuthorClass()
             {

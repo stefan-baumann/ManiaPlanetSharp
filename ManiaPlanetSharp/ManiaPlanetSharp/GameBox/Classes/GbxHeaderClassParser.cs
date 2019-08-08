@@ -6,27 +6,27 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox
 {
-    public abstract class GbxHeaderClass
+    /*public abstract class GbxClass
         : GbxNode
     { }
 
-    public abstract class GbxHeaderClassParser<THeaderClass>
+    public abstract class GbxClassParser<THeaderClass>
         : IGbxHeaderClassParser<THeaderClass>
         where THeaderClass : GbxHeaderClass, new()
     {
-        protected abstract int Chunk { get; }
+        protected abstract int ChunkId { get; }
         
-        public /*override*/ bool CanParse(uint chunkId)
+        public bool CanParse(uint chunkId)
         {
-            return chunkId == this.Chunk;
+            return chunkId == this.ChunkId;
         }
 
-        public abstract THeaderClass ParseChunk(GbxReader chunk);
-    }
+        public abstract THeaderClass ParseChunkInternal(GbxReader reader);
+    }*/
 
     public static class GbxHeaderClassParser
     {
-        private static IGbxHeaderClassParser<GbxHeaderClass>[] Parsers = new IGbxHeaderClassParser<GbxHeaderClass>[]
+        private static IGbxClassParser<GbxClass>[] Parsers = new IGbxClassParser<GbxClass>[]
         {
             //Map
             new GbxTmDescriptionClassParser(),
@@ -46,7 +46,7 @@ namespace ManiaPlanetSharp.GameBox
             new GbxLightmapCacheIdParser(),
         };
 
-        public static IGbxHeaderClassParser<GbxHeaderClass> GetParser(uint chunkId)
+        public static IGbxClassParser<GbxClass> GetParser(uint chunkId)
         {
             return GbxHeaderClassParser.Parsers.FirstOrDefault(parser => parser.CanParse(chunkId));
         }

@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxReplayBasicMetadataClass
-        : GbxBodyClass
+        : GbxClass
     {
         public int Version { get; set; }
         public string MapUid { get; set; }
@@ -20,9 +20,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxReplayBasicMetadataClassParser
-        : GbxBodyClassParser<GbxReplayBasicMetadataClass>
+        : GbxClassParser<GbxReplayBasicMetadataClass>
     {
-        protected override int Chunk => 0x03093000;
+        protected override int ChunkId => 0x03093000;
 
         protected override GbxReplayBasicMetadataClass ParseChunkInternal(GbxReader reader)
         {

@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxThumbnailClass
-        : GbxHeaderClass
+        : GbxClass
     {
         public uint Version { get; set; }
         public byte[] ThumbnailData { get; set; }
@@ -13,11 +13,11 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxThumbnailClassParser
-        : GbxHeaderClassParser<GbxThumbnailClass>
+        : GbxClassParser<GbxThumbnailClass>
     {
-        protected override int Chunk => 0x3043007;
+        protected override int ChunkId => 0x3043007;
 
-        public override GbxThumbnailClass ParseChunk(GbxReader reader)
+        protected override GbxThumbnailClass ParseChunkInternal(GbxReader reader)
         {
             GbxThumbnailClass thumbnail = new GbxThumbnailClass();
             thumbnail.Version = reader.ReadUInt32();

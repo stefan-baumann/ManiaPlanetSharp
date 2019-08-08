@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxIcon
-        : GbxHeaderClass
+        : GbxClass
     {
         public ushort Width { get; set; }
         public ushort Height { get; set; }
@@ -14,11 +14,11 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxIconParser
-        : GbxHeaderClassParser<GbxIcon>
+        : GbxClassParser<GbxIcon>
     {
-        protected override int Chunk => 0x2E001004;
+        protected override int ChunkId => 0x2E001004;
 
-        public override GbxIcon ParseChunk(GbxReader chunk)
+        protected override GbxIcon ParseChunkInternal(GbxReader chunk)
         {
             var result = new GbxIcon()
             {

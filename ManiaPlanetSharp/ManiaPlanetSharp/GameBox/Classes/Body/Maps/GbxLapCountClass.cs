@@ -5,16 +5,16 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxLapCountClass
-        : GbxBodyClass
+        : GbxClass
     {
         public bool Unused { get; set; }
         public int LapCount { get; set; }
     }
 
     public class GbxLapCountClassParser
-        : GbxBodyClassParser<GbxLapCountClass>
+        : GbxClassParser<GbxLapCountClass>
     {
-        protected override int Chunk => 0x03043018;
+        protected override int ChunkId => 0x03043018;
 
         public override bool Skippable => true;
 

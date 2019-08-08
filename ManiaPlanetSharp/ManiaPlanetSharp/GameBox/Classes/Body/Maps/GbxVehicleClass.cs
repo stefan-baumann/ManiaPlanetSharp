@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxVehicleClass
-        : GbxBodyClass
+        : GbxClass
     {
         public uint Version { get; set; }
         public string Name { get; set; }
@@ -14,9 +14,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxVehicleClassParser
-        : GbxBodyClassParser<GbxVehicleClass>
+        : GbxClassParser<GbxVehicleClass>
     {
-        protected override int Chunk => 0x0304300D;
+        protected override int ChunkId => 0x0304300D;
 
         protected override GbxVehicleClass ParseChunkInternal(GbxReader reader)
         {

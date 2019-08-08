@@ -5,15 +5,15 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxReplayCommunityClass
-        : GbxBodyClass
+        : GbxClass
     {
         public string XmlString { get; set; }
     }
 
     public class GbxReplayCommunityClassParser
-        : GbxBodyClassParser<GbxReplayCommunityClass>
+        : GbxClassParser<GbxReplayCommunityClass>
     {
-        protected override int Chunk => 0x03093001;
+        protected override int ChunkId => 0x03093001;
 
         protected override GbxReplayCommunityClass ParseChunkInternal(GbxReader reader)
         {

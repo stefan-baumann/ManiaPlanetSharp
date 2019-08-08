@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxStemMaterialClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxStemMaterialClass() { }
 

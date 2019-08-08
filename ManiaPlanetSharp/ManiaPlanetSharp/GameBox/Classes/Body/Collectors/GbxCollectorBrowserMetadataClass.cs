@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxCollectorBrowserMetadataClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxCollectorBrowserMetadataClass()
         { }
@@ -17,9 +17,9 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxCollectorBrowserMetadataClassParser
-        : GbxBodyClassParser<GbxCollectorBrowserMetadataClass>
+        : GbxClassParser<GbxCollectorBrowserMetadataClass>
     {
-        protected override int Chunk => 0x2E001009;
+        protected override int ChunkId => 0x2E001009;
 
         protected override GbxCollectorBrowserMetadataClass ParseChunkInternal(GbxReader reader)
         {

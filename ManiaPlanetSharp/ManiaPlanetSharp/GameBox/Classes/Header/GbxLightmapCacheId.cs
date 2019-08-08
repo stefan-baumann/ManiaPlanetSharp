@@ -5,17 +5,17 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxLightmapCacheId
-        : GbxHeaderClass
+        : GbxClass
     {
         public ulong FileTime { get; set; }
     }
 
     public class GbxLightmapCacheIdParser
-        : GbxHeaderClassParser<GbxLightmapCacheId>
+        : GbxClassParser<GbxLightmapCacheId>
     {
-        protected override int Chunk => 0x2E001006;
+        protected override int ChunkId => 0x2E001006;
 
-        public override GbxLightmapCacheId ParseChunk(GbxReader chunk)
+        protected override GbxLightmapCacheId ParseChunkInternal(GbxReader chunk)
         {
             return new GbxLightmapCacheId()
             {

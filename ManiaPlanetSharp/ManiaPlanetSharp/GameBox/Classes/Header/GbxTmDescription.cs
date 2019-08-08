@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     public class GbxTmDescriptionClass
-        : GbxHeaderClass
+        : GbxClass
     {
         public byte Version { get; set; }
 
@@ -55,11 +55,11 @@ namespace ManiaPlanetSharp.GameBox
     }
 
     public class GbxTmDescriptionClassParser
-        : GbxHeaderClassParser<GbxTmDescriptionClass>
+        : GbxClassParser<GbxTmDescriptionClass>
     {
-        protected override int Chunk => 0x3043002;
+        protected override int ChunkId => 0x3043002;
 
-        public override GbxTmDescriptionClass ParseChunk(GbxReader reader)
+        protected override GbxTmDescriptionClass ParseChunkInternal(GbxReader reader)
         {
             GbxTmDescriptionClass description = new GbxTmDescriptionClass();
             description.Version = reader.ReadByte();

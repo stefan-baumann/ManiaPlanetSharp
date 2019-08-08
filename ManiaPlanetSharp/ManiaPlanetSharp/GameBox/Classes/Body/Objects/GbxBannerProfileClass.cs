@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox
 {
     class GbxBannerProfileClass
-        : GbxBodyClass
+        : GbxClass
     {
         public GbxBannerProfileClass() { }
 
