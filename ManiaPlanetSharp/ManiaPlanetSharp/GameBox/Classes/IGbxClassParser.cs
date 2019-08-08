@@ -13,17 +13,5 @@ namespace ManiaPlanetSharp.GameBox
 
         TChunk ParseChunk(GbxReader chunk);
     }
-
-    /*public interface IGbxClassParser<out TChunk>
-        : IGbxClassParser<TChunk>
-        where TChunk : class
-    { }
-
-    public interface IGbxClassParser<out TChunk>
-        : IGbxClassParser<TChunk>
-        where TChunk : class
-    {
-
-    }*/
 }
  

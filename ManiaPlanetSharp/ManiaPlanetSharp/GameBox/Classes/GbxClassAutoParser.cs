@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace ManiaPlanetSharp.GameBox
 {
-    public class GbxBodyClassAutoParser<TBodyClass>
+    public class GbxClassAutoParser<TBodyClass>
         : GbxClassParser<TBodyClass>
         where TBodyClass : GbxClass, new()
     {
-        public GbxBodyClassAutoParser(int chunk)
+        public GbxClassAutoParser(int chunk)
         {
             this.chunk = chunk;
             this.Fields = typeof(TBodyClass).GetRuntimeProperties()

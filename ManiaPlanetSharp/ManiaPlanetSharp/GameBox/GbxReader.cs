@@ -118,20 +118,20 @@ namespace ManiaPlanetSharp.GameBox
             return Encoding.UTF8.GetString(data);
         }
 
-        private uint? LbsVersion { get; set; }
-        private List<string> LbsStrings { get; set; } = new List<string>();
+        private uint? LookbackStringVersion { get; set; }
+        private List<string> LookbackStrings { get; set; } = new List<string>();
         public string ReadLookbackString()
         {
-            if (LbsVersion == null)
+            if (LookbackStringVersion == null)
             {
-                this.LbsVersion = this.ReadUInt32();
+                this.LookbackStringVersion = this.ReadUInt32();
             }
 
             uint index = this.ReadUInt32();
             if (((index & 0xc0000000) != 0 && (index & 0x3fffffff) == 0) || index == 0 /*|| (index & 0xc0000000) == 0*/)
             {
                 string newString = this.ReadString();
-                LbsStrings.Add(newString);
+                LookbackStrings.Add(newString);
                 return newString;
             }
             if (index == uint.MaxValue) //?
@@ -191,20 +191,20 @@ namespace ManiaPlanetSharp.GameBox
             }
 
             int storedIndex = (int)(index & 0x3fffffff);
-            if (storedIndex > this.LbsStrings.Count)
+            if (storedIndex > this.LookbackStrings.Count)
             {
                 Debug.WriteLine($"Lookback String with Index {storedIndex} (0x{storedIndex:X8}) could not be found.");
                 return string.Empty;
             }
             else
             {
-                return this.LbsStrings[storedIndex - 1];
+                return this.LookbackStrings[storedIndex - 1];
             }
         }
 
         public void ResetLocalLbsStrings()
         {
-            this.LbsStrings.Clear();
+            this.LookbackStrings.Clear();
         }
 
         public GbxFileReference ReadFileReference()
