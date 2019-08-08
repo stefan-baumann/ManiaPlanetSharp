@@ -8,6 +8,7 @@ using ManiaPlanetSharp.GameBox.Classes.Ghost;
 using ManiaPlanetSharp.GameBox.Classes.Map;
 using ManiaPlanetSharp.GameBox.Classes.Object;
 using ManiaPlanetSharp.GameBox.Classes.Replay;
+using ManiaPlanetSharp.GameBox.Classes.Various;
 using ManiaPlanetSharp.Utilities;
 
 namespace ManiaPlanetSharp.GameBox
@@ -208,6 +209,17 @@ namespace ManiaPlanetSharp.GameBox
             new UnusedClassParser(0x03092018, reader => Utils.Repeat(reader.ReadLookbackString, 3)),
 
             //Other
+            new DecorationMoodRemappingParser(),
+            new UnusedClassParser(0x03038001, reader =>
+            {
+                var version = reader.ReadByte();
+                var b = reader.ReadUInt32();
+            }),
+            new CollectionDescriptionParser(),
+            new CollectionFoldersParser(),
+            new AutoClassParser<CollectionMenuIconFolder>(0x03033003),
+            new GameSkinParser(),
+            new AutoClassParser<PlayerProfile>(0x0308C000),
             //0x2E006001 (Physical Model?)
             //0x2E007001 (Visual Model?)
         };
