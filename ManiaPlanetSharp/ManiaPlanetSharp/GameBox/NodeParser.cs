@@ -114,21 +114,25 @@ namespace ManiaPlanetSharp.GameBox
                     }
                 }
 
+#if !DEBUG
                 try
                 {
+#endif
                     Node parsed = parser.ParseChunk(reader);
                     long endPosition = reader.Stream.Position;
                     parsed.Class = chunkId;
                     reader.Stream.Position = startPosition;
                     parsed.Data = reader.ReadRaw((int)(endPosition - startPosition));
                     return parsed;
+#if !DEBUG
                 }
                 catch (Exception ex)
                 {
                     Debug.WriteLine($"[!] Internal Exception of type {ex.GetType()} while parsing chunk {chunkId:X8} with {parser.GetType()}. Terminating parsing.");
                     return null;
                 }
-            }
+#endif
+                }
             else if (this.TrySkipChunk(reader, out Node skipped))
             {
                 skipped.Class = chunkId;

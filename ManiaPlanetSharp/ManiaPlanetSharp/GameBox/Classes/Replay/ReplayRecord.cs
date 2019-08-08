@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Classes.Replay
 {
-    public class ReplayBasicMetadata
+    public class ReplayRecord
         : Node
     {
         public int Version { get; set; }
@@ -19,14 +19,14 @@ namespace ManiaPlanetSharp.GameBox.Classes.Replay
         public string TitleUid { get; set; }
     }
 
-    public class ReplayBasicMetadataParser
-        : ClassParser<ReplayBasicMetadata>
+    public class ReplayRecordParser
+        : ClassParser<ReplayRecord>
     {
         protected override int ChunkId => 0x03093000;
 
-        protected override ReplayBasicMetadata ParseChunkInternal(GameBoxReader reader)
+        protected override ReplayRecord ParseChunkInternal(GameBoxReader reader)
         {
-            var result = new ReplayBasicMetadata();
+            var result = new ReplayRecord();
             result.Version = (int)reader.ReadUInt32();
             if (result.Version >= 2)
             {

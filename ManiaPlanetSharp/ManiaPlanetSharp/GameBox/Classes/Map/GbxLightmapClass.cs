@@ -25,6 +25,8 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     {
         protected override int ChunkId => 0x0304303D;
 
+        public override bool Skippable => true;
+
         protected override GbxLightmapClass ParseChunkInternal(GameBoxReader reader)
         {
             //Something might be wrong here - check MT-Wiki for details

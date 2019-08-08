@@ -7,9 +7,6 @@ namespace ManiaPlanetSharp.GameBox.Classes.Collector
     public class GbxCollectorBrowserMetadataClass
         : Node
     {
-        public GbxCollectorBrowserMetadataClass()
-        { }
-
         public string PagePath { get; set; }
         public bool HasIconFid { get; set; }
         public FileReference Icon { get; set; } //Potentially a NodeRef

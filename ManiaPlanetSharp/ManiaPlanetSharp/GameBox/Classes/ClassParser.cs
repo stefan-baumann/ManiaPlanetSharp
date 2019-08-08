@@ -126,7 +126,7 @@ namespace ManiaPlanetSharp.GameBox
             //new GbxUnusedBodyClassParser(0x, true, reader => {
             //
             //}),
-            new GbxLightmapClassParser(),
+            //new GbxLightmapClassParser(), //Not working properly yet
             //0x03043044 (ManiaScript)
             //0x21080001 (Virtual Skipper metadata)
             new GbxBlockSkinClassParserA(),
@@ -171,8 +171,11 @@ namespace ManiaPlanetSharp.GameBox
 
             //Replay
             new ReplayEmbeddedMapParser(),
-            new ReplayBasicMetadataParser(),
+            new ReplayRecordParser(),
             new ReplayCommunityParser(), //Implement XML parsing
+            new UnusedClassParser(0x03093007, true, reader => reader.ReadUInt32()),
+            new AutoClassParser<ReplayGhosts>(0x03093014),
+            new UnusedClassParser(0x03093015, reader => reader.ReadNodeReference()),
 
             //Other
             //0x2E006001 (Physical Model?)
@@ -202,6 +205,9 @@ namespace ManiaPlanetSharp.GameBox
             new GbxCollectorMainDescriptionClassParser(),
             new GbxCollectorIconParser(),
             new GbxCollectorLightmapCacheIdParser(),
+
+            //Replay
+            new AutoClassParser<ReplayMapAuthor>(0x03093002),
         };
 
         public static IClassParser<Node> GetHeaderClassParser(uint chunkId)
