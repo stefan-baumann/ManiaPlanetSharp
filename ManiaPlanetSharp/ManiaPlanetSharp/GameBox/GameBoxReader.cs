@@ -138,7 +138,7 @@ namespace ManiaPlanetSharp.GameBox
             {
                 return string.Empty;
             }
-            if ((index & 0x3fffffffU) == index)
+            if ((index & 0x3fffffff) == index)
             {
                 switch (index)
                 {

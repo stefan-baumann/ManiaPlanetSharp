@@ -251,6 +251,7 @@ namespace ManiaPlanetSharp.GameBox
 
             //Replay
             new AutoClassParser<ReplayMapAuthor>(0x03093002),
+            new ReplayCommunityParser(),
         };
 
         public static IClassParser<Node> GetHeaderClassParser(uint chunkId)
