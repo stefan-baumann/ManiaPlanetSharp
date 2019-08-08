@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace ManiaPlanetSharp.GameBox.Classes.Object
+{
+    public class GbxObjectUsabilityClass
+        : GbxClass
+    {
+        public GbxObjectUsabilityClass() { }
+
+        [GbxAutoProperty(0)]
+        public int Version { get; set; }
+        [GbxAutoProperty(1)]
+        public bool IsUsable { get; set; }
+    }
+}
