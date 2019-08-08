@@ -10,7 +10,7 @@ namespace ManiaPlanetSharp.GameBox.Classes.Collector
         public ulong FileTime { get; set; }
     }
 
-    public class GbxLightmapCacheIdParser
+    public class GbxCollectorLightmapCacheIdParser
         : GbxClassParser<GbxCollectorLightmapCacheIdClass>
     {
         protected override int ChunkId => 0x2E001006;

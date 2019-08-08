@@ -101,7 +101,7 @@ namespace ManiaPlanetSharp.GameBox
                 {
                     byte[] data = reader.ReadRaw(chunk.Value);
                     Debug.WriteLine($"Starting parsing of header chunk with id 0x{chunk.Key:X8}");
-                    var parser = GbxHeaderClassParser.GetParser(chunk.Key);
+                    var parser = GbxClassParser.GetHeaderClassParser(chunk.Key);
                     if (parser != null)
                     {
                         using (MemoryStream stream = new MemoryStream(data))

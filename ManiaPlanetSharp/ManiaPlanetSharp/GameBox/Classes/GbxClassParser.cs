@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using ManiaPlanetSharp.GameBox.Classes.Collector;
+using ManiaPlanetSharp.GameBox.Classes.Map;
+using ManiaPlanetSharp.GameBox.Classes.Object;
+using ManiaPlanetSharp.GameBox.Classes.Replay;
 using ManiaPlanetSharp.Utilities;
 
 namespace ManiaPlanetSharp.GameBox
@@ -12,6 +16,16 @@ namespace ManiaPlanetSharp.GameBox
     {
         public GbxClass()
         { }
+    }
+
+    public interface IGbxClassParser<out TChunk>
+    where TChunk : class
+    {
+        bool CanParse(uint chunkId);
+
+        bool Skippable { get; }
+
+        TChunk ParseChunk(GbxReader chunk);
     }
 
     public abstract class GbxClassParser<TBodyClass>
@@ -51,8 +65,9 @@ namespace ManiaPlanetSharp.GameBox
 
     public static class GbxClassParser
     {
-        private static IGbxClassParser<GbxClass>[] Parsers = new IGbxClassParser<GbxClass>[]
+        private static IGbxClassParser<GbxClass>[] BodyClassParsers = new IGbxClassParser<GbxClass>[]
         {
+            //Maps
             new GbxVehicleClassParser(),
             new GbxChallengeParameterClassParser(),
             new GbxUnusedClassParser(0x03043012, reader => reader.ReadString()),
@@ -171,9 +186,34 @@ namespace ManiaPlanetSharp.GameBox
             //0x2E007001 (Visual Model?)
         };
 
-        public static IGbxClassParser<GbxClass> GetParser(uint chunkId)
+        public static IGbxClassParser<GbxClass> GetBodyClassParser(uint chunkId)
         {
-            return GbxClassParser.Parsers.FirstOrDefault(parser => parser.CanParse(chunkId));
+            return GbxClassParser.BodyClassParsers.FirstOrDefault(parser => parser.CanParse(chunkId));
+        }
+        
+        private static IGbxClassParser<GbxClass>[] HeaderClassParsers = new IGbxClassParser<GbxClass>[]
+        {
+            //Map
+            new GbxTmDescriptionClassParser(),
+            new GbxCommonClassParser(),
+            new GbxVersionClassParser(),
+            new GbxMapCommunityClassParser(),
+            new GbxThumbnailClassParser(),
+            new GbxAuthorClassParser(),
+
+            //Object
+            new GbxObjectTypeParser(),
+            new GbxUnusedClassParser(0x2E002001, reader => reader.ReadUInt32()),
+
+            //Collector
+            new GbxCollectorMainDescriptionClassParser(),
+            new GbxCollectorIconParser(),
+            new GbxCollectorLightmapCacheIdParser(),
+        };
+
+        public static IGbxClassParser<GbxClass> GetHeaderClassParser(uint chunkId)
+        {
+            return GbxClassParser.HeaderClassParsers.FirstOrDefault(parser => parser.CanParse(chunkId));
         }
     }
 }
