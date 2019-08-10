@@ -134,6 +134,8 @@ namespace ManiaPlanetSharp.GameBox
             new GbxBlockSkinClassParserA(),
             new GbxBlockSkinClassParserB(),
             new GbxBlockSkinClassParserC(),
+            new UnusedClassParser(0x03043034, reader => reader.ReadUInt32()), //Unknown, 0
+            new UnusedClassParser(0x03043038, reader => reader.ReadUInt32()), //Unknown, 0
 
 
 
