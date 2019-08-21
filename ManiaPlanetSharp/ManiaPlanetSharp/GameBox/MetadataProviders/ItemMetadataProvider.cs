@@ -26,7 +26,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         public ObjectType? Type => this.GetHeaderNode<ObjectTypeInfo>()?.ObjectType;
         public string Path => this.GetHeaderNode<GbxCollectorMainDescriptionClass>()?.Path ?? this.GetBodyNode<GbxCollectorBrowserMetadataClass>()?.PagePath;
         public ProductState? ProductState => this.GetHeaderNode<GbxCollectorMainDescriptionClass>()?.ProductState;
-        public byte[] Icon => this.GetBodyNode<GbxCollectorIcon>()?.IconData;
+        public byte[] Icon => this.GetHeaderNode<GbxCollectorIcon>()?.IconData;
         public bool? UseAutoRenderedIcon => this.GetBodyNode<GbxCollectorIconMetadataClass>()?.UseAutoRenderedIcon;
         public uint? IconQuarterRotations => this.GetBodyNode<GbxCollectorIconMetadataClass>()?.QuarterRotationY;
         public Vector3D? GroundPoint => this.GetBodyNode<ObjectGroundPoint>()?.GroundPoint;
