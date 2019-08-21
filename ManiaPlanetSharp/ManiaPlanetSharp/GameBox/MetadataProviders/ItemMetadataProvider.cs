@@ -47,7 +47,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             }
 
             byte[] aligned = new byte[this.IconSize.Value.Width * this.IconSize.Value.Height * 4];
-            for (int i = 0; i < aligned.Length - 3; i += 4)
+            for (int i = 0; i < this.IconData.Length - 3; i += 4)
             {
                 aligned[i] = this.IconData[i + 3];
                 aligned[i + 1] = this.IconData[i];
