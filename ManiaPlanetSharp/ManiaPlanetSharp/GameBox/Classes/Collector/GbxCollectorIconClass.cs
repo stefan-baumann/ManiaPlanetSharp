@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Classes.Collector
@@ -9,6 +10,7 @@ namespace ManiaPlanetSharp.GameBox.Classes.Collector
     {
         public ushort Width { get; set; }
         public ushort Height { get; set; }
+        public Size Size => new Size(this.Width, this.Height);
         public byte Unused { get; set; }
         public byte[] IconData { get; set; } //RGBA, 32bpp
     }
