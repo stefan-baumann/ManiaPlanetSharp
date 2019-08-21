@@ -11,6 +11,7 @@ namespace ManiaPlanetSharp.GameBox.Classes.Collector
         public ushort Width { get; set; }
         public ushort Height { get; set; }
         public Size Size => new Size(this.Width, this.Height);
+        public byte Unused { get; set; }
         public byte[] IconData { get; set; } //RGBA, 32bpp
     }
 
@@ -24,7 +25,8 @@ namespace ManiaPlanetSharp.GameBox.Classes.Collector
             var result = new GbxCollectorIcon()
             {
                 Width = chunk.ReadUInt16(),
-                Height = chunk.ReadUInt16()
+                Height = chunk.ReadUInt16(),
+                Unused = chunk.ReadByte()
             };
             result.IconData = chunk.ReadRaw(4 * result.Width * result.Height);
             return result;
