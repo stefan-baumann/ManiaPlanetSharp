@@ -45,19 +45,10 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             {
                 return null;
             }
-
-            byte[] aligned = new byte[this.IconSize.Value.Width * this.IconSize.Value.Height * 4];
-            for (int i = 0; i < this.IconData.Length - 3; i += 4)
-            {
-                aligned[i] = this.IconData[i + 3];
-                aligned[i + 1] = this.IconData[i];
-                aligned[i + 2] = this.IconData[i + 1];
-                aligned[i + 3] = this.IconData[i + 2];
-            }
-
+            
             Bitmap bmp = new Bitmap(this.IconSize.Value.Width, this.IconSize.Value.Height, PixelFormat.Format32bppArgb);
             BitmapData data = bmp.LockBits(new Rectangle(0, 0, this.IconSize.Value.Width, this.IconSize.Value.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            Marshal.Copy(aligned, 0, data.Scan0, aligned.Length);
+            Marshal.Copy(this.IconData, 0, data.Scan0, this.IconData.Length);
             bmp.UnlockBits(data);
 
             bmp.RotateFlip((new[] { RotateFlipType.RotateNoneFlipY, RotateFlipType.Rotate90FlipY, RotateFlipType.Rotate180FlipY, RotateFlipType.Rotate270FlipY })[this.IconQuarterRotations ?? 0]);
