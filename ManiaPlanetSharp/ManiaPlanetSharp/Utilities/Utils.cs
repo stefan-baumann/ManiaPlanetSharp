@@ -45,7 +45,7 @@ namespace ManiaPlanetSharp.Utilities
                 builder.AppendLine(Indent("null", level));
                 return;
             }
-                Type type = node.GetType();
+            Type type = node.GetType();
             builder.AppendLine(Indent((level == 0 ? "# " : "- ") + type.Name, level));
 
             foreach (var property in type.GetTypeInfo().GetProperties())

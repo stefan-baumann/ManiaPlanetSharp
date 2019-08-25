@@ -113,6 +113,10 @@ namespace ManiaPlanetSharp.GameBox
                             chunks.Add(node);
                         }
                     }
+                    else
+                    {
+                        chunks.Add(new Node(chunk.Key) { Data = data });
+                    }
                 }
                 return chunks;
             }
