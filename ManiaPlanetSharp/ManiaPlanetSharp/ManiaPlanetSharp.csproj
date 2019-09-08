@@ -8,13 +8,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DefineConstants>TRACE;DEBUG;NETSTANDARD2_0;HACKY_OBJECT_MODEL_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NETSTANDARD2_0; HACKY_OBJECT_MODEL_ANALYSIS</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>TRACE;NETSTANDARD2_0;HACKY_OBJECT_MODEL_ANALYSIS</DefineConstants>
+    <DefineConstants>TRACE;NETSTANDARD2_0; HACKY_OBJECT_MODEL_ANALYSIS</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

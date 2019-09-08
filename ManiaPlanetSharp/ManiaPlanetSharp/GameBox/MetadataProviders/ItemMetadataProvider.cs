@@ -37,7 +37,10 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         public float? PainterGroundMargin => this.GetBodyNode<ObjectGroundPoint>()?.PainterGroundMargin;
         public float? OrbitalCenterHeightFromGround => this.GetBodyNode<ObjectGroundPoint>()?.OrbitalCenterHeightFromGround;
         public float? OrbitalRadiusBase => this.GetBodyNode<ObjectGroundPoint>()?.OrbitalRadiusBase;
-        public float? OrbitalPreviewAngle => this.GetBodyNode<ObjectGroundPoint>().OrbitalPreviewAngle;
+        public float? OrbitalPreviewAngle => this.GetBodyNode<ObjectGroundPoint>()?.OrbitalPreviewAngle;
+
+        public string MeshName => this.GetBodyNode<ObjectModel>()?.MeshName;
+        public string ShapeName => this.GetBodyNode<ObjectModel>()?.ShapeName;
 
         public Bitmap GenerateIconBitmap()
         {
