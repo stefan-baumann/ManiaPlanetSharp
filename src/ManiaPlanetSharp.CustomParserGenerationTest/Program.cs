@@ -1,4 +1,5 @@
 using ManiaPlanetSharp.GameBox;
+using ManiaPlanetSharp.GameBox.Parsing;
 using ManiaPlanetSharp.GameBox.Parsing.Chunks;
 using ManiaPlanetSharp.GameBox.Parsing.ParserGeneration;
 using System;

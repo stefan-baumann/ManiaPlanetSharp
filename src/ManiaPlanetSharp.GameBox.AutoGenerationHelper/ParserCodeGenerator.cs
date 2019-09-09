@@ -1,4 +1,5 @@
 ﻿using AgileObjects.ReadableExpressions;
+using ManiaPlanetSharp.GameBox.Parsing;
 using ManiaPlanetSharp.GameBox.Parsing.ParserGeneration;
 using System;
 using System.Collections.Generic;

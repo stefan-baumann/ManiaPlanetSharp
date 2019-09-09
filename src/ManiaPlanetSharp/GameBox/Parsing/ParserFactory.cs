@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
+namespace ManiaPlanetSharp.GameBox.Parsing
 {
     public static class ParserFactory
     {

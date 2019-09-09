@@ -8,6 +8,8 @@
     <RepositoryUrl>https://github.com/stefan-baumann/ManiaPlanetSharp</RepositoryUrl>
     <PackageLicenseUrl>https://github.com/stefan-baumann/ManiaPlanetSharp/blob/master/LICENSE</PackageLicenseUrl>
     <PackageTags>ManiaPlanet, Trackmania, Shootmania, GameBox, Parser, Metadata, ManiaExchange</PackageTags>
+    <Copyright>Copyright © 2019 Stefan Baumann</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
