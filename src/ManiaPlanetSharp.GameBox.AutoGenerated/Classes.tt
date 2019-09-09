@@ -13,16 +13,21 @@
 <#@ output extension=".cs" #>
 <#
 Assembly mpSharp = Assembly.GetAssembly(typeof(Chunk));
-var chunks = mpSharp.GetExportedTypes().Where(t => typeof(Chunk).IsAssignableFrom(t) && t != typeof(Chunk) && t.GetCustomAttribute<ChunkAttribute>() != null);
-var classes = chunks.GroupBy(c => c.GetCustomAttribute<ChunkAttribute>().Id & ~0xFFFU);
+var chunks = mpSharp.GetExportedTypes().Where(t => typeof(Chunk).IsAssignableFrom(t) && t != typeof(Chunk) && t.GetCustomAttributes<ChunkAttribute>().Any());
+var classes = chunks.SelectMany(c => c.GetCustomAttributes<ChunkAttribute>().Select(ca => Tuple.Create(ca.Id, c))).GroupBy(c => c.Item1 & ~0xFFFU);
 foreach (var @class in classes)
 {
-	var classId = @class.Key; #>
-//<#= KnownClassIds.GetClassName(classId) #><#
+	var classId = @class.Key;
+#>//<#= KnownClassIds.GetClassName(classId) #>
+<#
 	foreach (var chunk in @class)
-	{ #>
+	{
+#>
+// - Chunk <#= chunk.Item2.Name #> (<#= $"0x{chunk.Item1:X8}" #>)
+<#
+	}
+#>
 
-// - Chunk <#= chunk.Name #> (<#= $"0x{chunk.GetCustomAttribute<ChunkAttribute>().Id:X8}" #>)
-<#	}
+<#
 }
 #>

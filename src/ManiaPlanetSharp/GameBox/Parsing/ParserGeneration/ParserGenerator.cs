@@ -13,22 +13,26 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
          * - Special treatment for properties of type byte[]
          * - Direct call to ParserFactory on property of specified node type
          */
-
-        public static Expression<Func<GameBoxReader, T>> GenerateParserExpression<T>()
-            where T : new()
+                
+        public static Expression<ChunkParserDelegate<TChunk>> GenerateChunkParserExpression<TChunk>()
+            where TChunk : Chunk, new()
         {
 #if !DEBUG
             try
             {
 #endif
-                ParameterExpression readerParameter = Expression.Parameter(typeof(GameBoxReader), "reader");
-                ParameterExpression resultVariable = Expression.Variable(typeof(T), "result");
-                List<ParameterExpression> localVariables = new List<ParameterExpression>() { resultVariable };
-                IEnumerable<Expression> body =
-                    new[] { Expression.Assign(resultVariable, Expression.New(typeof(T))) }
-                    .Concat(GenerateFieldParserExpressions<T>(resultVariable, readerParameter, localVariables))
-                    .Concat(new[] { Expression.Label(Expression.Label(typeof(T)), resultVariable) } );
-                return Expression.Lambda<Func<GameBoxReader, T>>(Expression.Block(localVariables, body), readerParameter);
+            ParameterExpression readerParameter = Expression.Parameter(typeof(GameBoxReader), "reader");
+            ParameterExpression idParameter = Expression.Parameter(typeof(uint), "chunkId");
+            ParameterExpression resultVariable = Expression.Variable(typeof(TChunk), "result");
+            List<ParameterExpression> localVariables = new List<ParameterExpression>() { resultVariable };
+            IEnumerable<Expression> body =
+                new[] {
+                    Expression.Assign(resultVariable, Expression.New(typeof(TChunk))), //result = new TChunk();
+                    Expression.Assign(Expression.Property(resultVariable, nameof(Chunk.Id)), idParameter) //result.Id = chunkId;
+                }
+                .Concat(GenerateFieldParserExpressions<TChunk>(resultVariable, readerParameter, localVariables))
+                .Concat(new[] { Expression.Label(Expression.Label(typeof(TChunk)), resultVariable) });
+            return Expression.Lambda<ChunkParserDelegate<TChunk>>(Expression.Block(localVariables, body), readerParameter, idParameter);
 #if !DEBUG
             }
             catch (Exception ex)
@@ -37,6 +41,34 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             }
 #endif
         }
+
+        public static Expression<ParserDelegate<TStruct>> GenerateStructParserExpression<TStruct>()
+            where TStruct : new()
+        {
+#if !DEBUG
+            try
+            {
+#endif
+            ParameterExpression readerParameter = Expression.Parameter(typeof(GameBoxReader), "reader");
+            ParameterExpression resultVariable = Expression.Variable(typeof(TStruct), "result");
+            List<ParameterExpression> localVariables = new List<ParameterExpression>() { resultVariable };
+            IEnumerable<Expression> body =
+                new[] {
+                    Expression.Assign(resultVariable, Expression.New(typeof(TStruct))), //result = new TChunk();
+                }
+                .Concat(GenerateFieldParserExpressions<TStruct>(resultVariable, readerParameter, localVariables))
+                .Concat(new[] { Expression.Label(Expression.Label(typeof(TStruct)), resultVariable) });
+            return Expression.Lambda<ParserDelegate<TStruct>>(Expression.Block(localVariables, body), readerParameter);
+#if !DEBUG
+            }
+            catch (Exception ex)
+            {
+                throw new ParserGeneratorException($"Internal exception occured while generating parser for type {typeof(T).FullName}", ex);
+            }
+#endif
+        }
+
+
 
         private static IEnumerable<Expression> GenerateFieldParserExpressions<T>(Expression target, Expression reader, List<ParameterExpression> localVariables)
         {
@@ -162,13 +194,16 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 switch (field.SpecialPropertyType)
                 {
                     case SpecialPropertyType.LookbackString:
+                        //reader.ReadLookbackString();
                         return Expression.Call(reader, nameof(GameBoxReader.ReadLookbackString), null);
                     case SpecialPropertyType.NodeReference:
+                        //reader.ReadNodeReference();
                         return Expression.Call(reader, nameof(GameBoxReader.ReadNodeReference), null);
                     case SpecialPropertyType.CustomStruct:
-                        if (field.Property.PropertyType.GetCustomAttribute<CustomStructAttribute>() != null)
+                        if (singleValueType.GetCustomAttribute<CustomStructAttribute>() != null)
                         {
-                            return Expression.Call(typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetCustomStructParser)).MakeGenericMethod(singleValueType));
+                            //ParserFactory.GetCustomStructParser<singleValueType>().Parse(reader)
+                            return Expression.Call(Expression.Call(typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetCustomStructParser)).MakeGenericMethod(singleValueType)), typeof(CustomStructParser<>).MakeGenericType(singleValueType).GetMethod("Parse"), reader);
                         }
                         else
                         {
@@ -182,10 +217,12 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             {
                 if (readerMethods.ContainsKey(singleValueType))
                 {
+                    //reader.Read[...]
                     return Expression.Call(reader, readerMethods[singleValueType], null);
                 }
                 else if (typeof(Node).IsAssignableFrom(singleValueType))
                 {
+                    //reader.ReadNode()
                     return Expression.Call(reader, nameof(GameBoxReader.ReadNode), null);
                 }
                 else

@@ -15,8 +15,8 @@ namespace ManiaPlanetSharp.GameBox
         public static string GenerateChunkParserCode<TChunk>()
             where TChunk : Chunk, new()
         {
-            Parser<TChunk> parser = ChunkParser<TChunk>.GenerateParser();
-            Expression<Func<GameBoxReader, TChunk>> expression = (Expression<Func<GameBoxReader, TChunk>>)typeof(Parser<TChunk>).GetProperty("ParserExpression", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(parser);
+            IParser<TChunk> parser = ChunkParser<TChunk>.GenerateParser();
+            Expression<ChunkParserDelegate<TChunk>> expression = (Expression<ChunkParserDelegate<TChunk>>)typeof(ChunkParser<TChunk>).GetProperty("ParserExpression", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(parser);
             return expression.Body.ToReadableString();
         }
 
@@ -29,8 +29,8 @@ namespace ManiaPlanetSharp.GameBox
         public static string GenerateCustomStructParserCode<TStruct>()
             where TStruct : new()
         {
-            Parser<TStruct> parser = CustomStructParser<TStruct>.GenerateParser();
-            Expression<Func<GameBoxReader, TStruct>> expression = (Expression<Func<GameBoxReader, TStruct>>)typeof(Parser<TStruct>).GetProperty("ParserExpression", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(parser);
+            IParser<TStruct> parser = CustomStructParser<TStruct>.GenerateParser();
+            Expression<ParserDelegate<TStruct>> expression = (Expression<ParserDelegate<TStruct>>)typeof(CustomStructParser<TStruct>).GetProperty("ParserExpression", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(parser);
             return expression.Body.ToReadableString();
         }
     }

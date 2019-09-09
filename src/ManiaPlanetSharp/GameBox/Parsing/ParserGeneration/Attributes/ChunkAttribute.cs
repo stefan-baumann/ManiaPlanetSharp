@@ -12,7 +12,14 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         {
             this.Id = id;
         }
+        public ChunkAttribute(uint id, bool skippable)
+            : this(id)
+        {
+            this.Skippable = skippable;
+        }
 
         public uint Id { get; private set; }
+
+        public bool Skippable { get; private set; }
     }
 }

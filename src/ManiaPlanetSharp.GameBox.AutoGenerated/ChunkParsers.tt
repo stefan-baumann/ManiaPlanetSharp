@@ -47,7 +47,7 @@ foreach (var chunkType in chunkTypes)
 	{
 		public override List<uint> ParseableIds => new List<uint>() { <#= string.Join(", ", ids.Select(i => $"0x{i:X8}")) #> };
 
-        public override <#= chunkType #> Parse(GameBoxReader reader)
+        public override <#= chunkType #> Parse(GameBoxReader reader, uint chunkId)
         {
 <#= string.Join(Environment.NewLine, code/*.Replace(chunkType.Name, chunkType.FullName)*/.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries).Select(line => $"\t\t\t{line}")) #>
         }
