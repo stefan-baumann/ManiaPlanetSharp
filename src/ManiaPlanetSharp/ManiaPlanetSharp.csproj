@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Stefan Baumann</Authors>
+    <Company>Stefan Baumann</Company>
+    <Product>ManiaPlanetSharp</Product>
+    <RepositoryUrl>https://github.com/stefan-baumann/ManiaPlanetSharp</RepositoryUrl>
+    <PackageLicenseUrl>https://github.com/stefan-baumann/ManiaPlanetSharp/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageTags>ManiaPlanet, Trackmania, Shootmania, GameBox, Parser, Metadata, ManiaExchange</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="GameBox\MetadataProviders\" />
+    <Folder Include="ManiaExchange\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,319 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AgileObjects.ReadableExpressions</name>
+    </assembly>
+    <members>
+        <member name="T:AgileObjects.ReadableExpressions.ExpressionExtensions">
+            <summary>
+            Provides the Expression translation extension method.
+            </summary>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.ExpressionExtensions.ToReadableString(System.Linq.Expressions.Expression,System.Func{AgileObjects.ReadableExpressions.TranslationSettings,AgileObjects.ReadableExpressions.TranslationSettings})">
+            <summary>
+            Translates the given Linq <paramref name="expression"/> to a source-code string.
+            </summary>
+            <param name="expression">The Expression to translate.</param>
+            <param name="configuration">The configuration to use for the translation, if required.</param>
+            <returns>The translated <paramref name="expression"/>.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.ExpressionExtensions.ToReadableString(Microsoft.Scripting.Ast.Expression,System.Func{AgileObjects.ReadableExpressions.TranslationSettings,AgileObjects.ReadableExpressions.TranslationSettings})">
+            <summary>
+            Translates the given <paramref name="expression"/> to a source-code string.
+            </summary>
+            <param name="expression">The Expression to translate.</param>
+            <param name="configuration">The configuration to use for the translation, if required.</param>
+            <returns>The translated <paramref name="expression"/>.</returns>
+        </member>
+        <member name="T:AgileObjects.ReadableExpressions.Extensions.PublicExpressionExtensions">
+            <summary>
+            Provides a set of static extension methods for Expression information.
+            </summary>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicExpressionExtensions.GetSubject(Microsoft.Scripting.Ast.MethodCallExpression)">
+            <summary>
+            Returns the Expression representing the subject of the given <paramref name="methodCall"/>.
+            </summary>
+            <param name="methodCall">
+            The Expression representing the method call the subject of which should be retrieved.
+            </param>
+            <returns>
+            The Expression representing the subject of the given <paramref name="methodCall"/>.
+            </returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicExpressionExtensions.GetParentOrNull(Microsoft.Scripting.Ast.Expression)">
+            <summary>
+            Gets the parent Expression for the given <paramref name="expression"/>.
+            </summary>
+            <param name="expression">The Expression for which to retrieve the parent.</param>
+            <returns>The given <paramref name="expression"/>'s parent Expression.</returns>
+        </member>
+        <member name="T:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions">
+            <summary>
+            Provides a set of static extension methods for type information.
+            </summary>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.GetFriendlyName(System.Type,System.Func{AgileObjects.ReadableExpressions.TranslationSettings,AgileObjects.ReadableExpressions.TranslationSettings})">
+            <summary>
+            Returns a friendly, readable version of the name of the given <paramref name="type"/>.
+            </summary>
+            <param name="type">The type for which to retrieve a friendly, readable name.</param>
+            <param name="configuration">The configuration to use for the variable naming, if required.</param>
+            <returns>A friendly, readable version of the name of the given <paramref name="type"/>.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.GetVariableNameInCamelCase(System.Type,System.Func{AgileObjects.ReadableExpressions.TranslationSettings,AgileObjects.ReadableExpressions.TranslationSettings})">
+            <summary>
+            Retrieves a camel-case variable name for a variable of this <paramref name="type"/>.
+            </summary>
+            <param name="type">The Type for which to retrieve the variable name.</param>
+            <param name="configuration">The configuration to use for the variable naming, if required.</param>
+            <returns>A camel-case variable name for a variable of this <paramref name="type"/>.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.GetVariableNameInPascalCase(System.Type,System.Func{AgileObjects.ReadableExpressions.TranslationSettings,AgileObjects.ReadableExpressions.TranslationSettings})">
+            <summary>
+            Retrieves a pascal-case variable name for a variable of this <paramref name="type"/>.
+            </summary>
+            <param name="type">The Type for which to retrieve the variable name.</param>
+            <param name="configuration">The configuration to use for the variable naming, if required.</param>
+            <returns>A pascal-case variable name for a variable of this <paramref name="type"/>.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.IsEnumerable(System.Type)">
+            <summary>
+            Determines if this <paramref name="type"/> is an enumerable Type.
+            </summary>
+            <param name="type">The Type for which to make the determination.</param>
+            <returns>True if this <paramref name="type"/> is an enumerable Type, otherwise false.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.IsDictionary(System.Type)">
+            <summary>
+            Determines if this <paramref name="type"/> is a Dictionary Type.
+            </summary>
+            <param name="type">The Type for which to make the determination.</param>
+            <returns>True if this <paramref name="type"/> is a Dictionary Type, otherwise false.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.GetDictionaryTypes(System.Type)">
+            <summary>
+            Gets a KeyValuePair containing the key and value Types of this Dictionary <paramref name="type"/>.
+            </summary>
+            <param name="type">The Type for which to retrieve the key and value Types.</param>
+            <returns>A KeyValuePair containing the key and value Types of this Dictionary <paramref name="type"/>.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.GetDictionaryType(System.Type)">
+            <summary>
+            Gets the Dictionary Type of this <paramref name="type"/> - either the Dictionary Type it is, or
+            the first IDictionary Type it implements. If this <paramref name="type"/> is not a Dictionary
+            Type, returns null.
+            </summary>
+            <param name="type">The Type for which to retrieve the Dictionary Type.</param>
+            <returns>The Dictionary Type of this <paramref name="type"/>, or null if there is none.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.GetEnumerableElementType(System.Type)">
+            <summary>
+            Gets the element Type for this <paramref name="enumerableType"/>.
+            </summary>
+            <param name="enumerableType">The enumerable Type for which to retrieve the element Type.</param>
+            <returns>
+            The element Type for this <paramref name="enumerableType"/>, or null if this Type is not enumerable.
+            </returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.CanBeNull(System.Type)">
+            <summary>
+            Returns a value indicating if the given <paramref name="type"/> can be null.
+            </summary>
+            <param name="type">The type for which to make the determination.</param>
+            <returns>True if the given <paramref name="type"/> can be null, otherwise false.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.IsNullableType(System.Type)">
+            <summary>
+            Returns a value indicating if the given <paramref name="type"/> is a Nullable{T}.
+            </summary>
+            <param name="type">The type for which to make the determination.</param>
+            <returns>True if the given <paramref name="type"/> is a Nullable{T}, otherwise false.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Extensions.PublicTypeExtensions.GetNonNullableType(System.Type)">
+            <summary>
+            Gets the underlying non-nullable Type of this <paramref name="type"/>, or returns this
+            <paramref name="type"/> if it is not nullable.
+            </summary>
+            <param name="type">The Type for which to retrieve the underlying non-nullable Type.</param>
+            <returns>
+            The underlying non-nullable Type of this <paramref name="type"/>, or returns this
+            <paramref name="type"/> if it is not nullable.
+            </returns>
+        </member>
+        <member name="T:AgileObjects.ReadableExpressions.ReadableExpression">
+            <summary>
+            A factory class providing the Comment Expression
+            </summary>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.ReadableExpression.Comment(System.String)">
+            <summary>
+            Create a <see cref="T:Microsoft.Scripting.Ast.ConstantExpression"/> representing a code comment with the 
+            given <paramref name="text"/>.
+            </summary>
+            <param name="text">The text of the comment to create, without slashes or /* */.</param>
+            <returns>A <see cref="T:Microsoft.Scripting.Ast.ConstantExpression"/> representing a code comment.</returns>
+        </member>
+        <member name="T:AgileObjects.ReadableExpressions.TranslationSettings">
+            <summary>
+            Provides configuration options to control aspects of source-code string generation.
+            </summary>
+        </member>
+        <member name="P:AgileObjects.ReadableExpressions.TranslationSettings.UseFullyQualifiedTypeNames">
+            <summary>
+            Fully qualify Type names with their namespace.
+            </summary>
+        </member>
+        <member name="P:AgileObjects.ReadableExpressions.TranslationSettings.UseExplicitGenericParameters">
+            <summary>
+            Always specify generic parameter arguments explicitly in &lt;pointy braces&gt;
+            </summary>
+        </member>
+        <member name="P:AgileObjects.ReadableExpressions.TranslationSettings.ShowQuotedLambdaComments">
+            <summary>
+            Annotate a Quoted Lambda Expression with a comment indicating that it has 
+            been Quoted.
+            </summary>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.TranslationSettings.NameAnonymousTypesUsing(System.Func{System.Type,System.String})">
+            <summary>
+            Name anonymous types using the given <paramref name="nameFactory"/> instead of the
+            default method.
+            </summary>
+            <param name="nameFactory">
+            The factory method to execute to retrieve the name for an anonymous type.
+            </param>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.TranslationSettings.TranslateConstantsUsing(System.Func{System.Type,System.Object,System.String})">
+            <summary>
+            Translate ConstantExpressions using the given <paramref name="valueFactory"/> instead of
+            the default method.
+            </summary>
+            <param name="valueFactory">
+            The factory method to execute to retrieve the ConstantExpression's translated value.
+            </param>
+        </member>
+        <member name="P:AgileObjects.ReadableExpressions.Translations.Interfaces.ITranslationContext.Settings">
+            <summary>
+            Configuration for translation in this context
+            </summary>
+        </member>
+        <member name="P:AgileObjects.ReadableExpressions.Translations.Interfaces.ITranslationContext.JoinedAssignmentVariables">
+            <summary>
+            Gets the variables in the translated <see cref="T:Microsoft.Scripting.Ast.Expression"/> which should be declared in the
+            same statement in which they are assigned.
+            </summary>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.Interfaces.ITranslationContext.IsNotJoinedAssignment(Microsoft.Scripting.Ast.Expression)">
+            <summary>
+            Returns a value indicating whether the given <paramref name="expression"/> represents an assignment 
+            where the assigned variable is declared as part of the assignment statement.
+            </summary>
+            <param name="expression">The <see cref="T:Microsoft.Scripting.Ast.Expression"/> to evaluate.</param>
+            <returns>
+            True if the given <paramref name="expression"/> represents an assignment where the assigned variable 
+            is declared as part of the assignment statement, otherwise false.
+            </returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.Interfaces.ITranslationContext.IsCatchBlockVariable(Microsoft.Scripting.Ast.Expression)">
+            <summary>
+            Returns a value indicating whether the given <paramref name="expression"/> is the Exception
+            variable in a Catch block.
+            </summary>
+            <param name="expression">The expression for which to make the determination.</param>
+            <returns>
+            True if the given <paramref name="expression"/> is the Exception variable in a Catch block,
+            otherwise false.
+            </returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.Interfaces.ITranslationContext.IsReferencedByGoto(Microsoft.Scripting.Ast.LabelTarget)">
+            <summary>
+            Returns a value indicating whether the given <paramref name="labelTarget"/> is referenced by a
+            <see cref="T:Microsoft.Scripting.Ast.GotoExpression"/>.
+            </summary>
+            <param name="labelTarget">The <see cref="T:Microsoft.Scripting.Ast.LabelTarget"/> to evaluate.</param>
+            <returns>
+            True if the given <paramref name="labelTarget"/> is referenced by a <see cref="T:Microsoft.Scripting.Ast.GotoExpression"/>,
+            otherwise false.
+            </returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.Interfaces.ITranslationContext.GoesToReturnLabel(Microsoft.Scripting.Ast.GotoExpression)">
+            <summary>
+            Returns a value indicating whether the given <paramref name="goto"/> goes to the 
+            final statement in a block, and so should be rendered as a return statement.
+            </summary>
+            <param name="goto">The GotoExpression for which to make the determination.</param>
+            <returns>
+            True if the given <paramref name="goto"/> goes to the final statement in a block,
+            otherwise false.
+            </returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.Interfaces.ITranslationContext.IsPartOfMethodCallChain(Microsoft.Scripting.Ast.MethodCallExpression)">
+            <summary>
+            Returns a value indicating whether the given <paramref name="methodCall"/> is part of a chain
+            of multiple method calls.
+            </summary>
+            <param name="methodCall">The <see cref="T:Microsoft.Scripting.Ast.Expression"/> to evaluate.</param>
+            <returns>
+            True if the given <paramref name="methodCall"/> is part of a chain of multiple method calls,
+            otherwise false.
+            </returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.Interfaces.ITranslationContext.GetUnnamedVariableNumberOrNull(Microsoft.Scripting.Ast.ParameterExpression)">
+            <summary>
+            Gets the 1-based index of the given <paramref name="variable"/> in the set of unnamed,
+            accessed variables of its Type.
+            </summary>
+            <param name="variable">The variable for which to get the 1-based index.</param>
+            <returns>
+            The 1-based index of the given <paramref name="variable"/>, or null if only variable of
+            this Type is declared.
+            </returns>
+        </member>
+        <member name="T:AgileObjects.ReadableExpressions.Translations.LinqExpressionToDlrExpressionConverter">
+            <summary>
+            Converts a .NET 3.5 Linq Expression object into a DynamicLanguageRuntime Expression object.
+            </summary>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.LinqExpressionToDlrExpressionConverter.Convert(System.Linq.Expressions.LambdaExpression)">
+            <summary>
+            Converts the given <paramref name="linqLambda"/> into a DynamicLanguageRuntime Lambda Expression.
+            </summary>
+            <param name="linqLambda">The Linq Lambda Expression to convert.</param>
+            <returns>The given <paramref name="linqLambda"/> converted into a DynamicLanguageRuntime Lambda Expression.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.LinqExpressionToDlrExpressionConverter.Convert(System.Linq.Expressions.Expression)">
+            <summary>
+            Converts the given <paramref name="linqExpression"/> into a DynamicLanguageRuntime Expression.
+            </summary>
+            <param name="linqExpression">The Linq Expression to convert.</param>
+            <returns>The given <paramref name="linqExpression"/> converted into a DynamicLanguageRuntime Expression.</returns>
+        </member>
+        <member name="T:AgileObjects.ReadableExpressions.Translations.StaticTranslators.DefinitionsTranslator">
+            <summary>
+            Translates reflection objects into readable strings. Used to provide visualizations.
+            </summary>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.StaticTranslators.DefinitionsTranslator.Translate(System.Type)">
+            <summary>
+            Translates the given <paramref name="type"/> into a readable string.
+            </summary>
+            <param name="type">The Type to translate.</param>
+            <returns>A readable string version of the given <paramref name="type"/>.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.StaticTranslators.DefinitionsTranslator.Translate(System.Reflection.ConstructorInfo)">
+            <summary>
+            Translates the given <paramref name="ctor"/> into a readable string.
+            </summary>
+            <param name="ctor">The ConstructorInfo to translate.</param>
+            <returns>A readable string version of the given <paramref name="ctor"/>.</returns>
+        </member>
+        <member name="M:AgileObjects.ReadableExpressions.Translations.StaticTranslators.DefinitionsTranslator.Translate(System.Reflection.MethodInfo)">
+            <summary>
+            Translates the given <paramref name="method"/> into a readable string.
+            </summary>
+            <param name="method">The MethodInfo to translate.</param>
+            <returns>A readable string version of the given <paramref name="method"/>.</returns>
+        </member>
+    </members>
+</doc>
