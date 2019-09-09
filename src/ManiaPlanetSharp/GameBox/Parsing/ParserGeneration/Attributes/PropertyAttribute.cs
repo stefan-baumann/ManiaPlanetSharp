@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
+namespace ManiaPlanetSharp.GameBox.Parsing
 {
     public enum SpecialPropertyType
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
+namespace ManiaPlanetSharp.GameBox.Parsing
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
     public class CustomParserMethodAttribute

@@ -17,7 +17,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         public static Expression<ChunkParserDelegate<TChunk>> GenerateChunkParserExpression<TChunk>()
             where TChunk : Chunk, new()
         {
-#if !DEBUG
+#if false //!DEBUG
             try
             {
 #endif
@@ -33,7 +33,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 .Concat(GenerateFieldParserExpressions<TChunk>(resultVariable, readerParameter, localVariables))
                 .Concat(new[] { Expression.Label(Expression.Label(typeof(TChunk)), resultVariable) });
             return Expression.Lambda<ChunkParserDelegate<TChunk>>(Expression.Block(localVariables, body), readerParameter, idParameter);
-#if !DEBUG
+#if false //!DEBUG
             }
             catch (Exception ex)
             {
@@ -45,7 +45,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         public static Expression<ParserDelegate<TStruct>> GenerateStructParserExpression<TStruct>()
             where TStruct : new()
         {
-#if !DEBUG
+#if false //!DEBUG
             try
             {
 #endif
@@ -59,7 +59,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 .Concat(GenerateFieldParserExpressions<TStruct>(resultVariable, readerParameter, localVariables))
                 .Concat(new[] { Expression.Label(Expression.Label(typeof(TStruct)), resultVariable) });
             return Expression.Lambda<ParserDelegate<TStruct>>(Expression.Block(localVariables, body), readerParameter);
-#if !DEBUG
+#if false //!DEBUG
             }
             catch (Exception ex)
             {
@@ -148,10 +148,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                             yield return Expression.Assign(lengthSource, Expression.Call(reader, nameof(GameBoxReader.ReadUInt32), null));
                             break;
                         case FixedArrayLengthSource fixedLengthSource:
-                            lengthSource = Expression.Constant(fixedLengthSource.Length);
+                            lengthSource = Expression.Convert(Expression.Constant(fixedLengthSource.Length), typeof(uint));
                             break;
                         case PropertyArrayLengthSource propertyLengthSource:
-                            lengthSource = Expression.Property(target, propertyLengthSource.DependentProperty);
+                            lengthSource = Expression.Convert(Expression.Property(target, propertyLengthSource.DependentProperty), typeof(uint));
                             break;
                         default:
                             throw new NotImplementedException($"Unknown array length source at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
