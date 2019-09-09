@@ -37,7 +37,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             }
             catch (Exception ex)
             {
-                throw new ParserGeneratorException($"Internal exception occured while generating parser for type {typeof(T).FullName}", ex);
+                throw new ParserGeneratorException($"Internal exception occured while generating parser for type {typeof(TChunk).FullName}", ex);
             }
 #endif
         }
@@ -63,7 +63,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             }
             catch (Exception ex)
             {
-                throw new ParserGeneratorException($"Internal exception occured while generating parser for type {typeof(T).FullName}", ex);
+                throw new ParserGeneratorException($"Internal exception occured while generating parser for type {typeof(TStruct).FullName}", ex);
             }
 #endif
         }
