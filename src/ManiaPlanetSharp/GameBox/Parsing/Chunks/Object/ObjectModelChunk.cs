@@ -21,9 +21,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         [Property(SpecialPropertyType.NodeReference), Condition(nameof(ObjectModelChunk.Version), ConditionOperator.Equal, 1)]
         public Node VisualModelStatic { get; set; }
-
-#if false
-
+        
         [Property, Condition(nameof(ObjectModelChunk.Version), ConditionOperator.GreaterThanOrEqual, 3)]
         public int Unknown1 { get; set; }
 
@@ -44,7 +42,6 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         [Property(SpecialPropertyType.NodeReference), Condition(nameof(ObjectModelChunk.Version), ConditionOperator.GreaterThanOrEqual, 8), Condition(nameof(ObjectModelChunk.Unknown5), ConditionOperator.Equal, null)]
         public Node Unknown6 { get; set; }
-
-#endif
+        
     }
 }
