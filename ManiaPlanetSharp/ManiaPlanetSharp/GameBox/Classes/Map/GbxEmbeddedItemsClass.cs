@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
+using SharpCompress.Archives.Zip;
+using SharpCompress.Readers;
 
 namespace ManiaPlanetSharp.GameBox.Classes.Map
 {
@@ -15,7 +18,9 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
         public int ItemCount { get; set; }
         public int ZipSize { get => this.ZipFile?.Length ?? 0; }
         public byte[] ZipFile { get; set; }
+        public uint EmbeddedItemSize { get; set; }
         public GbxEmbeddedItem[] Items { get; set; }
+        public GbxEmbeddedItemFile[] Files { get; set; }
     }
 
     public class GbxEmbeddedItem
@@ -23,6 +28,12 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
         public string Path { get; set; }
         public string Collection { get; set; }
         public string Author { get; set; }
+    }
+
+    public class GbxEmbeddedItemFile
+    {
+        public string Path { get; set; }
+        public byte[] Data { get; set; }
     }
 
     public class GbxEmbeddedItemsClassParser
@@ -41,32 +52,48 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
             embeddedItems.ItemCount = (int)reader.ReadUInt32();
             embeddedItems.ZipFile = reader.ReadRaw((int)size);
 
-            embeddedItems.Items = this.ParseItems(embeddedItems.ZipFile, (int)embeddedItems.ItemCount);
-
-            return embeddedItems;
-        }
-
-        protected GbxEmbeddedItem[] ParseItems(byte[] zipFile, int itemCount)
-        {
-            using (MemoryStream stream = new MemoryStream(zipFile))
-            using (GameBoxReader reader = new GameBoxReader(stream))
+            using (MemoryStream stream = new MemoryStream(embeddedItems.ZipFile))
+            using (GameBoxReader zipReader = new GameBoxReader(stream))
             {
-                GbxEmbeddedItem[] items = new GbxEmbeddedItem[itemCount];
-                for (int i = 0; i < itemCount; i++)
+                embeddedItems.Items = new GbxEmbeddedItem[embeddedItems.ItemCount];
+                for (int i = 0; i < embeddedItems.ItemCount; i++)
                 {
                     GbxEmbeddedItem item = new GbxEmbeddedItem();
 
-                    item.Path = reader.ReadLookbackString();
-                    item.Collection = reader.ReadLookbackString();
-                    item.Author = reader.ReadLookbackString();
-                    
-                    items[i] = item;
+                    item.Path = zipReader.ReadLookbackString();
+                    item.Collection = zipReader.ReadLookbackString();
+                    item.Author = zipReader.ReadLookbackString();
+
+                    embeddedItems.Items[i] = item;
                 }
 
-                Debug.WriteLine($"    Done with parsing embedded item metadata, {stream.Position} of {stream.Length} bytes read.");
+                //Debug.WriteLine($"    Done with parsing embedded item metadata, {stream.Position} of {stream.Length} bytes read.");
 
-                return items;
+                embeddedItems.EmbeddedItemSize = zipReader.ReadUInt32();
+                using (MemoryStream zipStream = new MemoryStream((int)embeddedItems.EmbeddedItemSize))
+                {
+                    stream.CopyTo(zipStream);
+                    using (ZipArchive archive = ZipArchive.Open(zipStream))
+                    {
+                        embeddedItems.Files = archive.Entries.Select(entry =>
+                        {
+                            var file = new GbxEmbeddedItemFile() { Path = entry.Key };
+                            if (!entry.IsDirectory)
+                            {
+                                using (MemoryStream target = new MemoryStream((int)entry.Size))
+                                using (Stream source = entry.OpenEntryStream())
+                                {
+                                    source.CopyTo(target);
+                                    file.Data = target.ToArray();
+                                }
+                            }
+                            return file;
+                        }).ToArray();
+                    }
+                }
             }
+
+            return embeddedItems;
         }
     }
 }
