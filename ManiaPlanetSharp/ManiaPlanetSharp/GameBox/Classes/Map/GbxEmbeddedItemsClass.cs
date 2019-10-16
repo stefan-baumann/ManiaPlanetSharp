@@ -34,6 +34,19 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
     {
         public string Path { get; set; }
         public byte[] Data { get; set; }
+
+        public Stream GetDataStream()
+        {
+            return new MemoryStream(this.Data);
+        }
+
+        public GameBoxFile ParseFile()
+        {
+            using (Stream stream = this.GetDataStream())
+            {
+                return new GameBoxFileParser(stream).Parse();
+            }
+        }
     }
 
     public class GbxEmbeddedItemsClassParser

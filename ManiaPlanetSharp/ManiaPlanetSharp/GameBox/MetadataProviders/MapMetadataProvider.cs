@@ -68,8 +68,10 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         public int? LightmapVersion => this.GetHeaderNode<GbxCommonClass>()?.LightmapVersion;
         public Block[] Blocks => this.GetBodyNode<GbxMapClass>()?.Blocks;
         public FileReference CustomMusic => this.GetBodyNode<GbxCustomMusicClass>()?.CustomMusic;
-        public GbxEmbeddedItem[] EmbeddedItems => this.GetBodyNode<GbxEmbeddedItemsClass>()?.Items;
         public int? EmbeddedItemSize => this.GetBodyNode<GbxEmbeddedItemsClass>()?.ZipSize;
+        public int? EmbeddedItemSizeInGame => (int?)this.GetBodyNode<GbxEmbeddedItemsClass>()?.EmbeddedItemSize;
+        public GbxEmbeddedItem[] EmbeddedItems => this.GetBodyNode<GbxEmbeddedItemsClass>()?.Items;
+        public GbxEmbeddedItemFile[] EmbeddedItemFiles => this.GetBodyNode<GbxEmbeddedItemsClass>()?.Files;
         public List<Dependency> Dependencies => this.GetHeaderNode<GbxMapCommunityClass>()?.Root?.Dependencies?.Deps;
         public string ExecutableBuildDate => this.GetHeaderNode<GbxMapCommunityClass>()?.Root?.ExecutableBuildDate;
         public string ExecutableVersion => this.GetHeaderNode<GbxMapCommunityClass>()?.Root?.ExecutableVersion;
