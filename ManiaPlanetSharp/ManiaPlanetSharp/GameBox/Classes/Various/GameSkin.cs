@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Classes.Various
@@ -24,7 +25,7 @@ namespace ManiaPlanetSharp.GameBox.Classes.Various
         public byte SkinFileCount { get; set; }
         public SkinFile[] SkinFiles { get; set; }
     }
-
+    
     public class GameSkinParser
         : ClassParser<GameSkin>
     {

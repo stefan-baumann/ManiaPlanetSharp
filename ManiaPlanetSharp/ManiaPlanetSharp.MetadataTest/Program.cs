@@ -51,7 +51,7 @@ namespace ManiaPlanetSharp.MetadataTest
                         //Console.WriteLine(Utils.PrintNodeTree(result));
                         //var metadata = new MapMetadataProvider(result);
 
-                        /*Console.WriteLine("Header ".PadRight(Console.WindowWidth / 2, '-'));
+                        Console.WriteLine("Header ".PadRight(Console.WindowWidth / 2, '-'));
                         foreach (Node node in result.Header)
                         {
                             if (node.GetType() == typeof(Node) || node.GetType() == typeof(UnusedClass))
@@ -74,14 +74,14 @@ namespace ManiaPlanetSharp.MetadataTest
                             {
                                 Console.WriteLine(Utils.PrintNodeTree(node));
                             }
-                        }*/
+                        }
 
-                        foreach (Node node in result.Body.Where(node => node.Class == 0x2E002019))
+                        /*foreach (Node node in result.Body.Where(node => node.Class == 0x2E002019))
                         {
                             PrintUnknownNode(node);
                         }
                         var model = result.Body.OfType<ObjectModel>().FirstOrDefault();
-                        Console.WriteLine(Utils.PrintNodeTree(model));
+                        Console.WriteLine(Utils.PrintNodeTree(model));*/
 
                         Console.WriteLine(new string('-', Console.WindowWidth / 2));
 #if !DEBUG

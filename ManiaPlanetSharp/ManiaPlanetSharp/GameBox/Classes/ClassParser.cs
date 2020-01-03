@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -43,18 +44,40 @@ namespace ManiaPlanetSharp.GameBox
             using (MemoryStream chunkStream = chunk.GetDataStream())
             using (GameBoxReader reader = new GameBoxReader(chunkStream))
             {
-                return this.ParseChunkInternal(reader);
+                try
+                {
+                    return this.ParseChunkInternal(reader);
+                }
+                catch (EndOfStreamException ex)
+                {
+                    Debug.WriteLine($"Chunk parsing could not be completed successfully due to an unexpected end of file for chunk 0x{this.ChunkId:X8} in node 0x{chunk.Class:X8}.");
+#if DEBUG
+                    Debugger.Break();
+#endif
+                    return null;
+                }
             }
         }
 
         public TClass ParseChunk(GameBoxReader reader)
         {
             long startPosition = reader.Stream.Position;
-            TClass result = this.ParseChunkInternal(reader);
-            long endPosition = reader.Stream.Position;
-            reader.Stream.Position = startPosition;
-            result.Data = reader.ReadRaw((int)(endPosition - startPosition));
-            return result;
+            try
+            {
+                TClass result = this.ParseChunkInternal(reader);
+                long endPosition = reader.Stream.Position;
+                reader.Stream.Position = startPosition;
+                result.Data = reader.ReadRaw((int)(endPosition - startPosition));
+                return result;
+            }
+            catch (EndOfStreamException ex)
+            {
+                Debug.WriteLine($"Chunk parsing could not be completed successfully due to an unexpected end of file for chunk 0x{this.ChunkId:X8} at position {startPosition}.");
+#if DEBUG
+                Debugger.Break();
+#endif
+                return null;
+            }
         }
     }
 

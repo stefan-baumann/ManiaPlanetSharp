@@ -119,10 +119,14 @@ namespace ManiaPlanetSharp.GameBox
                 {
 #endif
                     Node parsed = parser.ParseChunk(reader);
-                    long endPosition = reader.Stream.Position;
-                    parsed.Class = chunkId;
-                    reader.Stream.Position = startPosition;
-                    parsed.Data = reader.ReadRaw((int)(endPosition - startPosition));
+                    if (parsed == null)
+                    {
+                        reader.Stream.Position = startPosition + 1;
+                    }
+                    //long endPosition = reader.Stream.Position;
+                    //parsed.Class = chunkId;
+                    //reader.Stream.Position = startPosition;
+                    //parsed.Data = reader.ReadRaw((int)(endPosition - startPosition));
                     return parsed;
 #if !DEBUG
                 }
