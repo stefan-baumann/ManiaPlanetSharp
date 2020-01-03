@@ -74,8 +74,8 @@ namespace ManiaPlanetSharp.GameBox
             catch (EndOfStreamException ex)
             {
                 Debug.WriteLine($"Chunk parsing could not be completed successfully due to an unexpected end of file for chunk 0x{this.ChunkId:X8} at position {startPosition}.");
-#if DEBUG
                 ParsingErrorLogger.OnParsingErrorOccured(this, new BodyParsingErrorEventArgs(this.ChunkId, startPosition, ex.StackTrace));
+#if DEBUG
                 Debugger.Break();
 #endif
                 return null;

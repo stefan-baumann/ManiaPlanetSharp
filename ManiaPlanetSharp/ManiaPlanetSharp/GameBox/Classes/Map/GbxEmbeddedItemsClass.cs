@@ -83,26 +83,43 @@ namespace ManiaPlanetSharp.GameBox.Classes.Map
                 //Debug.WriteLine($"    Done with parsing embedded item metadata, {stream.Position} of {stream.Length} bytes read.");
 
                 embeddedItems.EmbeddedItemSize = zipReader.ReadUInt32();
-                using (MemoryStream zipStream = new MemoryStream((int)embeddedItems.EmbeddedItemSize))
+                if (embeddedItems.EmbeddedItemSize != 0)
                 {
-                    stream.CopyTo(zipStream);
-                    using (ZipArchive archive = ZipArchive.Open(zipStream))
+                    using (MemoryStream zipStream = new MemoryStream((int)embeddedItems.EmbeddedItemSize))
                     {
-                        embeddedItems.Files = archive.Entries.Select(entry =>
+                        stream.CopyTo(zipStream);
+                        try
                         {
-                            var file = new GbxEmbeddedItemFile() { Path = entry.Key };
-                            if (!entry.IsDirectory)
+                            using (ZipArchive archive = ZipArchive.Open(zipStream))
                             {
-                                using (MemoryStream target = new MemoryStream((int)entry.Size))
-                                using (Stream source = entry.OpenEntryStream())
+                                embeddedItems.Files = archive.Entries.Select(entry =>
                                 {
-                                    source.CopyTo(target);
-                                    file.Data = target.ToArray();
-                                }
+                                    var file = new GbxEmbeddedItemFile() { Path = entry.Key };
+                                    if (!entry.IsDirectory)
+                                    {
+                                        using (MemoryStream target = new MemoryStream((int)entry.Size))
+                                        using (Stream source = entry.OpenEntryStream())
+                                        {
+                                            source.CopyTo(target);
+                                            file.Data = target.ToArray();
+                                        }
+                                    }
+                                    return file;
+                                }).ToArray();
                             }
-                            return file;
-                        }).ToArray();
+                        }
+                        catch (Exception ex)
+                        {
+                            ParsingErrorLogger.OnParsingErrorOccured(this, new NodeInternalParsingErrorEventArgs(embeddedItems, this.ChunkId, ex.ToString()));
+#if DEBUG
+                            Debugger.Break();
+#endif
+                        }
                     }
+                }
+                else
+                {
+                    embeddedItems.Files = new GbxEmbeddedItemFile[0];
                 }
             }
 
