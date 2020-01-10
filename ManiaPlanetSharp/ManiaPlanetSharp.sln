@@ -1,15 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29519.181
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp", "ManiaPlanetSharp\ManiaPlanetSharp.csproj", "{6565EEC8-9830-4318-9D43-96A82345179D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManiaPlanetSharp", "ManiaPlanetSharp\ManiaPlanetSharp.csproj", "{6565EEC8-9830-4318-9D43-96A82345179D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{2DF86578-8CC1-498C-9BF3-668E2D92AFC6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp.MetadataTest", "ManiaPlanetSharp.MetadataTest\ManiaPlanetSharp.MetadataTest.csproj", "{A6A712CF-2F70-43AF-97AD-742784B74B73}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp.ManiaExchangeTest", "ManiaPlanetSharp.ManiaExchangeTest\ManiaPlanetSharp.ManiaExchangeTest.csproj", "{9C4B1AF4-6C57-4A81-B8A1-E4AF309ACA8D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{4973DDD8-179F-444F-8F8D-F963CC87F3D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp.BatchIconExtractor", "ManiaPlanetSharp.BatchIconExtractor\ManiaPlanetSharp.BatchIconExtractor.csproj", "{5353267F-85A6-4FC1-AA14-CDA6B9E3485D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,6 +33,10 @@ Global
 		{9C4B1AF4-6C57-4A81-B8A1-E4AF309ACA8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9C4B1AF4-6C57-4A81-B8A1-E4AF309ACA8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9C4B1AF4-6C57-4A81-B8A1-E4AF309ACA8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5353267F-85A6-4FC1-AA14-CDA6B9E3485D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5353267F-85A6-4FC1-AA14-CDA6B9E3485D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5353267F-85A6-4FC1-AA14-CDA6B9E3485D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5353267F-85A6-4FC1-AA14-CDA6B9E3485D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -36,5 +44,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{A6A712CF-2F70-43AF-97AD-742784B74B73} = {2DF86578-8CC1-498C-9BF3-668E2D92AFC6}
 		{9C4B1AF4-6C57-4A81-B8A1-E4AF309ACA8D} = {2DF86578-8CC1-498C-9BF3-668E2D92AFC6}
+		{5353267F-85A6-4FC1-AA14-CDA6B9E3485D} = {4973DDD8-179F-444F-8F8D-F963CC87F3D8}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F45A0CDA-90BD-4A11-A0C3-E2E5EDA1DAAF}
 	EndGlobalSection
 EndGlobal

@@ -49,7 +49,11 @@ namespace ManiaPlanetSharp.MetadataTest
                         //Output all parsed data to the console
                         //Console.WriteLine(new string('-', Console.WindowWidth / 2));
                         //Console.WriteLine(Utils.PrintNodeTree(result));
-                        //var metadata = new MapMetadataProvider(result);
+                        //var metadata = new ItemMetadataProvider(result);
+                        //if (metadata.IconData != null)
+                        //{
+                            //metadata.GenerateIconBitmap().Save(Path.ChangeExtension(path, "png"));
+                        //}
 
                         Console.WriteLine("Header ".PadRight(Console.WindowWidth / 2, '-'));
                         foreach (Node node in result.Header)
