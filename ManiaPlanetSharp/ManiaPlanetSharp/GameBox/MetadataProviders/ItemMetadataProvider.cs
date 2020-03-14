@@ -41,6 +41,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public string MeshName => this.GetBodyNode<ObjectModel>()?.MeshName;
         public string ShapeName => this.GetBodyNode<ObjectModel>()?.ShapeName;
+        public string TriggerShapeName => this.GetBodyNode<ObjectModel>()?.TriggerShapeName;
 
         public Bitmap GenerateIconBitmap()
         {
