@@ -13,7 +13,7 @@ namespace ManiaPlanetSharp.CustomParserCodeGenerationTest
     {
         static void Main(string[] args)
         {
-            Debug.WriteLine(ParserCodeGenerator2.GenerateChunkParserString<ManiaPlanetSharp.GameBox.Parsing.Chunks.VisualModelChunk>());
+            Debug.WriteLine(ParserCodeGenerator.GenerateChunkParserString<ManiaPlanetSharp.GameBox.Parsing.Chunks.VisualModelChunk>());
         }
     }
 }

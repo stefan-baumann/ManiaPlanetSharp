@@ -39,12 +39,12 @@ namespace ManiaPlanetSharp.CustomParserGenerationTest
                 {
                     factoryMethod = chunkFactory.MakeGenericMethod(matchingType);
 
-                    Console.WriteLine(typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GenerateChunkParserCode), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(matchingType).Invoke(null, null));
+                    Console.WriteLine(typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GenerateChunkParserString), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(matchingType).Invoke(null, null));
                 }
                 else if (structs.Contains(matchingType))
                 {
                     factoryMethod = structFactory.MakeGenericMethod(matchingType);
-                    Console.WriteLine(typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GenerateCustomStructParserCode), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(matchingType).Invoke(null, null));
+                    Console.WriteLine(typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GenerateStructParserString), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(matchingType).Invoke(null, null));
                 }
                 else
                 {

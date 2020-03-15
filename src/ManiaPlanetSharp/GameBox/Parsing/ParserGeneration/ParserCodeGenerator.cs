@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 {
-    public static class ParserCodeGenerator2
+    public static class ParserCodeGenerator
     {
         public static string GenerateChunkParserString<TChunk>()
             where TChunk : Chunk, new()
@@ -54,6 +54,12 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 #endif
         }
 
+        public static List<uint> GetParserChunkIds<TChunk>()
+            where TChunk : Chunk, new()
+        {
+            return typeof(TChunk).GetCustomAttributes<ChunkAttribute>().Select(c => c.Id).ToList();
+        }
+
         private static void GenerateFieldsParseCode<T>(IndentingStringBuilder builder)
         {
             foreach (Field field in Fields.GetFields<T>().OrderBy(f => f.Index))
@@ -78,7 +84,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         {
             if (field.HasCustomParser)
             {
-                builder.AppendLine($"result.{field.Property.Name} = this.{field.CustomParserMethod}();");
+                builder.AppendLine($"result.{field.Property.Name} = result.{field.CustomParserMethod}(reader);");
             }
             else
             {
