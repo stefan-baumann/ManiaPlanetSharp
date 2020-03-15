@@ -219,3 +219,6 @@ pip-log.txt
 AeroSuite.sln.GhostDoc.xml
 /ManiaPlanetSharp/.vs/ManiaPlanetSharp
 /ManiaPlanetSharp.zip
+src/.vs/ManiaPlanetSharp/v16/Server/sqlite3/db.lock
+src/.vs/ManiaPlanetSharp/v16/Server/sqlite3/storage.ide-shm
+src/.vs/ManiaPlanetSharp/v16/Server/sqlite3/storage.ide-wal

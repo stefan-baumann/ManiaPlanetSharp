@@ -49,7 +49,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2), Condition(nameof(Version), ConditionOperator.LessThan, 5)]
         public int Unknown7Count { get; set; }
 
-        [Property(SpecialPropertyType.CustomStruct), Array(nameof(Unknown7Count)), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2), Condition(nameof(Version), ConditionOperator.LessThan, 5)]
+        [Property(), Array(nameof(Unknown7Count)), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2), Condition(nameof(Version), ConditionOperator.LessThan, 5)]
         public VisualModelStruct1[] Unknown7 { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.Equal, 5)]
@@ -64,7 +64,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]
         public int Unknown10Count { get; set; }
 
-        [Property(SpecialPropertyType.CustomStruct), Array(nameof(Unknown10Count)), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]
+        [Property(), Array(nameof(Unknown10Count)), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]
         public VisualModelStruct1[] Unknown10 { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2), Condition(nameof(Version), ConditionOperator.LessThanOrEqual, 16)]
@@ -94,16 +94,16 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 13)]
         public int Unknown19Count { get; set; }
 
-        [Property(SpecialPropertyType.CustomStruct), Array(nameof(Unknown19Count)), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 13)]
+        [Property(), Array(nameof(Unknown19Count)), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 13)]
         public VisualModelStruct3[] Unknown19 { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 13)]
         public int Unknown20Count { get; set; }
 
-        [Property(SpecialPropertyType.CustomStruct), Array(nameof(Unknown20Count)), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 13)]
+        [Property(), Array(nameof(Unknown20Count)), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 13)]
         public VisualModelStruct4[] Unknown20 { get; set; }
         
-        [Property(SpecialPropertyType.CustomStruct), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 14)]
+        [Property(), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 14)]
         public VisualModelStruct3 Unknown21 { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.Equal, 15)]
@@ -115,7 +115,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 19)]
         public float Unknown24 { get; set; }
 
-        [Property(SpecialPropertyType.CustomStruct), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 20)]
+        [Property(), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 20)]
         public VisualModelStruct3 Unknown25 { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 21)]

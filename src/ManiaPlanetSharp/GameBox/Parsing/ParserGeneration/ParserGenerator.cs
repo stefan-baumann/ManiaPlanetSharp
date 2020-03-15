@@ -17,7 +17,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         public static Expression<ChunkParserDelegate<TChunk>> GenerateChunkParserExpression<TChunk>()
             where TChunk : Chunk, new()
         {
-#if false //!DEBUG
+#if !DEBUG
             try
             {
 #endif
@@ -33,7 +33,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 .Concat(GenerateFieldParserExpressions<TChunk>(resultVariable, readerParameter, localVariables))
                 .Concat(new[] { Expression.Label(Expression.Label(typeof(TChunk)), resultVariable) });
             return Expression.Lambda<ChunkParserDelegate<TChunk>>(Expression.Block(localVariables, body), readerParameter, idParameter);
-#if false //!DEBUG
+#if !DEBUG
             }
             catch (Exception ex)
             {
@@ -45,7 +45,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         public static Expression<ParserDelegate<TStruct>> GenerateStructParserExpression<TStruct>()
             where TStruct : new()
         {
-#if false //!DEBUG
+#if !DEBUG
             try
             {
 #endif
@@ -59,7 +59,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 .Concat(GenerateFieldParserExpressions<TStruct>(resultVariable, readerParameter, localVariables))
                 .Concat(new[] { Expression.Label(Expression.Label(typeof(TStruct)), resultVariable) });
             return Expression.Lambda<ParserDelegate<TStruct>>(Expression.Block(localVariables, body), readerParameter);
-#if false //!DEBUG
+#if !DEBUG
             }
             catch (Exception ex)
             {
@@ -72,7 +72,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 
         private static IEnumerable<Expression> GenerateFieldParserExpressions<T>(Expression target, Expression reader, List<ParameterExpression> localVariables)
         {
-            foreach (Field field in GetFields<T>().OrderBy(f => f.Index))
+            foreach (Field field in Fields.GetFields<T>().OrderBy(f => f.Index))
             {
                 Expression parsingExpression = Expression.Block(GenerateFieldParserExpression(target, reader, field, localVariables));
                 if (field.HasConditions)
@@ -194,21 +194,29 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 switch (field.SpecialPropertyType)
                 {
                     case SpecialPropertyType.LookbackString:
+                        if (singleValueType != typeof(string))
+                        {
+                            throw new InvalidOperationException($"Property marked as lookbackstring is not of type string at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
+                        }
                         //reader.ReadLookbackString();
                         return Expression.Call(reader, nameof(GameBoxReader.ReadLookbackString), null);
                     case SpecialPropertyType.NodeReference:
+                        if (!typeof(Node).IsAssignableFrom(singleValueType))
+                        {
+                            throw new InvalidOperationException($"Property marked as node reference is not of a type derived of Node at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
+                        }
                         //reader.ReadNodeReference();
                         return Expression.Call(reader, nameof(GameBoxReader.ReadNodeReference), null);
-                    case SpecialPropertyType.CustomStruct:
-                        if (singleValueType.GetCustomAttribute<CustomStructAttribute>() != null)
-                        {
-                            //ParserFactory.GetCustomStructParser<singleValueType>().Parse(reader)
-                            return Expression.Call(Expression.Call(typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetCustomStructParser)).MakeGenericMethod(singleValueType)), typeof(CustomStructParser<>).MakeGenericType(singleValueType).GetMethod("Parse"), reader);
-                        }
-                        else
-                        {
-                            throw new InvalidOperationException($"CustomStruct property has type without CustomStructAttribute at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
-                        }
+                    //case SpecialPropertyType.CustomStruct:
+                    //    if (singleValueType.GetCustomAttribute<CustomStructAttribute>() != null)
+                    //    {
+                    //        //ParserFactory.GetCustomStructParser<singleValueType>().Parse(reader)
+                    //        return Expression.Call(Expression.Call(typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetCustomStructParser)).MakeGenericMethod(singleValueType)), typeof(CustomStructParser<>).MakeGenericType(singleValueType).GetMethod("Parse"), reader);
+                    //    }
+                    //    else
+                    //    {
+                    //        throw new InvalidOperationException($"CustomStruct property has type without CustomStructAttribute at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
+                    //    }
                     default:
                         throw new NotImplementedException($"Unknown special property type at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
                 }
@@ -224,6 +232,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 {
                     //reader.ReadNode()
                     return Expression.Call(reader, nameof(GameBoxReader.ReadNode), null);
+                }
+                else if (singleValueType.GetCustomAttribute<CustomStructAttribute>() != null)
+                {
+                    //ParserFactory.GetCustomStructParser<singleValueType>().Parse(reader)
+                    return Expression.Call(Expression.Call(typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetCustomStructParser)).MakeGenericMethod(singleValueType)), typeof(CustomStructParser<>).MakeGenericType(singleValueType).GetMethod("Parse"), reader);
                 }
                 else
                 {
@@ -293,41 +306,6 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 yield return chunk.Id;
             }
             yield break;
-        }
-
-        private static IEnumerable<Field> GetFields<T>()
-        {
-            foreach (PropertyInfo property in typeof(T).GetProperties())
-            {
-                PropertyAttribute propertyAttribute = property.GetCustomAttribute<PropertyAttribute>();
-                if (propertyAttribute != null)
-                {
-                    yield return new Field()
-                    {
-                        Property = property,
-                        Index = propertyAttribute.Line,
-                        SpecialPropertyType = propertyAttribute.SpecialType,
-                        ArrayLengthSource = property.GetCustomAttribute<ArrayAttribute>()?.LengthSource,
-                        Conditions = property.GetCustomAttributes<ConditionAttribute>().Select(conditionAttribute => conditionAttribute.Condition).ToList(),
-                        CustomParserMethod = property.GetCustomAttribute<CustomParserMethodAttribute>()?.ParserMethod
-                    };
-                }
-            }
-        }
-
-        public class Field
-        {
-            public PropertyInfo Property { get; set; }
-            public int Index { get; set; }
-
-            public bool HasSpecialPropertyType => this.SpecialPropertyType != null;
-            public SpecialPropertyType? SpecialPropertyType { get; set; }
-            public bool HasConditions => this.Conditions != null ? this.Conditions.Any() : false;
-            public List<Condition> Conditions { get; set; }
-            public bool IsArray => this.ArrayLengthSource != null;
-            public ArrayLengthSource ArrayLengthSource { get; set; }
-            public bool HasCustomParser => this.CustomParserMethod != null;
-            public string CustomParserMethod { get; set; }
         }
     }
 }

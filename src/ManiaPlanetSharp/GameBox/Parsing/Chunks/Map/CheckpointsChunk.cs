@@ -9,7 +9,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
     public class CheckpointsChunk
         : Chunk
     {
-        [Property(SpecialPropertyType.CustomStruct), Array]
+        [Property, Array]
         public Checkpoint[] Checkpoints { get; set; }
     }
 
