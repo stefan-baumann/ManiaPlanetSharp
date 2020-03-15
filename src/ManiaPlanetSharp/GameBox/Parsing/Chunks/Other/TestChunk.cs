@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks.Other
 {
-    //[Chunk(0x12345678)]
+    [Chunk(0x12345678)]
     public class TestChunk
         : Chunk
     {
