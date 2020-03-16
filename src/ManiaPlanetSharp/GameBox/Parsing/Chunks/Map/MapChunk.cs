@@ -39,20 +39,22 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property]
         public uint Version { get; set; }
 
-        [Property(), CustomParserMethod(nameof(MapChunk.ParseBlocks))]
+        [Property, CustomParserMethod(nameof(MapChunk.ParseBlocks))]
         public Block[] Blocks { get; set; }
 
         public Block[] ParseBlocks(GameBoxReader reader)
         {
+            //The block struct can be parsed by the automatically generated parser
             CustomStructParser<Block> blockParser = ParserFactory.GetCustomStructParser<Block>();
 
+            //This count of blocks that specified the length of the array does not count blocks with empty flags, so we have to read them one by one and check if they are actually counted
             Block[] blocks = new Block[reader.ReadUInt32()];
             for (int i = 0; i < this.Blocks.Length; i++)
             {
                 Block block = blockParser.Parse(reader);
                 if (block.Flags.HasFlag(BlockFlags.Null))
                 {
-                    i--;
+                    i--; //Ignore parsed block
                 }
                 else
                 {

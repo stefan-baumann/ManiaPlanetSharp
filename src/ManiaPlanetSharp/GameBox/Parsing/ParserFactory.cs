@@ -42,10 +42,16 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     Debug.WriteLine("Located pre-generated parsers.");
                     try
                     {
-                        foreach (var parser in (Dictionary<Type, IParser<Chunk>>)chunkParserClass.GetProperty("ChunkParsers", BindingFlags.Public | BindingFlags.Static).GetValue(null))
+                        foreach (var parser in (Dictionary<Type, IChunkParser<Chunk>>)chunkParserClass.GetProperty("ChunkParsers", BindingFlags.Public | BindingFlags.Static).GetValue(null))
                         {
                             Debug.WriteLine("    Found chunk parser for type " + parser.Key.ToString());
-                            ParserFactory.chunkParsers.TryAdd(parser.Key, parser.Value);
+                            if (ParserFactory.chunkParsers.TryAdd(parser.Key, parser.Value))
+                            {
+                                foreach (uint chunkId in parser.Value.ParseableIds)
+                                {
+                                    chunkParsersByID.Add(chunkId, parser.Value);
+                                }
+                            }
                         }
                         foreach (var parser in (Dictionary<Type, IParser<object>>)chunkParserClass.GetProperty("StructParsers", BindingFlags.Public | BindingFlags.Static).GetValue(null))
                         {
@@ -62,18 +68,31 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             initialized = true;
         }
 
-        private static ConcurrentDictionary<Type, IParser<Chunk>> chunkParsers = new ConcurrentDictionary<Type, IParser<Chunk>>();
+        private static ConcurrentDictionary<Type, IChunkParser<Chunk>> chunkParsers = new ConcurrentDictionary<Type, IChunkParser<Chunk>>();
+        private static Dictionary<uint, IChunkParser<Chunk>> chunkParsersByID = new Dictionary<uint, IChunkParser<Chunk>>();
+
         public static ChunkParser<TChunk> GetChunkParser<TChunk>()
             where TChunk : Chunk, new()
         {
             return (ChunkParser<TChunk>)chunkParsers.GetOrAdd(typeof(TChunk), _ =>
             {
                 Debug.WriteLine($"Generating parser for type {typeof(TChunk).Name}.");
-                return ChunkParser<TChunk>.GenerateParser();
+                var parser = ChunkParser<TChunk>.GenerateParser();
+                foreach (uint chunkId in parser.ParseableIds)
+                {
+                    chunkParsersByID.Add(chunkId, parser);
+                }
+                return parser;
             });
         }
 
+        public static IChunkParser<Chunk> GetChunkParser(uint chunkId)
+        {
+            return chunkParsersByID[chunkId];
+        }
+
         private static ConcurrentDictionary<Type, IParser<object>> structParsers = new ConcurrentDictionary<Type, IParser<object>>();
+
         public static CustomStructParser<TStruct> GetCustomStructParser<TStruct>()
             where TStruct : new()
         {

@@ -71,6 +71,11 @@ namespace ManiaPlanetSharp.GameBox
             return this.Reader.ReadByte();
         }
 
+        public char ReadChar()
+        {
+            return (char)this.Reader.ReadByte();
+        }
+
         public ushort ReadUInt16()
         {
             return this.Reader.ReadUInt16();

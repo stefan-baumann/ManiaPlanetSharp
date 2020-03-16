@@ -14,8 +14,17 @@ namespace ManiaPlanetSharp.GameBox.Parsing
     public delegate TChunk ChunkParserDelegate<TChunk>(GameBoxReader reader, uint chunkId);
     public delegate T ParserDelegate<T>(GameBoxReader reader);
     
-    public class ChunkParser<TChunk>
+    public interface IChunkParser<out TChunk>
         : IParser<TChunk>
+        where TChunk : Chunk
+    {
+        List<uint> ParseableIds { get; }
+
+        TChunk Parse(GameBoxReader reader, uint chunkId);
+    }
+
+    public class ChunkParser<TChunk>
+        : IChunkParser<TChunk>
         where TChunk : Chunk, new()
     {
         internal ChunkParser()
