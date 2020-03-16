@@ -4,14 +4,14 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
-    [Chunk(0x03043014, Skippable = true)]
-    public class PasswordChunkOld
+    [Chunk(0x2E00100E)]
+    public class CollectorIconMetadataChunk
         : Chunk
     {
         [Property]
-        public uint Unused { get; set; }
+        public bool UseAutoRenderedIcon { get; set; }
 
         [Property]
-        public string Password { get; set; }
+        public uint QuarterRotationY { get; set; }
     }
 }

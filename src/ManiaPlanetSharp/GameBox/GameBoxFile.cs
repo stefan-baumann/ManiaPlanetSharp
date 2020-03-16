@@ -1,15 +1,33 @@
-﻿using ManiaPlanetSharp.Utilities;
+﻿using ManiaPlanetSharp.GameBox.Parsing;
+using ManiaPlanetSharp.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace ManiaPlanetSharp.GameBox.Parsing
+namespace ManiaPlanetSharp.GameBox
 {
     [CustomStruct]
     public class GameBoxFile
     {
+        public static GameBoxFile Parse(string path)
+        {
+            using (FileStream stream = File.OpenRead(path))
+            {
+                return GameBoxFile.Parse(stream);
+            }
+        }
+
+        public static GameBoxFile Parse(Stream stream)
+        {
+            using (GameBoxReader reader = new GameBoxReader(stream))
+            {
+                return ParserFactory.GetCustomStructParser<GameBoxFile>().Parse(reader);
+            }
+        }
+
         #region Header
 
         private char[] magicString;
@@ -64,17 +82,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         {
             List<HeaderEntry> headerEntries = new List<HeaderEntry>((int)this.HeaderChunkCount);
             CustomStructParser<HeaderEntry> headerEntryParser = ParserFactory.GetCustomStructParser<HeaderEntry>();
-            Debug.WriteLine("Parsing header entries");
             for (int i = 0; i < this.HeaderChunkCount; i++)
             {
-                try
-                {
-                    headerEntries.Add(headerEntryParser.Parse(reader));
-                }
-                catch (KeyNotFoundException)
-                {
-
-                }
+                headerEntries.Add(headerEntryParser.Parse(reader));
             }
             return headerEntries.OrderBy(entry => entry.ChunkID).ToArray();
         }

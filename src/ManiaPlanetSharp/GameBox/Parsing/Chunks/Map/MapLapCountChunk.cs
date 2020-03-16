@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     [Chunk(0x03043018, Skippable = true)]
-    public class LapCountChunk
+    public class MapLapCountChunk
     {
         [Property]
         public bool Unused { get; set; }

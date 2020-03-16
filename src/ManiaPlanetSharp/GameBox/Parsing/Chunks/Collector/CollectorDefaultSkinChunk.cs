@@ -4,11 +4,11 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
-    [Chunk(0x03043019, Skippable = true)]
-    public class ModpackChunk
+    [Chunk(0x2E00100F)]
+    public class CollectorDefaultSkinChunk
         : Chunk
     {
         [Property]
-        public FileReference Modpack { get; set; }
+        public string DefaultSkinName { get; set; }
     }
 }

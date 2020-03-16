@@ -6,7 +6,7 @@ using ManiaPlanetSharp.GameBox.Parsing.ParserGeneration;
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     [Chunk(0x03043017, Skippable = true)]
-    public class CheckpointsChunk
+    public class MapCheckpointsChunk
         : Chunk
     {
         [Property, Array]

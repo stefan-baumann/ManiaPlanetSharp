@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     [Chunk(0x03043054, Skippable = true)]
-    public class EmbeddedItemsChunk
+    public class MapEmbeddedItemsChunk
         : Chunk
     {
         [Property]

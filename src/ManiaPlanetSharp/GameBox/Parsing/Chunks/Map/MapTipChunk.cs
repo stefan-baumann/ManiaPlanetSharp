@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     [Chunk(0x0305B001)]
-    public class TipChunk
+    public class MapTipChunk
         : Chunk
     {
         [Property]

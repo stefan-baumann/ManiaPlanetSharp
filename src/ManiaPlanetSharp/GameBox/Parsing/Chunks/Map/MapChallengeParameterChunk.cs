@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     //[Chunk(0x03043011)]
-    public class ChallengeParameterChunk
+    public class MapChallengeParameterChunk
         : Chunk
     {
         [Property]

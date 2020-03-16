@@ -6,7 +6,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     //[Chunk(0x0304303D, Skippable = true)]
     //The information here is outdated
-    public class LightmapChunk
+    public class MapLightmapChunk
         : Chunk
     {
         [Property]

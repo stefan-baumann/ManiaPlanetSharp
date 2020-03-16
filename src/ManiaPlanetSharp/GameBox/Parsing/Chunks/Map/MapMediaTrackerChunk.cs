@@ -5,7 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     //[Chunk(0x03043021)]
-    public class MediaTrackerChunk
+    public class MapMediaTrackerChunk
     {
         [Property(SpecialPropertyType.NodeReference)]
         public Node IntroClip { get; set; }

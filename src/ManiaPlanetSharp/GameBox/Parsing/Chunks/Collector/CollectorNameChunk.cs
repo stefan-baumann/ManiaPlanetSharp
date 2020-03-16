@@ -4,11 +4,11 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
-    [Chunk(0x03043024)]
-    public class CustomMusicChunk
+    [Chunk(0x2E00100C)]
+    public class CollectorNameChunk
         : Chunk
     {
         [Property]
-        public FileReference CustomMusic { get; set; }
+        public string Name { get; set; }
     }
 }

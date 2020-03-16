@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     [Chunk(0x0304301C, Skippable = true)]
-    public class PlaymodeChunk
+    public class MapPlaymodeChunk
         : Chunk
     {
         [Property]
