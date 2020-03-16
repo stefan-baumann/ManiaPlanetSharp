@@ -59,9 +59,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                             ParserFactory.structParsers.TryAdd(parser.Key, parser.Value);
                         }
                     }
-                    catch
+                    catch (Exception ex)
                     {
-
+                        throw ex;
                     }
                 }
             }

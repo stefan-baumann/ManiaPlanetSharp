@@ -22,11 +22,14 @@ namespace ManiaPlanetSharp.ParserTest
                 }
                 if (File.Exists(path))
                 {
-                    using (FileStream stream = File.OpenRead(path))
+                    using (MemoryStream stream = new MemoryStream(File.ReadAllBytes(path)))
                     using (GameBoxReader reader = new GameBoxReader(stream))
                     {
                         CustomStructParser<GameBoxFile> parser = ParserFactory.GetCustomStructParser<GameBoxFile>();
+                        Stopwatch stopwatch = Stopwatch.StartNew();
                         GameBoxFile file = parser.Parse(reader);
+                        stopwatch.Stop();
+                        Console.WriteLine($"Done in {stopwatch.Elapsed.TotalMilliseconds:#0.0}ms.");
                     }
                 }
                 else

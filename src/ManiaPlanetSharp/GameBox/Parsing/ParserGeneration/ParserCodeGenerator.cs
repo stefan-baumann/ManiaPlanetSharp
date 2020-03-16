@@ -153,7 +153,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 }
                 if (singleValueType == typeof(byte))
                 {
-                    builder.AppendLine($"result.{field.Property.Name} = reader.ReadRaw({lengthSource});");
+                    builder.AppendLine($"result.{field.Property.Name} = reader.ReadRaw((int){lengthSource});");
                 }
                 else
                 {

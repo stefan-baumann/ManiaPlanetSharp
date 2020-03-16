@@ -20,6 +20,6 @@ namespace ManiaPlanetSharp.GameBox.Parsing
 
         public uint Id { get; private set; }
 
-        public bool Skippable { get; private set; }
+        public bool Skippable { get; set; }
     }
 }

@@ -6,23 +6,20 @@ namespace ManiaPlanetSharp.GameBox
 {
     public abstract class Chunk
         : Node
-    {
-    }
+    { }
 
     public class UnknownChunk
         : Chunk
     {
-        public UnknownChunk(byte[] rawData, uint chunkId)
-            : this(rawData)
+        public UnknownChunk(byte[] data, uint chunkId)
+            : this(data)
         {
             this.Id = chunkId;
         }
 
-        public UnknownChunk(byte[] rawData)
+        public UnknownChunk(byte[] data)
         {
-            this.RawData = rawData;
+            this.Data = data;
         }
-
-        public byte[] RawData { get; set; }
     }
 }
