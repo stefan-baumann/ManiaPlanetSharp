@@ -6,14 +6,17 @@
     <Company>Stefan Baumann</Company>
     <Product>ManiaPlanetSharp</Product>
     <RepositoryUrl>https://github.com/stefan-baumann/ManiaPlanetSharp</RepositoryUrl>
-    <PackageLicenseUrl>https://github.com/stefan-baumann/ManiaPlanetSharp/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
     <PackageTags>ManiaPlanet, Trackmania, Shootmania, GameBox, Parser, Metadata, ManiaExchange</PackageTags>
     <Copyright>Copyright © 2020 Stefan Baumann</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/stefan-baumann/ManiaPlanetSharp</PackageProjectUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -23,10 +26,6 @@
   <ItemGroup>
     <Folder Include="GameBox\MetadataProviders\" />
     <Folder Include="ManiaExchange\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Newtonsoft.Json" Version="9.0.1" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
