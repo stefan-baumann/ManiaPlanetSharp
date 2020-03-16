@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp.CustomPars
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp.CustomParserCodeGenerationTest", "ManiaPlanetSharp.CustomParserCodeGenerationTest\ManiaPlanetSharp.CustomParserCodeGenerationTest.csproj", "{2F1B72A1-4838-4828-9736-8BFC6DA6BBFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp.ParserTest", "ManiaPlanetSharp.ParserTest\ManiaPlanetSharp.ParserTest.csproj", "{5CD37038-44F1-4485-BCE2-BAB64097DA5F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{2F1B72A1-4838-4828-9736-8BFC6DA6BBFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F1B72A1-4838-4828-9736-8BFC6DA6BBFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F1B72A1-4838-4828-9736-8BFC6DA6BBFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CD37038-44F1-4485-BCE2-BAB64097DA5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CD37038-44F1-4485-BCE2-BAB64097DA5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CD37038-44F1-4485-BCE2-BAB64097DA5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CD37038-44F1-4485-BCE2-BAB64097DA5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,6 +48,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{F3949E03-50D8-4C0F-A723-2C23F69D51EA} = {F7E9CC9A-89A3-407B-BE0C-5B0CF3456AD9}
 		{2F1B72A1-4838-4828-9736-8BFC6DA6BBFD} = {F7E9CC9A-89A3-407B-BE0C-5B0CF3456AD9}
+		{5CD37038-44F1-4485-BCE2-BAB64097DA5F} = {F7E9CC9A-89A3-407B-BE0C-5B0CF3456AD9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {27F9B807-1D20-4546-880E-6593671D737C}

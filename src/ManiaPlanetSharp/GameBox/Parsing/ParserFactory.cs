@@ -18,7 +18,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         private static bool initialized = false;
         public static void InitializePrecompiledParsers()
         {
-            if (!initialized)
+            if (!initialized && GlobalParserSettings.UsePrecompiledParsers)
             {
                 Debug.WriteLine("Initializing Parser Factory...");
                 var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic);
@@ -66,6 +66,12 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                 }
             }
             initialized = true;
+        }
+
+        internal static void ClearParsers()
+        {
+            chunkParsers.Clear();
+            chunkParsersByID.Clear();
         }
 
         private static ConcurrentDictionary<Type, IChunkParser<Chunk>> chunkParsers = new ConcurrentDictionary<Type, IChunkParser<Chunk>>();

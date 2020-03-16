@@ -19,7 +19,7 @@ namespace ManiaPlanetSharp.CustomParserGenerationTest
             var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.DefinedTypes);
             var chunks = types.Where(t => typeof(Chunk).IsAssignableFrom(t) && t != typeof(Chunk));
             var structs = types.Where(t => t.GetCustomAttribute<CustomStructAttribute>() != null);
-            var chunkFactory = typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetChunkParser), BindingFlags.Public | BindingFlags.Static);
+            var chunkFactory = typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetChunkParser), new Type[] { });
             var structFactory = typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetCustomStructParser), BindingFlags.Public | BindingFlags.Static);
 
             ParserFactory.InitializePrecompiledParsers();
