@@ -24,8 +24,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="GameBox\MetadataProviders\" />
     <Folder Include="ManiaExchange\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
