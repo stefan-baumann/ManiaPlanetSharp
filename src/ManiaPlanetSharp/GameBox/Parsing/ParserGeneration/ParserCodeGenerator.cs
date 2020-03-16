@@ -82,87 +82,82 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 
         private static void GenerateFieldParseCode(Field field, IndentingStringBuilder builder)
         {
+            string parseCode;
+            Type singleValueType = field.IsArray ? field.Property.PropertyType.GetElementType() : field.Property.PropertyType;
             if (field.HasCustomParser)
             {
-                builder.AppendLine($"result.{field.Property.Name} = result.{field.CustomParserMethod}(reader);");
+                parseCode = $"result.{field.CustomParserMethod}(reader)";
+            }
+            else if (field.HasSpecialPropertyType)
+            {
+                switch (field.SpecialPropertyType)
+                {
+                    case SpecialPropertyType.LookbackString:
+                        if (singleValueType != typeof(string))
+                        {
+                            throw new InvalidOperationException($"Property marked as lookbackstring is not of type string at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
+                        }
+                        parseCode = "reader.ReadLookbackString()";
+                        break;
+                    case SpecialPropertyType.NodeReference:
+                        if (!typeof(Node).IsAssignableFrom(singleValueType))
+                        {
+                            throw new InvalidOperationException($"Property marked as node reference is not of a type derived of Node at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
+                        }
+                        parseCode = singleValueType == typeof(Node) ? "reader.ReadNodeReference()" : $"({singleValueType.FullName})reader.ReadNodeReference()";
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unknown special property type at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
+                }
             }
             else
             {
-                string parseCode;
-                Type singleValueType = field.IsArray ? field.Property.PropertyType.GetElementType() : field.Property.PropertyType;
-                if (field.HasSpecialPropertyType)
+                if (readerMethods.ContainsKey(singleValueType))
                 {
-                    switch (field.SpecialPropertyType)
-                    {
-                        case SpecialPropertyType.LookbackString:
-                            if (singleValueType != typeof(string))
-                            {
-                                throw new InvalidOperationException($"Property marked as lookbackstring is not of type string at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
-                            }
-                            parseCode = "reader.ReadLookbackString()";
-                            break;
-                        case SpecialPropertyType.NodeReference:
-                            if (!typeof(Node).IsAssignableFrom(singleValueType))
-                            {
-                                throw new InvalidOperationException($"Property marked as node reference is not of a type derived of Node at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
-                            }
-                            parseCode = singleValueType == typeof(Node) ? "reader.ReadNodeReference()" : $"({singleValueType.FullName})reader.ReadNodeReference()";
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown special property type at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
-                    }
+                    parseCode = $"reader.{readerMethods[singleValueType]}()";
+                }
+                else if (typeof(Node).IsAssignableFrom(singleValueType))
+                {
+                    parseCode = singleValueType == typeof(Node) ? "reader.ReadNode()" : $"({singleValueType.FullName})reader.ReadNode()";
+                }
+                else if (singleValueType.GetCustomAttribute<CustomStructAttribute>() != null)
+                {
+                    parseCode = $"ParserFactory.GetCustomStructParser<{singleValueType.FullName}>().Parse(reader)";
                 }
                 else
                 {
-                    if (readerMethods.ContainsKey(singleValueType))
-                    {
-                        parseCode = $"reader.{readerMethods[singleValueType]}()";
-                    }
-                    else if (typeof(Node).IsAssignableFrom(singleValueType))
-                    {
-                        parseCode = singleValueType == typeof(Node) ? "reader.ReadNode()" : $"({singleValueType.FullName})reader.ReadNode()";
-                    }
-                    else if (singleValueType.GetCustomAttribute<CustomStructAttribute>() != null)
-                    {
-                        parseCode = $"ParserFactory.GetCustomStructParser<{singleValueType.FullName}>().Parse(reader)";
-                    }
-                    else
-                    {
-                        throw new NotImplementedException($"Unknown property type at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
-                    }
+                    throw new NotImplementedException($"Unknown property type at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
                 }
+            }
 
-                if (!field.IsArray)
+            if (!field.IsArray)
+            {
+                builder.AppendLine($"result.{field.Property.Name} = {parseCode};");
+            }
+            else
+            {
+                string lengthSource;
+                switch (field.ArrayLengthSource)
                 {
-                    builder.AppendLine($"result.{field.Property.Name} = {parseCode};");
+                    case AutomaticArrayLengthSource a:
+                        lengthSource = "reader.ReadUInt32()";
+                        break;
+                    case FixedArrayLengthSource fixedLengthSource:
+                        lengthSource = fixedLengthSource.Length.ToString();
+                        break;
+                    case PropertyArrayLengthSource propertyLengthSource:
+                        lengthSource = $"(uint)result.{propertyLengthSource.DependentProperty}";
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unknown array length source at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
                 }
-                else
-                {
-                    string lengthSource;
-                    switch (field.ArrayLengthSource)
-                    {
-                        case AutomaticArrayLengthSource a:
-                            lengthSource = "reader.ReadUInt32()";
-                            break;
-                        case FixedArrayLengthSource fixedLengthSource:
-                            lengthSource = fixedLengthSource.Length.ToString();
-                            break;
-                        case PropertyArrayLengthSource propertyLengthSource:
-                            lengthSource = $"(uint)result.{propertyLengthSource.DependentProperty}";
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown array length source at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
-                    }
-                    //this.Property = new T[<lengthSource>]
-                    builder.AppendLine($"result.{field.Property.Name} = new {field.Property.PropertyType.GetElementType()}[{lengthSource}];");
-                    //for (iProperty = 0; iProperty < <lengthSource>; iProperty++) { this.Property[iProperty] = <parseExpression>; }
-                    builder.AppendLine($"for (int i = 0; i < result.{field.Property.Name}.Length; i++)");
-                    builder.AppendLine("{");
-                    builder.Indent();
-                    builder.AppendLine($"result.{field.Property.Name}[i] = {parseCode};");
-                    builder.UnIndent();
-                    builder.AppendLine("}");
-                }
+                builder.AppendLine($"result.{field.Property.Name} = new {field.Property.PropertyType.GetElementType()}[{lengthSource}];");
+                builder.AppendLine($"for (int i = 0; i < result.{field.Property.Name}.Length; i++)");
+                builder.AppendLine("{");
+                builder.Indent();
+                builder.AppendLine($"result.{field.Property.Name}[i] = {parseCode};");
+                builder.UnIndent();
+                builder.AppendLine("}");
             }
         }
 
@@ -170,6 +165,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         {
             { typeof(bool), nameof(GameBoxReader.ReadBool) },
             { typeof(byte), nameof(GameBoxReader.ReadByte) },
+            { typeof(char), nameof(GameBoxReader.ReadChar) },
             { typeof(ushort), nameof(GameBoxReader.ReadUInt16) },
             { typeof(int), nameof(GameBoxReader.ReadInt32) },
             { typeof(uint), nameof(GameBoxReader.ReadUInt32) },
@@ -189,7 +185,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             switch (condition)
             {
                 case BinaryCondition binaryCondition:
-                    return binaryCondition.ReferenceValue == true ? binaryCondition.DependentProperty : "!" + binaryCondition.DependentProperty;
+                    return "result." + (binaryCondition.ReferenceValue == true ? binaryCondition.DependentProperty : "!" + binaryCondition.DependentProperty);
                 case ValueCondition valueCondition:
                     string valueCode = valueCondition.ReferenceValue == null ? "null" : valueCondition.ReferenceValue is string s ? $"\"{s}\"" : valueCondition.ReferenceValue is Enum e ? $"{e.GetType().FullName}.{Enum.GetName(e.GetType(), e)}" : valueCondition.ReferenceValue.ToString();
                     

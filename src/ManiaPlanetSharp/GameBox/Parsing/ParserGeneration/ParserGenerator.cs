@@ -123,47 +123,49 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 
         private static IEnumerable<Expression> GenerateFieldParserExpression(Expression target, Expression reader, Field field, List<ParameterExpression> localVariables)
         {
+            Expression parseExpression;
             if (field.HasCustomParser)
             {
-                //this.Property = this.CustomParserMethod();
-                yield return CreateAssignExpression(target, field, Expression.Call(target, field.Property.DeclaringType.GetMethod(field.CustomParserMethod, BindingFlags.Public | BindingFlags.Instance), reader));
+                //result.CustomParserMethod(reader)
+                parseExpression = Expression.Call(target, field.Property.DeclaringType.GetMethod(field.CustomParserMethod, BindingFlags.Public | BindingFlags.Instance), reader);
             }
             else
             {
-                Expression parseExpression = GenerateSingleValueParseExpression(field, reader);
-                if (!field.IsArray)
+                parseExpression = GenerateSingleValueParseExpression(field, reader);
+            }
+
+            if (!field.IsArray)
+            {
+                //result.Property = <parseExpression>;
+                yield return CreateAssignExpression(target, field, parseExpression);
+            }
+            else
+            {
+                Expression lengthSource;
+                switch (field.ArrayLengthSource)
                 {
-                    //this.Property = <parseExpression>;
-                    yield return CreateAssignExpression(target, field, parseExpression);
+                    case AutomaticArrayLengthSource a:
+                        //uint PropertyArrayLength = reader.ReadUInt32();
+                        lengthSource = Expression.Variable(typeof(uint), field.Property.Name + "ArrayLength");
+                        localVariables.Add((ParameterExpression)lengthSource);
+                        yield return Expression.Assign(lengthSource, Expression.Call(reader, nameof(GameBoxReader.ReadUInt32), null));
+                        break;
+                    case FixedArrayLengthSource fixedLengthSource:
+                        lengthSource = Expression.Convert(Expression.Constant(fixedLengthSource.Length), typeof(uint));
+                        break;
+                    case PropertyArrayLengthSource propertyLengthSource:
+                        lengthSource = Expression.Convert(Expression.Property(target, propertyLengthSource.DependentProperty), typeof(uint));
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unknown array length source at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
                 }
-                else
-                {
-                    Expression lengthSource;
-                    switch (field.ArrayLengthSource)
-                    {
-                        case AutomaticArrayLengthSource a:
-                            //uint PropertyArrayLength = reader.ReadUInt32();
-                            lengthSource = Expression.Variable(typeof(uint), field.Property.Name + "ArrayLength");
-                            localVariables.Add((ParameterExpression)lengthSource);
-                            yield return Expression.Assign(lengthSource, Expression.Call(reader, nameof(GameBoxReader.ReadUInt32), null));
-                            break;
-                        case FixedArrayLengthSource fixedLengthSource:
-                            lengthSource = Expression.Convert(Expression.Constant(fixedLengthSource.Length), typeof(uint));
-                            break;
-                        case PropertyArrayLengthSource propertyLengthSource:
-                            lengthSource = Expression.Convert(Expression.Property(target, propertyLengthSource.DependentProperty), typeof(uint));
-                            break;
-                        default:
-                            throw new NotImplementedException($"Unknown array length source at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
-                    }
-                    //this.Property = new T[<lengthSource>]
-                    yield return CreateAssignExpression(target, field, Expression.NewArrayBounds(field.Property.PropertyType.GetElementType(), Expression.Convert(lengthSource, typeof(int))));
-                    //uint iProperty;
-                    ParameterExpression index = Expression.Variable(typeof(uint), "i" + field.Property.Name);
-                    localVariables.Add(index);
-                    //for (iProperty = 0; iProperty < <lengthSource>; iProperty++) { this.Property[iProperty] = <parseExpression>; }
-                    yield return CreateForExpression(index, Expression.Constant(0U), lengthSource, CreateArrayAssignExpression(target, field, index, parseExpression));
-                }
+                //this.Property = new T[<lengthSource>]
+                yield return CreateAssignExpression(target, field, Expression.NewArrayBounds(field.Property.PropertyType.GetElementType(), Expression.Convert(lengthSource, typeof(int))));
+                //uint iProperty;
+                ParameterExpression index = Expression.Variable(typeof(uint), "i" + field.Property.Name);
+                localVariables.Add(index);
+                //for (iProperty = 0; iProperty < <lengthSource>; iProperty++) { this.Property[iProperty] = <parseExpression>; }
+                yield return CreateForExpression(index, Expression.Constant(0U), lengthSource, CreateArrayAssignExpression(target, field, index, parseExpression));
             }
 
             yield break;
@@ -172,6 +174,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         private static Dictionary<Type, string> readerMethods = new Dictionary<Type, string>()
         {
             { typeof(bool), nameof(GameBoxReader.ReadBool) },
+            { typeof(char), nameof(GameBoxReader.ReadChar) },
             { typeof(byte), nameof(GameBoxReader.ReadByte) },
             { typeof(ushort), nameof(GameBoxReader.ReadUInt16) },
             { typeof(int), nameof(GameBoxReader.ReadInt32) },
