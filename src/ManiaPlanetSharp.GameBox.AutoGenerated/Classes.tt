@@ -1,0 +1,32 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="netstandard" #>
+<#@ assembly name="ManiaPlanetSharp.dll" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="ManiaPlanetSharp.GameBox" #>
+<#@ import namespace="ManiaPlanetSharp.GameBox.Parsing" #>
+<#@ import namespace="ManiaPlanetSharp.GameBox.Parsing.ParserGeneration" #>
+<#@ output extension=".cs" #>
+<#
+Assembly mpSharp = Assembly.GetAssembly(typeof(Chunk));
+var chunks = mpSharp.GetExportedTypes().Where(t => typeof(Chunk).IsAssignableFrom(t) && t != typeof(Chunk) && t.GetCustomAttributes<ChunkAttribute>().Any());
+var classes = chunks.SelectMany(c => c.GetCustomAttributes<ChunkAttribute>().Select(ca => Tuple.Create(ca.Id, c))).GroupBy(c => c.Item1 & ~0xFFFU);
+foreach (var @class in classes)
+{
+	var classId = @class.Key;
+#>//<#= KnownClassIds.GetClassName(classId) #>
+<#
+	foreach (var chunk in @class)
+	{
+#>
+// - Chunk <#= chunk.Item2.Name #> (<#= $"0x{chunk.Item1:X8}" #>)
+<#
+	}
+#>
+
+<#
+}
+#>

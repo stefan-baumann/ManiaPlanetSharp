@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Stefan Baumann</Authors>
+    <Company>Stefan Baumann</Company>
+    <Product>ManiaPlanetSharp</Product>
+    <RepositoryUrl>https://github.com/stefan-baumann/ManiaPlanetSharp</RepositoryUrl>
+    <PackageLicenseUrl></PackageLicenseUrl>
+    <PackageTags>ManiaPlanet, Trackmania, Shootmania, GameBox, Parser, Metadata, ManiaExchange</PackageTags>
+    <Copyright>Copyright © 2020 Stefan Baumann</Copyright>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>https://github.com/stefan-baumann/ManiaPlanetSharp</PackageProjectUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="ManiaExchange\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy /Y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(SolutionDir)$(TargetName).dll&quot;&#xD;&#xA;" />
+  </Target>
+
+</Project>
