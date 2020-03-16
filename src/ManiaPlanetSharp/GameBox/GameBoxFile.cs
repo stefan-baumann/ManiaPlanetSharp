@@ -24,28 +24,34 @@ namespace ManiaPlanetSharp.GameBox
         {
             using (GameBoxReader reader = new GameBoxReader(stream))
             {
-                return ParserFactory.GetCustomStructParser<GameBoxFile>().Parse(reader);
+#if !DEBUG
+                try
+                {
+#endif
+                    return ParserFactory.GetCustomStructParser<GameBoxFile>().Parse(reader);
+#if !DEBUG
+                }
+                catch (Exception ex)
+                {
+                    throw new ParseException(ex);
+                }
+#endif
             }
         }
 
-        #region Header
+#region Header
 
-        private char[] magicString;
-        [Property, Array(3)]
-        public char[] MagicString
+        [Property, CustomParserMethod(nameof(ReadMagicString))]
+        public string MagicString { get; set; }
+
+        public string ReadMagicString(GameBoxReader reader)
         {
-            set
+            string magicString = reader.ReadString(3);
+            if (magicString != "GBX")
             {
-                if (value == null || value.Length != 3 || value.SequenceEqual("GBX"))
-                {
-                    throw new ArgumentException("The magic string is invalid.", nameof(MagicString));
-                }
-                this.magicString = value;
+                throw new ArgumentException("The magic string is invalid.", nameof(MagicString));
             }
-            get
-            {
-                return this.magicString;
-            }
+            return magicString;
         }
 
         [Property]
@@ -135,9 +141,9 @@ namespace ManiaPlanetSharp.GameBox
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6)]
         public uint NodeCount { get; set; }
 
-        #endregion
+#endregion
 
-        #region ReferenceTable
+#region ReferenceTable
 
         [Property]
         public uint ReferenceTableExternalNodeCount { get; set; }
@@ -174,9 +180,9 @@ namespace ManiaPlanetSharp.GameBox
             return node;
         }
 
-        #endregion
+#endregion
 
-        #region Body
+#region Body
 
         [Property, Condition(nameof(BodyCompressed))]
         public uint UncompressedBodySize { get; set; }
@@ -237,7 +243,7 @@ namespace ManiaPlanetSharp.GameBox
             }
         }
 
-        #endregion
+#endregion
     }
 
     [CustomStruct]

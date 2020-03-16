@@ -26,18 +26,26 @@ namespace ManiaPlanetSharp.ParserTest
                 {
                     using (MemoryStream stream = new MemoryStream(File.ReadAllBytes(path)))
                     {
-                        Stopwatch stopwatch = Stopwatch.StartNew();
-                        GameBoxFile file = GameBoxFile.Parse(stream);
-                        stopwatch.Stop();
-
-                        MetadataProvider metadataProvider = new ItemMetadataProvider(file);
-                        Console.WriteLine("Metadata:");
-                        foreach(var property in metadataProvider.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(property => property.Name != "File"))
+                        try
                         {
-                            Console.WriteLine($" - {property.Name}: {property.GetValue(metadataProvider)}");
-                        }
+                            Stopwatch stopwatch = Stopwatch.StartNew();
+                            GameBoxFile file = GameBoxFile.Parse(stream);
+                            stopwatch.Stop();
 
-                        Console.WriteLine($"Done in {stopwatch.Elapsed.TotalMilliseconds:#0.0}ms.");
+                            MetadataProvider metadataProvider = new ItemMetadataProvider(file);
+                            Console.WriteLine("Metadata:");
+                            foreach (var property in metadataProvider.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(property => property.Name != "File"))
+                            {
+                                Console.WriteLine($" - {property.Name}: {property.GetValue(metadataProvider)}");
+                            }
+
+                            Console.WriteLine($"Done in {stopwatch.Elapsed.TotalMilliseconds:#0.0}ms.");
+                        }
+                        catch (ParseException ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            Console.WriteLine(ex.InnerException.ToString());
+                        }
                     }
                 }
                 else

@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 
-namespace ManiaPlanetSharp.GameBox
+namespace ManiaPlanetSharp.GameBox.Parsing
 {
     /// <summary>
     /// Provides basic methods used for reading information from .gbx files.
@@ -278,7 +278,7 @@ namespace ManiaPlanetSharp.GameBox
             return new Size3D((int)this.ReadUInt32(), (int)this.ReadUInt32(), (int)this.ReadUInt32());
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             this.Reader.Dispose();
         }

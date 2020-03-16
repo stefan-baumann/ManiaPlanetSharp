@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ManiaPlanetSharp.GameBox.Parsing.Chunks.Object
+namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     [Chunk(0x2E002001)]
     public class ObjectUnknownChunk
