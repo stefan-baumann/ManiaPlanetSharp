@@ -92,23 +92,31 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                 uint chunkId = this.HeaderChunkEntries[i].ChunkID;
                 try
                 {
-                    headerChunks[i] = ParserFactory.GetChunkParser(chunkId).Parse(reader, chunkId);
-                }
-                catch (KeyNotFoundException)
-                {
-                    headerChunks[i] = new UnknownChunk(reader.ReadRaw((int)this.HeaderChunkEntries[i].ChunkSize));
+                    if (ParserFactory.TryGetChunkParser(chunkId, out IChunkParser<Chunk> parser))
+                    {
+                        headerChunks[i] = parser.Parse(reader, chunkId);
+                    }
+                    else
+                    {
+                        headerChunks[i] = new UnknownChunk(reader.ReadRaw((int)this.HeaderChunkEntries[i].ChunkSize), chunkId);
+                    }
                 }
 #if !DEBUG
                 catch (Exception ex)
                 {
                     ParsingErrorLogger.OnParsingErrorOccured(this, new ParsingErrorEventArgs(chunkId, ex.Message));
+                    reader.Stream.Position = start + offset;
+                    headerChunks[i] = new UnknownChunk(reader.ReadRaw((int)this.HeaderChunkEntries[i].ChunkSize), chunkId);
                 }
 #endif
-                offset += this.HeaderChunkEntries[i].ChunkSize;
-                if (reader.Stream.Position != start + offset)
+                finally
                 {
-                    ParsingErrorLogger.OnParsingErrorOccured(this, new ParsingErrorEventArgs(chunkId, "Invalid stream position after parsing of header chunk."));
-                    reader.Stream.Position = start + offset;
+                    offset += this.HeaderChunkEntries[i].ChunkSize;
+                    if (reader.Stream.Position != start + offset)
+                    {
+                        ParsingErrorLogger.OnParsingErrorOccured(this, new ParsingErrorEventArgs(chunkId, "Invalid stream position after parsing of header chunk."));
+                        reader.Stream.Position = start + offset;
+                    }
                 }
             }
             return headerChunks;

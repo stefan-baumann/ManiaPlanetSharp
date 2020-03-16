@@ -12,6 +12,12 @@ namespace ManiaPlanetSharp.GameBox
     public class UnknownChunk
         : Chunk
     {
+        public UnknownChunk(byte[] rawData, uint chunkId)
+            : this(rawData)
+        {
+            this.Id = chunkId;
+        }
+
         public UnknownChunk(byte[] rawData)
         {
             this.RawData = rawData;

@@ -41,6 +41,11 @@ namespace ManiaPlanetSharp.GameBox
         /// </value>
         protected BinaryReader Reader { get; private set; }
 
+        /// <summary>
+        /// Returns a boolean indicating whether this instance is currently parsing chunks in the gbx body or not
+        /// </summary>
+        public bool BodyMode { get; set; } = false;
+
 
 
         /// <summary>

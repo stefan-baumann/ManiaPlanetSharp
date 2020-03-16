@@ -17,7 +17,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             {
 #endif
             IndentingStringBuilder builder = new IndentingStringBuilder();
-            builder.AppendLine($"var result = new {typeof(TChunk).FullName}() {{ Id = reader.ReadUInt32() }};");
+            builder.AppendLine($"var result = reader.BodyMode ? new {typeof(TChunk).FullName}() {{ Id = reader.ReadUInt32() }} : new {typeof(TChunk).FullName}();");
 
             GenerateFieldsParseCode<TChunk>(builder);
 
@@ -49,7 +49,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             }
             catch (Exception ex)
             {
-                throw new ParserGeneratorException($"Internal exception occured while generating parser for type {typeof(TChunk).FullName}", ex);
+                throw new ParserGeneratorException($"Internal exception occured while generating parser for type {typeof(TStruct).FullName}", ex);
             }
 #endif
         }
@@ -151,13 +151,20 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                     default:
                         throw new NotImplementedException($"Unknown array length source at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
                 }
-                builder.AppendLine($"result.{field.Property.Name} = new {field.Property.PropertyType.GetElementType()}[{lengthSource}];");
-                builder.AppendLine($"for (int i = 0; i < result.{field.Property.Name}.Length; i++)");
-                builder.AppendLine("{");
-                builder.Indent();
-                builder.AppendLine($"result.{field.Property.Name}[i] = {parseCode};");
-                builder.UnIndent();
-                builder.AppendLine("}");
+                if (singleValueType == typeof(byte))
+                {
+                    builder.AppendLine($"result.{field.Property.Name} = reader.ReadRaw({lengthSource});");
+                }
+                else
+                {
+                    builder.AppendLine($"result.{field.Property.Name} = new {field.Property.PropertyType.GetElementType()}[{lengthSource}];");
+                    builder.AppendLine($"for (int i = 0; i < result.{field.Property.Name}.Length; i++)");
+                    builder.AppendLine("{");
+                    builder.Indent();
+                    builder.AppendLine($"result.{field.Property.Name}[i] = {parseCode};");
+                    builder.UnIndent();
+                    builder.AppendLine("}");
+                }
             }
         }
 

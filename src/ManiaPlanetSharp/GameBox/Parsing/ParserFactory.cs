@@ -97,6 +97,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             return chunkParsersByID[chunkId];
         }
 
+        public static bool TryGetChunkParser(uint chunkId, out IChunkParser<Chunk> parser)
+        {
+            return chunkParsersByID.TryGetValue(chunkId, out parser);
+        }
+
         private static ConcurrentDictionary<Type, IParser<object>> structParsers = new ConcurrentDictionary<Type, IParser<object>>();
 
         public static CustomStructParser<TStruct> GetCustomStructParser<TStruct>()
