@@ -78,11 +78,11 @@ namespace ManiaPlanetSharp.GameBox
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6)]
         public uint UserDataSize { get; set; }
 
-        [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6)]
+        [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6), Condition(nameof(UserDataSize), ConditionOperator.GreaterThan, 0)]
         public uint HeaderChunkCount { get; set; }
 
         [Property, CustomParserMethod(nameof(ParseHeaderChunkEntries)), Condition(nameof(HeaderChunkCount), ConditionOperator.GreaterThan, 0)]
-        public HeaderEntry[] HeaderChunkEntries { get; set; }
+        public HeaderEntry[] HeaderChunkEntries { get; set; } = new HeaderEntry[] { };
 
         public HeaderEntry[] ParseHeaderChunkEntries(GameBoxReader reader)
         {
@@ -96,7 +96,7 @@ namespace ManiaPlanetSharp.GameBox
         }
 
         [Property, CustomParserMethod(nameof(ParseHeaderChunks)), Condition(nameof(HeaderChunkCount), ConditionOperator.GreaterThan, 0)]
-        public Node[] HeaderChunks { get; set; }
+        public Node[] HeaderChunks { get; set; } = new Node[] { };
 
         public Node[] ParseHeaderChunks(GameBoxReader reader)
         {

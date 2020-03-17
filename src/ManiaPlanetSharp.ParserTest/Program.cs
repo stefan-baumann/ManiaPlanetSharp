@@ -32,6 +32,7 @@ namespace ManiaPlanetSharp.ParserTest
                         {
                             Stopwatch stopwatch = Stopwatch.StartNew();
                             GameBoxFile file = GameBoxFile.Parse(stream);
+                            double headerTime = stopwatch.Elapsed.TotalMilliseconds;
                             var chunks = file.ParseBody();
                             stopwatch.Stop();
 
@@ -41,7 +42,7 @@ namespace ManiaPlanetSharp.ParserTest
                             {
                                 Console.WriteLine($" - {property.Name}: {property.GetValue(metadataProvider)}");
                             }
-                            Console.WriteLine($"Done in {stopwatch.Elapsed.TotalMilliseconds:#0.0}ms.");
+                            Console.WriteLine($"Done in {stopwatch.Elapsed.TotalMilliseconds:#0.0}ms (header: {headerTime:#0.0}ms, body: {stopwatch.Elapsed.TotalMilliseconds - headerTime:#0.0}ms).");
                         }
                         catch (ParseException ex)
                         {

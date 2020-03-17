@@ -12,7 +12,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         {
             this.File = file ?? throw new ArgumentNullException(nameof(file));
 
-            this.headerNodes = this.File.HeaderChunks
+            this.headerNodes = this.File.HeaderChunks?
                 .Where(node => node.GetType() != typeof(UnknownChunk))
                 .GroupBy(node => node.GetType())
                 .ToDictionary(group => group.Key, group => group.ToArray());
@@ -32,7 +32,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         protected TChunk[] GetHeaderNodes<TChunk>()
             where TChunk : Node
         {
-            if (this.headerNodes.ContainsKey(typeof(TChunk)))
+            if (this.headerNodes?.ContainsKey(typeof(TChunk)) ?? false)
             {
                 return this.headerNodes[typeof(TChunk)].OfType<TChunk>().ToArray();
             }
