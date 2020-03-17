@@ -243,6 +243,38 @@ namespace ManiaPlanetSharp.GameBox
             }
         }
 
+        public IEnumerable<Node> ParseBody()
+        {
+            HashSet<uint> chunkIds = new HashSet<uint>(ParserFactory.GetParseableIds());
+            List<Chunk> chunks = new List<Chunk>();
+            using (MemoryStream stream = new MemoryStream(this.GetUncompressedBodyData()))
+            using (GameBoxReader reader = new GameBoxReader(stream) { BodyMode = true })
+            {
+                for (long offset = 0; offset < stream.Length - 4; offset++)
+                {
+                    stream.Position = offset;
+                    uint id = reader.ReadUInt32();
+                    if (chunkIds.Contains(id))
+                    {
+                        try
+                        {
+                            stream.Position -= 4;
+                            Chunk chunk = ParserFactory.GetChunkParser(id).Parse(reader, id);
+                            chunks.Add(chunk);
+
+                            offset = stream.Position - 1;
+                        }
+                        catch (Exception ex)
+                        {
+                            //Do something
+                        }
+                    }
+                }
+            }
+
+            return chunks;
+        }
+
 #endregion
     }
 

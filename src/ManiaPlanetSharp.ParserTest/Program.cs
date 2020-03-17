@@ -30,6 +30,7 @@ namespace ManiaPlanetSharp.ParserTest
                         {
                             Stopwatch stopwatch = Stopwatch.StartNew();
                             GameBoxFile file = GameBoxFile.Parse(stream);
+                            var chunks = file.ParseBody();
                             stopwatch.Stop();
 
                             MetadataProvider metadataProvider = new ItemMetadataProvider(file);
