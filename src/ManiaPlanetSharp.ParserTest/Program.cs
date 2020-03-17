@@ -1,6 +1,7 @@
 ﻿using ManiaPlanetSharp.GameBox;
 using ManiaPlanetSharp.GameBox.MetadataProviders;
 using ManiaPlanetSharp.GameBox.Parsing;
+using ManiaPlanetSharp.GameBox.Parsing.Chunks;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -14,6 +15,7 @@ namespace ManiaPlanetSharp.ParserTest
         {
             //Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
 
+            ParserFactory.InitializePrecompiledParsers();
             while (true)
             {
                 Console.Write("GameBox file: ");
@@ -39,7 +41,6 @@ namespace ManiaPlanetSharp.ParserTest
                             {
                                 Console.WriteLine($" - {property.Name}: {property.GetValue(metadataProvider)}");
                             }
-
                             Console.WriteLine($"Done in {stopwatch.Elapsed.TotalMilliseconds:#0.0}ms.");
                         }
                         catch (ParseException ex)

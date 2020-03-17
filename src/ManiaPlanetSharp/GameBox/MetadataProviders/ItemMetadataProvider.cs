@@ -1,63 +1,51 @@
 ﻿using ManiaPlanetSharp.GameBox.Parsing.Chunks;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.MetadataProviders
 {
     public class ItemMetadataProvider
-        : MetadataProvider
+        : ItemBasicMetadataProvider
     {
         public ItemMetadataProvider(GameBoxFile file)
             : base(file)
         {
-            this.Name = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Name2 ?? this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Name;
-            this.Author = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Author;
-            this.Collection = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Collection;
-            this.Type = this.GetHeaderNodes<ObjectItemTypeChunk>()?.FirstOrDefault()?.ItemType;
-            this.Path = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Path;
-            this.ProductState = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.ProductState;
-            this.IconData = this.GetHeaderNodes<CollectorIconChunk>()?.FirstOrDefault()?.IconData;
-            this.IconSize = this.GetHeaderNodes<CollectorIconChunk>()?.FirstOrDefault()?.Size;
+            this.ParseBody();
         }
 
-        public string Name { get; protected set; }
+        private string description;
+        public virtual string Description => this.description ?? (this.description = this.GetBodyNodes<CollectorDescriptionChunk>()?.FirstOrDefault()?.Description);
 
-        public string Author { get; protected set; }
+        private bool? useAutoRenderedIcon;
+        public virtual bool? UseAutoRenderedIcon => this.useAutoRenderedIcon ?? (this.useAutoRenderedIcon = this.GetBodyNodes<CollectorIconMetadataChunk>()?.FirstOrDefault()?.UseAutoRenderedIcon);
 
-        public string Collection { get; protected set; }
+        private uint? quarterRotationY;
+        public override uint? IconQuarterRotations => this.quarterRotationY ?? (this.quarterRotationY = this.GetBodyNodes<CollectorIconMetadataChunk>()?.FirstOrDefault()?.QuarterRotationY);
 
-        public ObjectType? Type { get; protected set; }
+        private Vector3D? groundPoint;
+        public virtual Vector3D? GroundPoint => this.groundPoint ?? (this.groundPoint = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.GroundPoint);
 
-        public string Path { get; protected set; }
+        private float? painterGroundMargin;
+        public virtual float? PainterGroundMargin => this.painterGroundMargin ?? (this.painterGroundMargin = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.PainterGroundMargin);
 
-        public ProductState? ProductState { get; protected set; }
+        private float? orbitalCenterHeightFromGround;
+        public virtual float? OrbitalCenterHeightFromGround => this.orbitalCenterHeightFromGround ?? (this.orbitalCenterHeightFromGround = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.OrbitalCenterHeightFromGround);
 
-        public byte[] IconData { get; protected set; }
+        private float? orbitalRadiusBase;
+        public virtual float? OrbitalRadiusBase => this.orbitalRadiusBase ?? (this.orbitalRadiusBase = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.OrbitalRadiusBase);
 
-        public Size? IconSize { get; protected set; }
+        private float? orbitalPreviewAngle;
+        public virtual float? OrbitalPreviewAngle => this.orbitalPreviewAngle ?? (this.orbitalPreviewAngle = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.OrbitalPreviewAngle);
 
-        //Not assigned currently
-        public uint? IconQuarterRotations { get; protected set; }
+        private string meshName;
+        public virtual string MeshName => this.meshName ?? (this.meshName = this.GetBodyNodes<ObjectModelChunk>()?.FirstOrDefault()?.MeshName);
 
-        public Bitmap GenerateIconBitmap()
-        {
-            if (this.IconData == null || this.IconSize == null)
-            {
-                return null;
-            }
+        private string shapeName;
+        public virtual string ShapeName => this.shapeName ?? (this.shapeName = this.GetBodyNodes<ObjectModelChunk>()?.FirstOrDefault()?.ShapeName);
 
-            Bitmap bmp = new Bitmap(this.IconSize.Value.Width, this.IconSize.Value.Height, PixelFormat.Format32bppArgb);
-            BitmapData data = bmp.LockBits(new Rectangle(0, 0, this.IconSize.Value.Width, this.IconSize.Value.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
-            Marshal.Copy(this.IconData, 0, data.Scan0, this.IconData.Length);
-            bmp.UnlockBits(data);
-
-            bmp.RotateFlip((new[] { RotateFlipType.RotateNoneFlipY, RotateFlipType.Rotate90FlipY, RotateFlipType.Rotate180FlipY, RotateFlipType.Rotate270FlipY })[this.IconQuarterRotations ?? 0]);
-            return bmp;
-        }
+        private string triggerShapeName;
+        public virtual string TriggerShapeName => this.triggerShapeName ?? (this.triggerShapeName = this.GetBodyNodes<ObjectModelChunk>()?.FirstOrDefault()?.TriggerShapeName);
     }
 }

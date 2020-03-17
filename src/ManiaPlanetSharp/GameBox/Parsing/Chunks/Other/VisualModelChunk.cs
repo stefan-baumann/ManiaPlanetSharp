@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
-    [Chunk(0x2E007000)]
+    //[Chunk(0x2E007000)]
     public class VisualModelChunk
         : Chunk
     {
@@ -15,7 +15,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public Node Part2 { get; set; }
     }
 
-    [Chunk(0x2E007001)]
+    //[Chunk(0x2E007001)]
     public class VisualModel1Chunk
         : Chunk
     {
@@ -123,7 +123,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
     }
 
-    [Chunk(0x2E007002)]
+    //[Chunk(0x2E007002)]
     public class VisualModel2Chunk
         : Chunk
     {
@@ -149,7 +149,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public float[] Unknown6 { get; set; }
     }
 
-    [Chunk(0x2E007003)]
+    //[Chunk(0x2E007003)]
     public class VisualModel3Chunk
         : Chunk
     {
