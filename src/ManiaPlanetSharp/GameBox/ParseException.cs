@@ -4,6 +4,9 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox
 {
+    /// <summary>
+    /// Wrapper exception for exceptions that occur while parsing.
+    /// </summary>
     public class ParseException
         : Exception
     {

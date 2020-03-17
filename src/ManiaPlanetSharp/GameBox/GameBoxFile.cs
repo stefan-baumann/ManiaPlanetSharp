@@ -2,6 +2,7 @@
 using ManiaPlanetSharp.Utilities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -42,8 +43,10 @@ namespace ManiaPlanetSharp.GameBox
 #region Header
 
         [Property, CustomParserMethod(nameof(ReadMagicString))]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string MagicString { get; set; }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public string ReadMagicString(GameBoxReader reader)
         {
             string magicString = reader.ReadString(3);
@@ -58,18 +61,22 @@ namespace ManiaPlanetSharp.GameBox
         public ushort Version { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 3)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public char FileFormatC { get; set; }
         public FileFormat FileFormat => this.FileFormatC == 'T' ? FileFormat.Text : FileFormat.Binary;
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 3)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public char ReferenceTableCompressedC { get; set; }
         public bool ReferenceTableCompressed => this.ReferenceTableCompressedC == 'C';
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 3)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public char BodyCompressedC { get; set; }
         public bool BodyCompressed => this.BodyCompressedC == 'C';
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 4)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public char Unused { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 3)]
@@ -79,11 +86,13 @@ namespace ManiaPlanetSharp.GameBox
         public uint UserDataSize { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6), Condition(nameof(UserDataSize), ConditionOperator.GreaterThan, 0)]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public uint HeaderChunkCount { get; set; }
 
         [Property, CustomParserMethod(nameof(ParseHeaderChunkEntries)), Condition(nameof(HeaderChunkCount), ConditionOperator.GreaterThan, 0)]
-        public HeaderEntry[] HeaderChunkEntries { get; set; } = new HeaderEntry[] { };
+        public HeaderEntry[] HeaderChunkEntries { get; set; } = Array.Empty<HeaderEntry>();
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public HeaderEntry[] ParseHeaderChunkEntries(GameBoxReader reader)
         {
             List<HeaderEntry> headerEntries = new List<HeaderEntry>((int)this.HeaderChunkCount);
@@ -96,8 +105,9 @@ namespace ManiaPlanetSharp.GameBox
         }
 
         [Property, CustomParserMethod(nameof(ParseHeaderChunks)), Condition(nameof(HeaderChunkCount), ConditionOperator.GreaterThan, 0)]
-        public Node[] HeaderChunks { get; set; } = new Node[] { };
+        public Node[] HeaderChunks { get; set; } = Array.Empty<Node>();
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public Node[] ParseHeaderChunks(GameBoxReader reader)
         {
             Node[] headerChunks = new Node[this.HeaderChunkCount];
@@ -157,6 +167,7 @@ namespace ManiaPlanetSharp.GameBox
         [Property, Array(nameof(ReferenceTableExternalNodeCount)), CustomParserMethod(nameof(ParseReferenceTableExternalNode)), Condition(nameof(ReferenceTableExternalNodeCount), ConditionOperator.GreaterThan, 0)]
         public ReferenceTableExternalNode[] ReferenceTableExternalNodes { get; set; }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public ReferenceTableExternalNode ParseReferenceTableExternalNode(GameBoxReader reader)
         {
             ReferenceTableExternalNode node = new ReferenceTableExternalNode() { FlagsU = reader.ReadUInt32() };
@@ -208,6 +219,7 @@ namespace ManiaPlanetSharp.GameBox
             }
         }
 
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public byte[] ReadBodyData(GameBoxReader reader)
         {
             Debug.WriteLine("Reading GameBox body data...");
@@ -259,8 +271,11 @@ namespace ManiaPlanetSharp.GameBox
                         try
                         {
                             stream.Position -= 4;
-                            Chunk chunk = ParserFactory.GetChunkParser(id).Parse(reader, id);
-                            chunks.Add(chunk);
+                            if (ParserFactory.TryGetChunkParser(id, out var parser))
+                            {
+                                Chunk chunk = parser.Parse(reader, id);
+                                chunks.Add(chunk);
+                            }
 
                             offset = stream.Position - 1;
                         }
@@ -285,6 +300,7 @@ namespace ManiaPlanetSharp.GameBox
         public uint ChunkID { get; set; }
 
         [Property]
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public uint ChunkSizeU { get; set; }
 
         public uint ChunkSize => this.ChunkSizeU & 0x7fffffff;
@@ -305,6 +321,7 @@ namespace ManiaPlanetSharp.GameBox
     public class ReferenceTableExternalNode
     {
         //The UseFile field is only present if the header version is greater than 5, which is not implementable with auto-generated parsers, hence no parser generation attributes here
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public uint FlagsU { get; set; }
 
         public ReferenceTableExternalNodeFlags Flags => (ReferenceTableExternalNodeFlags)this.FlagsU;

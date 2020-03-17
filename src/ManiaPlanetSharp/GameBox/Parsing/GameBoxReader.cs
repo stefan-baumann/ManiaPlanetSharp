@@ -7,7 +7,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Parsing
 {
     /// <summary>
-    /// Provides basic methods used for reading information from .gbx files.
+    /// Provides basic methods used for reading information from GameBox files.
     /// </summary>
     [DebuggerNonUserCode]
     public class GameBoxReader
@@ -16,7 +16,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoxStreamReader"/> class.
         /// </summary>
-        /// <param name="stream">The stream the gbx data should be read from.</param>
+        /// <param name="stream">The stream the GameBox data is read from.</param>
         public GameBoxReader(Stream stream)
         {
             this.Stream = stream;
@@ -60,57 +60,97 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <summary>
         /// Fetches raw data.
         /// </summary>
-        /// <param name="length">The length.</param>
+        /// <param name="length">The length of the raw data to be fetched in bytes.</param>
         public byte[] ReadRaw(int length)
         {
             return this.Reader.ReadBytes(length);
         }
 
+        /// <summary>
+        /// Reads a boolean.
+        /// </summary>
+        /// <returns><c>True</c>, if the value read is not equal to <c>0</c>.</returns>
         public bool ReadBool()
         {
             return this.Reader.ReadInt32() > 0;
         }
 
+        /// <summary>
+        /// Reads a byte.
+        /// </summary>
+        /// <returns></returns>
         public byte ReadByte()
         {
             return this.Reader.ReadByte();
         }
 
+        /// <summary>
+        /// Reads a character.
+        /// </summary>
+        /// <returns>A <c>byte</c> read from the file casted to a <c>char</c>.</returns>
         public char ReadChar()
         {
             return (char)this.Reader.ReadByte();
         }
 
+        /// <summary>
+        /// Reads a 16-bit unsigned integer.
+        /// </summary>
+        /// <returns></returns>
         public ushort ReadUInt16()
         {
             return this.Reader.ReadUInt16();
         }
 
+        /// <summary>
+        /// Reads a 32-bit signed integer.
+        /// </summary>
+        /// <returns></returns>
         public int ReadInt32()
         {
             return this.Reader.ReadInt32();
         }
 
+        /// <summary>
+        /// Reads a 32-bit unsigned integer.
+        /// </summary>
+        /// <returns></returns>
         public uint ReadUInt32()
         {
             return this.Reader.ReadUInt32();
         }
 
+        /// <summary>
+        /// Reads a 64-bit unsigned integer
+        /// </summary>
+        /// <returns></returns>
         public ulong ReadUInt64()
         {
             return this.Reader.ReadUInt64();
         }
 
+        /// <summary>
+        /// Reads a 128-bit unsigned integer.
+        /// </summary>
+        /// <returns>An array with two <c>ulong</c> values which represent the 128-bit integer.</returns>
         public ulong[] ReadUInt128()
         {
             return new[] { this.ReadUInt64(), this.ReadUInt64() };
         }
 
+        /// <summary>
+        /// Reads a 32-bit floating point number.
+        /// </summary>
+        /// <returns></returns>
         public float ReadFloat()
         {
             return this.Reader.ReadSingle();
         }
 
+        /// <summary>
+        /// Reads a string that is preceded by a 32-bit unsigned integer stating its length.
+        /// </summary>
+        /// <returns></returns>
         public string ReadString()
         {
             uint length = this.ReadUInt32();
@@ -122,6 +162,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             return this.ReadString((int)length);
         }
 
+        /// <summary>
+        /// Reads a string of a specified length.
+        /// </summary>
+        /// <param name="length">The length of the string in bytes.</param>
+        /// <returns></returns>
         public string ReadString(int length)
         {
             byte[] data = this.Reader.ReadBytes(length);
@@ -130,6 +175,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing
 
         private uint? LookbackStringVersion { get; set; }
         private List<string> LookbackStrings { get; set; } = new List<string>();
+        /// <summary>
+        /// Reads a lookback string relative to the context of this <c>GameBoxReader</c>.
+        /// </summary>
+        /// <returns></returns>
         public string ReadLookbackString()
         {
             if (LookbackStringVersion == null)
@@ -212,11 +261,18 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             }
         }
 
-        public void ResetLocalLbsStrings()
+        /// <summary>
+        /// Resets the lookback string cache.
+        /// </summary>
+        public void ResetLocalLookbackStringCache()
         {
             this.LookbackStrings.Clear();
         }
 
+        /// <summary>
+        /// Reads a file reference
+        /// </summary>
+        /// <returns></returns>
         public FileReference ReadFileReference()
         {
             FileReference reference = new FileReference();
@@ -235,6 +291,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         }
 
         private Dictionary<uint, Node> Nodes { get; set; } = new Dictionary<uint, Node>();
+        /// <summary>
+        /// Reads a node reference.
+        /// </summary>
+        /// <returns></returns>
         public Node ReadNodeReference()
         {
             uint index = this.ReadUInt32();
@@ -250,6 +310,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             return this.Nodes[index];
         }
 
+        /// <summary>
+        /// Reads a node.
+        /// </summary>
+        /// <returns></returns>
         public Node ReadNode()
         {
             //new NodeParser().ParseNode(this);
@@ -258,26 +322,45 @@ namespace ManiaPlanetSharp.GameBox.Parsing
 
 
 
+        /// <summary>
+        /// Reads a 2d-vector consisting of two 32-bit floating point numbers.
+        /// </summary>
+        /// <returns></returns>
         public Vector2D ReadVec2D()
         {
             return new Vector2D(this.ReadFloat(), this.ReadFloat());
         }
 
+        /// <summary>
+        /// Reads a 3d-vector consisting of three 32-bit floating point numbers.
+        /// </summary>
+        /// <returns></returns>
         public Vector3D ReadVec3D()
         {
             return new Vector3D(this.ReadFloat(), this.ReadFloat(), this.ReadFloat());
         }
 
+        /// <summary>
+        /// Reads a 2d-size consisting of two 32-bit unsigned integers.
+        /// </summary>
+        /// <returns></returns>
         public Size2D ReadSize2D()
         {
             return new Size2D((int)this.ReadUInt32(), (int)this.ReadUInt32());
         }
 
+        /// <summary>
+        /// Reads a 3d-size consisting of three 32-bit unsigned integers.
+        /// </summary>
+        /// <returns></returns>
         public Size3D ReadSize3D()
         {
             return new Size3D((int)this.ReadUInt32(), (int)this.ReadUInt32(), (int)this.ReadUInt32());
         }
 
+        /// <summary>
+        /// Releases all resources used by the current instance of the <c>GameBoxReader</c> class.
+        /// </summary>
         public virtual void Dispose()
         {
             this.Reader.Dispose();

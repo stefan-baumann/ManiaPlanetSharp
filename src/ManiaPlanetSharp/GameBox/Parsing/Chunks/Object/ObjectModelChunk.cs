@@ -47,6 +47,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         //public Node Unknown6 { get; set; }
 
 #if HACKY_OBJECT_MODEL_DETECTION
+        //For IX, we need reliable detection of the linked shape, triggershape and mesh files in items. As the knowledge we have about this chunk and its subchunks does not suffice to reliably get that information in some cases, we resort to rather "primitive" methods of finding those file paths, implemented here
 
         [Property, CustomParserMethod(nameof(FindShapeName))]
         public string ShapeName { get; set; }

@@ -6,85 +6,87 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox
 {
+    /// <summary>
+    /// Base class for all nodes and chunks.
+    /// </summary>
     public abstract class Node
-        //: IEnumerable<Node>, IList<Node>
     {
-        public Node()
+        /// <summary>
+        /// Creates a new empty instance of the <c>Node</c> class.
+        /// </summary>
+        protected Node()
         { }
 
-        public Node(uint id)
+        /// <summary>
+        /// Creates a new empty instance of the <c>Node</c> class with a specified id.
+        /// </summary>
+        /// <param name="id">The engine id of this node.</param>
+        protected Node(uint id)
             : this()
         {
             this.Id = id;
         }
 
-        public Node(uint id, byte[] data)
+
+        /// <summary>
+        /// Creates a new instance of the <c>Node</c> class with a specified id.
+        /// </summary>
+        /// <param name="id">The engine id of this node.</param>
+        /// <param name="data">The raw data of this node.</param>
+        protected Node(uint id, byte[] data)
             : this(id)
         {
             this.Data = data;
         }
 
-        //public Node(uint id, IEnumerable<Node> nodes)
-        //    : this(id)
-        //{
-        //    this.Nodes.AddRange(nodes);
-        //}
-
-        //public Node(uint id, byte[] data, IEnumerable<Node> nodes)
-        //    : this(id, data)
-        //{
-        //    this.Nodes.AddRange(nodes);
-        //}
 
 
-
+        /// <summary>
+        /// The full id of this node.
+        /// </summary>
         public virtual uint Id { get; set; }
+
+        /// <summary>
+        /// The class part of the id of this node.
+        /// </summary>
         public virtual uint ClassId => this.Id & 0xFFFFF000;
+
+        /// <summary>
+        /// The chunk part of the id of this node.
+        /// </summary>
         public virtual uint ChunkId => this.Id & 0xFFF;
 
+        /// <summary>
+        /// The raw data of this node.
+        /// </summary>
         public byte[] Data { get; set; }
 
-        //protected virtual List<Node> Nodes { get; private set; } = new List<Node>();
-
-        //public int Count => this.Nodes.Count;
-
-        //public bool IsReadOnly => false;
-
-        //public Node this[int index]
-        //{
-        //    get => this.Nodes[index];
-        //    set => this.Nodes[index] = value;
-        //}
 
 
-
+        /// <summary>
+        /// Returns the class name associated with this node's class id.
+        /// </summary>
+        /// <returns></returns>
         public virtual string GetClassName()
         {
             return KnownClassIds.GetClassName(this.ClassId);
         }
 
+        /// <summary>
+        /// Creates a <c>MemoryStream</c> with the raw data of this node.
+        /// </summary>
+        /// <returns></returns>
         public virtual Stream GetStream()
         {
-            if (this.Data == null) throw new ArgumentNullException();
-            return new MemoryStream(this.Data);
+            return new MemoryStream(this.Data ?? throw new ArgumentNullException(nameof(this.Data)));
         }
 
+        /// <summary>
+        /// Returns a string that represents the current node.
+        /// </summary>
         public override string ToString()
         {
             return $"{this.GetType().Name} (0x{this.Id:X8}/{this.GetClassName()})";
         }
-
-        //public IEnumerator<Node> GetEnumerator() => this.Nodes.GetEnumerator();
-        //IEnumerator IEnumerable.GetEnumerator() => this.Nodes.GetEnumerator();
-
-        //public int IndexOf(Node item) => this.Nodes.IndexOf(item);
-        //public void Insert(int index, Node item) => this.Nodes.Insert(index, item);
-        //public void RemoveAt(int index) => this.Nodes.RemoveAt(index);
-        //public void Add(Node item) => this.Nodes.Add(item);
-        //public void AddRange(IEnumerable<Node> collection) => this.Nodes.AddRange(collection);
-        //public void Clear() => this.Nodes.Clear();
-        //public bool Contains(Node item) => this.Nodes.Contains(item);
-        //public void CopyTo(Node[] array, int arrayIndex) => this.Nodes.CopyTo(array, arrayIndex);
-        //public bool Remove(Node item) => this.Nodes.Remove(item);
     }
 }
