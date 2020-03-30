@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using ManiaPlanetSharp.GameBox.Parsing.ParserGeneration;
 
@@ -44,22 +45,34 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public Block[] ParseBlocks(GameBoxReader reader)
         {
+            var start = reader.Stream.Position;
+
             //The block struct can be parsed by the automatically generated parser
             CustomStructParser<Block> blockParser = ParserFactory.GetCustomStructParser<Block>();
 
             //This count of blocks that specified the length of the array does not count blocks with empty flags, so we have to read them one by one and check if they are actually counted
             Block[] blocks = new Block[reader.ReadUInt32()];
-            for (int i = 0; i < this.Blocks.Length; i++)
+            try
             {
-                Block block = blockParser.Parse(reader);
-                if (block.Flags.HasFlag(BlockFlags.Null))
+                for (int i = 0; i < blocks.Length; i++)
                 {
-                    i--; //Ignore parsed block
+                    Block block = blockParser.Parse(reader);
+
+                    if (block.Flags.HasFlag(BlockFlags.Null))
+                    {
+                        i--; //Ignore parsed block
+                    }
+                    else
+                    {
+                        blocks[i] = block;
+                    }
                 }
-                else
-                {
-                    this.Blocks[i] = block;
-                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("GameBox Parser: Could not successfully parse map blocks.");
+                reader.Stream.Position = start;
+                return null;
             }
 
             return blocks;
@@ -88,13 +101,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public uint FlagsU { get; set; }
         public BlockFlags Flags => (BlockFlags)this.FlagsU;
         
-        [Property, Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
+        [Property, Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
         public string Author { get; set; }
 
-        [Property, Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
+        [Property(SpecialPropertyType.NodeReference), Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
         public Node Skin { get; set; }
         
-        [Property, Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.HasBlockParameters)]
+        [Property(SpecialPropertyType.NodeReference), Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.HasBlockParameters)]
         public Node BlockParameters { get; set; }
     }
 
