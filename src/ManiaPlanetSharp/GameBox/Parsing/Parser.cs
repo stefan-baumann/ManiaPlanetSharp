@@ -41,9 +41,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         where TChunk : Chunk
     {
         /// <summary>
-        /// The chunk ids parseable by this parser.
+        /// The chunk ids parseable by this parser and a bool specifying whether they are skippable
         /// </summary>
-        List<uint> ParseableIds { get; }
+        List<Tuple<uint, bool>> ParseableIds { get; }
 
         /// <summary>
         /// Parses the chunk with the specified chunk id from the specified reader.
@@ -86,7 +86,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         public static ChunkParser<TChunk> GenerateParser()
         {
             var parser = new ChunkParser<TChunk>(ParserGenerator.GenerateChunkParserExpression<TChunk>());
-            parser.ParseableIds.AddRange(typeof(TChunk).GetCustomAttributes<ChunkAttribute>().Select(c => c.Id));
+            parser.ParseableIds.AddRange(typeof(TChunk).GetCustomAttributes<ChunkAttribute>().Select(c => Tuple.Create(c.Id, c.Skippable)));
             return parser;
         }
 
@@ -95,7 +95,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <summary>
         /// The chunk ids parseable by this parser.
         /// </summary>
-        public virtual List<uint> ParseableIds { get; } = new List<uint>();
+        public virtual List<Tuple<uint, bool>> ParseableIds { get; } = new List<Tuple<uint, bool>>();
 
         /// <summary>
         /// The uncompiled linq expression for parsing the chunk.
@@ -140,7 +140,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <summary>
         /// The chunk ids parseable by this parser.
         /// </summary>
-        public abstract override List<uint> ParseableIds { get; }
+        public abstract override List<Tuple<uint, bool>> ParseableIds { get; }
     }
 
     /// <summary>

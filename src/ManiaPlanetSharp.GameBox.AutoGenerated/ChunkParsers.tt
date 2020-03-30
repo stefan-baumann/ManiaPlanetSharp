@@ -36,13 +36,13 @@ foreach (var chunkType in chunkTypes)
 foreach (var chunkType in chunkTypes)
 {
 	string code = (string)typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GenerateChunkParserString), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(chunkType).Invoke(null, null);
-	List<uint> ids = (List<uint>)typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GetParserChunkIds), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(chunkType).Invoke(null, null);
+	List<Tuple<uint, bool>> ids = (List<Tuple<uint, bool>>)typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GetParserChunkIds), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(chunkType).Invoke(null, null);
 #>
 
 	public class <#= chunkType.Name #>Parser
 		: PregeneratedChunkParser<<#= chunkType #>>
 	{
-		public override List<uint> ParseableIds => new List<uint>() { <#= string.Join(", ", ids.Select(i => $"0x{i:X8}")) #> };
+		public override List<Tuple<uint, bool>> ParseableIds => new List<Tuple<uint, bool>>() { <#= string.Join(", ", ids.Select(i => $"Tuple.Create(0x{i.Item1:X8}U, {(i.Item2 ? "true" : "false")})")) #> };
 
         public override <#= chunkType #> Parse(GameBoxReader reader, uint chunkId)
         {

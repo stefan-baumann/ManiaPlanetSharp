@@ -5,7 +5,7 @@ using ManiaPlanetSharp.GameBox.Parsing.ParserGeneration;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
-    [Chunk(0x03059000), Chunk(0x03059001), Chunk(0x03059002)]
+    //[Chunk(0x03059000), Chunk(0x03059001), Chunk(0x03059002)]
     public class PackDescriptionChunk
         : Chunk
     {

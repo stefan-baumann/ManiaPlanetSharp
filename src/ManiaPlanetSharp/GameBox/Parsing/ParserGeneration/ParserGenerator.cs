@@ -234,7 +234,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 else if (typeof(Node).IsAssignableFrom(singleValueType))
                 {
                     //reader.ReadNode()
-                    return Expression.Call(reader, nameof(GameBoxReader.ReadNode), null);
+                    return Expression.Call(reader, nameof(GameBoxReader.ReadBodyChunk), null);
                 }
                 else if (singleValueType.GetCustomAttribute<CustomStructAttribute>() != null)
                 {
@@ -302,11 +302,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 
 
 
-        public static IEnumerable<uint> GetParseableChunkIds<T>()
+        public static IEnumerable<Tuple<uint, bool>> GetParseableChunkIds<T>()
         {
             foreach (ChunkAttribute chunk in typeof(T).GetCustomAttributes<ChunkAttribute>())
             {
-                yield return chunk.Id;
+                yield return Tuple.Create(chunk.Id, chunk.Skippable);
             }
             yield break;
         }

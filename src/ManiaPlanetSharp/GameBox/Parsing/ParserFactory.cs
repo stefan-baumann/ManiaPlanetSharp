@@ -56,9 +56,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                             Debug.WriteLine("    Found chunk parser for type " + parser.Key.ToString());
                             if (ParserFactory.chunkParsers.TryAdd(parser.Key, parser.Value))
                             {
-                                foreach (uint chunkId in parser.Value.ParseableIds)
+                                foreach (var chunkId in parser.Value.ParseableIds)
                                 {
-                                    chunkParsersByID.Add(chunkId, parser.Value);
+                                    chunkParsersByID.Add(chunkId.Item1, parser.Value);
+                                    chunkIds.Add(chunkId.Item1);
                                 }
                             }
                         }
@@ -84,10 +85,12 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         {
             chunkParsers.Clear();
             chunkParsersByID.Clear();
+            chunkIds.Clear();
         }
 
         private static ConcurrentDictionary<Type, IChunkParser<Chunk>> chunkParsers = new ConcurrentDictionary<Type, IChunkParser<Chunk>>();
         private static Dictionary<uint, IChunkParser<Chunk>> chunkParsersByID = new Dictionary<uint, IChunkParser<Chunk>>();
+        private static HashSet<uint> chunkIds = new HashSet<uint>(ParserFactory.GetParseableIds());
 
         /// <summary>
         /// Returns a parser for the specified chunk type either from the precompiled parsers or the cache of previously dynamically generated parsers or generates one dynamically.
@@ -101,9 +104,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             {
                 Debug.WriteLine($"Generating parser for type {typeof(TChunk).Name}.");
                 var parser = ChunkParser<TChunk>.GenerateParser();
-                foreach (uint chunkId in parser.ParseableIds)
+                foreach (var chunkId in parser.ParseableIds)
                 {
-                    chunkParsersByID.Add(chunkId, parser);
+                    chunkParsersByID.Add(chunkId.Item1, parser);
+                    chunkIds.Add(chunkId.Item1);
                 }
                 return parser;
             });
@@ -131,7 +135,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             {
                 return true;
             }
-            else
+            else if (GlobalParserSettings.UseDynamicallyCompiledChunkParsers)
             {
                 Type chunkType = AppDomain.CurrentDomain.GetAssemblies()
                     .Where(p => !p.IsDynamic)
@@ -153,6 +157,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         internal static IEnumerable<uint> GetParseableIds()
         {
             return chunkParsersByID.Keys;
+        }
+
+        public static bool IsParseableChunkId(uint id)
+        {
+            return chunkIds.Contains(id);
         }
 
 

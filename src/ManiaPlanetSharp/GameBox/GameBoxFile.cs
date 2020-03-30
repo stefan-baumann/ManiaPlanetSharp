@@ -257,7 +257,6 @@ namespace ManiaPlanetSharp.GameBox
 
         public IEnumerable<Node> ParseBody()
         {
-            HashSet<uint> chunkIds = new HashSet<uint>(ParserFactory.GetParseableIds());
             List<Chunk> chunks = new List<Chunk>();
             using (MemoryStream stream = new MemoryStream(this.GetUncompressedBodyData()))
             using (GameBoxReader reader = new GameBoxReader(stream) { BodyMode = true })
@@ -265,23 +264,71 @@ namespace ManiaPlanetSharp.GameBox
                 for (long offset = 0; offset < stream.Length - 4; offset++)
                 {
                     stream.Position = offset;
-                    uint id = reader.ReadUInt32();
-                    if (chunkIds.Contains(id))
-                    {
-                        try
-                        {
-                            stream.Position -= 4;
-                            if (ParserFactory.TryGetChunkParser(id, out var parser))
-                            {
-                                Chunk chunk = parser.Parse(reader, id);
-                                chunks.Add(chunk);
-                            }
+                    //uint id = reader.ReadUInt32();
+                    //if (ParserFactory.IsParseableChunkId(id))
+                    //{
+                    //    try
+                    //    {
+                    //        if (ParserFactory.TryGetChunkParser(id, out var parser))
+                    //        {
+                    //            Chunk chunk = parser.Parse(reader, id);
 
-                            offset = stream.Position - 1;
-                        }
-                        catch (Exception ex)
+                    //            chunks.Add(chunk);
+                    //        }
+
+                    //        offset = stream.Position - 1;
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        Console.WriteLine($"GameBox Parser: Encountered Exception of type {ex.GetType()} (\"{ex.Message}\") while parsing body chunk with id 0x{id:X8}/{KnownClassIds.GetClassName(id & 0xFFFFF000)}.");
+                    //    }
+                    //}
+                    uint id = reader.ReadUInt32();
+                    if (ParserFactory.IsParseableChunkId(id))
+                    {
+                        if (ParserFactory.TryGetChunkParser(id, out var parser))
                         {
-                            //Do something
+                            try
+                            {
+                                //If skippable
+                                if (parser.ParseableIds.First(p => p.Item1 == id).Item2)
+                                {
+                                    if (reader.ReadUInt32() != GameBoxReader.SkipMarker)
+                                    {
+                                        Console.WriteLine($"Expected skip marker in chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)}.");
+                                        continue;
+                                    }
+                                    uint size = reader.ReadUInt32();
+                                    var start = reader.Stream.Position;
+                                    try
+                                    {
+                                        var result = parser.Parse(reader, id);
+
+                                        if (reader.Stream.Position != start + size)
+                                        {
+                                            Console.WriteLine($"GameBox Parser: Reader for skippable chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)} did not read the correct length. Adjusting read position.");
+
+                                            offset = start + size - 1;
+                                        }
+
+                                        chunks.Add(result);
+                                    }
+                                    catch
+                                    {
+                                        offset = start + size - 1;
+                                        throw;
+                                    }
+                                }
+                                else
+                                {
+                                    chunks.Add(parser.Parse(reader, id));
+                                }
+
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"GameBox Parser: Encountered Exception of type {ex.GetType()} (\"{ex.Message}\") while parsing body chunk with id 0x{id:X8}/{KnownClassIds.GetClassName(id & 0xFFFFF000)}.");
+                            }
                         }
                     }
                 }

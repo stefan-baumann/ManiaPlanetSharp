@@ -22,7 +22,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public GameBoxFile File { get; private set; }
 
-        protected void ParseBody()
+        public void ParseBody()
         {
             this.bodyNodes = this.File.ParseBody()
                 .Where(node => node.GetType() != typeof(UnknownChunk))
@@ -181,7 +181,15 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             public TValue GetValue()
             {
 #if !VALIDATE_METADATA_SOURCES
-                return this.Previous?.GetValue() ?? this.GetValueInternal();
+                if (this.Previous != null)
+                {
+                    var previousValue = this.Previous.GetValue();
+                    if (previousValue != null)
+                    {
+                        return previousValue;
+                    }
+                }
+                return this.GetValueInternal();
 #else
                 var value = this.GetValueInternal();
                 if (value == null)

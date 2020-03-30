@@ -35,7 +35,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             var items = new EmbeddedItem[this.ItemCount];
             for (int i = 0; i < this.ItemCount; i++)
             {
-                this.Items[i] = parser.Parse(reader);
+                items[i] = parser.Parse(reader);
             }
             this.ActualZipSize = this.ZipSize - (uint)(reader.Stream.Position - start);
             return items;

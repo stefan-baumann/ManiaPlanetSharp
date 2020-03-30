@@ -17,7 +17,8 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             {
 #endif
             IndentingStringBuilder builder = new IndentingStringBuilder();
-            builder.AppendLine($"var result = reader.BodyMode ? new {typeof(TChunk).FullName}() {{ Id = reader.ReadUInt32() }} : new {typeof(TChunk).FullName}();");
+            //builder.AppendLine($"var result = reader.BodyMode ? new {typeof(TChunk).FullName}() {{ Id = reader.GetChunkId() }} : new {typeof(TChunk).FullName}();");
+            builder.AppendLine($"var result = new {typeof(TChunk).FullName}() {{ Id = chunkId }};");
 
             GenerateFieldsParseCode<TChunk>(builder);
 
@@ -54,10 +55,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 #endif
         }
 
-        public static List<uint> GetParserChunkIds<TChunk>()
+        public static List<Tuple<uint, bool>> GetParserChunkIds<TChunk>()
             where TChunk : Chunk, new()
         {
-            return typeof(TChunk).GetCustomAttributes<ChunkAttribute>().Select(c => c.Id).ToList();
+            return typeof(TChunk).GetCustomAttributes<ChunkAttribute>().Select(c => Tuple.Create(c.Id, c.Skippable)).ToList();
         }
 
         private static void GenerateFieldsParseCode<T>(IndentingStringBuilder builder)

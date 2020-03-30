@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing
@@ -13,6 +14,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
     public class GameBoxReader
         : IDisposable
     {
+        protected internal const uint EndMarkerClassId = 0xFACADE01;
+        protected internal const uint SkipMarker = 0x534B4950; //SKIP
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoxStreamReader"/> class.
         /// </summary>
@@ -282,7 +286,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                 reference.Checksum = this.ReadRaw(32);
             }
             reference.FilePath = this.ReadString();
-            if (reference.FilePath.Length > 0 && reference.Version >= 1)
+            if (reference.FilePath?.Length > 0 && reference.Version >= 1)
             {
                 reference.LocatorUrl = this.ReadString();
             }
@@ -305,20 +309,104 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             }
             if (!this.Nodes.ContainsKey(index))
             {
-                this.Nodes.Add(index, this.ReadNode());
+                this.Nodes.Add(index, this.ReadBodyChunk());
             }
             return this.Nodes[index];
         }
 
         /// <summary>
-        /// Reads a node.
+        /// Reads a chunk from the body of a GameBox file.
         /// </summary>
         /// <returns></returns>
-        public Node ReadNode()
+        public Chunk ReadBodyChunk()
         {
             //new NodeParser().ParseNode(this);
-            throw new NotImplementedException();
+            if (!this.BodyMode)
+            {
+                throw new InvalidOperationException($"{nameof(ReadBodyChunk)} can only be performed on the body of a gbx file.");
+            }
+
+            uint id = this.ReadUInt32();
+            for (; id == 0; id = this.ReadUInt32()) ;
+            if (id == EndMarkerClassId)
+            {
+                return null;
+            }
+            if (ParserFactory.IsParseableChunkId(id))
+            {
+                if (ParserFactory.TryGetChunkParser(id, out var parser))
+                {
+                    //If skippable
+                    if (parser.ParseableIds.First(p => p.Item1 == id).Item2)
+                    {
+                        if (this.ReadUInt32() != SkipMarker)
+                        {
+                            throw new InvalidDataException($"Expected skip marker in chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)}.");
+                        }
+                        uint size = this.ReadUInt32();
+                        var start = this.Stream.Position;
+                        try
+                        {
+                            //this.lastChunkId = id;
+                            var result = parser.Parse(this, id);
+                            //this.lastChunkId = null;
+
+                            if (this.Stream.Position != start + size)
+                            {
+                                throw new InvalidOperationException($"Reader for skippable chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)} did not read the correct length.");
+                            }
+
+                            return result;
+                        }
+                        catch
+                        {
+                            this.Stream.Position = start + size;
+                            throw;
+                        }
+                    }
+                    else
+                    {
+                        return parser.Parse(this, id);
+                    }
+                }
+            }
+            throw new NotImplementedException($"Cannot parse chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)}");
         }
+
+        protected bool TrySkipChunk(out UnknownChunk skipped)
+        {
+            try
+            {
+                uint skip = this.ReadUInt32();
+                if (skip == SkipMarker)
+                {
+                    int length = (int)this.ReadUInt32();
+                    skipped = new UnknownChunk(this.ReadRaw(length), SkipMarker);
+                    return true;
+                }
+            }
+            catch { }
+
+            //Go back to position before parsing skip uint
+            this.Stream.Position -= 4;
+            skipped = null;
+            return false;
+        }
+
+        //private uint? lastChunkId;
+        //public uint GetChunkId()
+        //{
+        //    if (this.lastChunkId != null)
+        //    {
+        //        var id = this.lastChunkId.Value;
+        //        this.lastChunkId = null;
+        //        return id;
+        //    }
+        //    else
+        //    {
+        //        return Reader.ReadUInt32();
+        //    }
+        //}
 
 
 
