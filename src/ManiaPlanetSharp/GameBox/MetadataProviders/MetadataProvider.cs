@@ -2,12 +2,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.MetadataProviders
 {
+    [DebuggerNonUserCode]
     public abstract class MetadataProvider
     {
         protected MetadataProvider(GameBoxFile file)
@@ -22,12 +24,20 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public GameBoxFile File { get; private set; }
 
+        /// <summary>
+        /// Indicates whether the metadata provider should validate whether the values in the GameBox file should be validated against each other. If set to <c>true</c>, a <c>InvalidDataException</c> will be raised when a property with mismatching values is accessed.
+        /// </summary>
+        public bool ValidatingMode { get; set; } = false;
+
         public void ParseBody()
         {
-            this.bodyNodes = this.File.ParseBody()
-                .Where(node => node.GetType() != typeof(UnknownChunk))
-                .GroupBy(node => node.GetType())
-                .ToDictionary(group => group.Key, group => group.ToArray());
+            if (this.bodyNodes == null)
+            {
+                this.bodyNodes = this.File.ParseBody()
+                    .Where(node => node.GetType() != typeof(UnknownChunk))
+                    .GroupBy(node => node.GetType())
+                    .ToDictionary(group => group.Key, group => group.ToArray());
+            }
         }
 
         private Dictionary<Type, Node[]> headerNodes = new Dictionary<Type, Node[]>();
@@ -80,27 +90,6 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
-        protected TValue GetBufferedHeaderValueOld<TValue, TChunk>(Func<TChunk, TValue> factory, [CallerMemberName] string name = null)
-            where TChunk : Chunk
-        {
-            return this.GetBufferedValue(() =>
-            {
-                foreach (TChunk chunk in this.GetHeaderNodes<TChunk>() ?? Array.Empty<TChunk>())
-                {
-                    if (chunk != null)
-                    {
-                        TValue result = factory(chunk);
-                        if (result != null)
-                        {
-                            return result;
-                        }
-                    }
-                }
-                return default(TValue);
-            }, name);
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining)]
         protected BufferedHeaderValue<TChunk, TValue> GetBufferedHeaderValue<TChunk, TValue>(Func<TChunk, TValue> factory, [CallerMemberName] string name = null)
             where TChunk : Chunk
         {
@@ -113,14 +102,6 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         {
             return new BufferedBodyValue<TChunk, TValue>(this, name, factory);
         }
-
-        //[MethodImpl(MethodImplOptions.NoInlining)]
-        //protected TValue GetBufferedHeaderValue<TValue, TChunk>(HeaderChunkValueFactory<TValue, TChunk> factory, [CallerMemberName] string name = null)
-        //    where TChunk : Chunk
-        //    where TValue : class
-        //{
-        //    return this.GetBufferedValue(() => factory.GetValue(this), name);
-        //}
 
 
 
@@ -186,6 +167,11 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                     var previousValue = this.Previous.GetValue();
                     if (previousValue != null)
                     {
+                        var value = this.GetValueInternal();
+                        if (value != null && !previousValue.Equals(value) && this.Provider.ValidatingMode)
+                        {
+                            throw new InvalidDataException($"Parameter {this.Name} failed cross validation.");
+                        }
                         return previousValue;
                     }
                 }
@@ -213,6 +199,10 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                         if (value != null && !previousValue.Equals(value))
                         {
                             //Console.WriteLine($"[Buffered Value][Error] {this.Name}: Received different value (\"{value}\") from previous source (\"{previousValue}\")!");
+                            if (this.Provider.ValidatingMode)
+                            {
+                                throw new InvalidDataException($"Parameter {this.Name} failed cross validation.");
+                            }
                         }
                         return previousValue;
                     }
@@ -325,80 +315,5 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             //    return bufferedValue?.GetBufferedValue();
             //}
         }
-
-
-
-        //protected interface IChunkValueFactory<TValue, out TChunk>
-        //    where TChunk : Chunk
-        //{
-        //    TValue GetValue(MetadataProvider provider);
-        //}
-
-        //protected class HeaderChunkValueFactory<TValue, TChunk>
-        //    : IChunkValueFactory<TValue, TChunk>
-        //    where TValue : class
-        //    where TChunk : Chunk
-        //{
-        //    protected HeaderChunkValueFactory(Func<TChunk, TValue> factory)
-        //    {
-        //        this.Factory = factory ?? throw new ArgumentNullException(nameof(factory));
-        //    }
-
-        //    protected Func<TChunk, TValue> Factory { get; private set; }
-
-        //    protected IChunkValueFactory<TValue, Chunk> Previous { get; private set; }
-
-        //    public TValue GetValue(MetadataProvider provider)
-        //    {
-        //        if (provider == null)
-        //        {
-        //            throw new ArgumentNullException(nameof(provider));
-        //        }
-
-        //        if (this.Previous != null)
-        //        {
-        //            var previous = this.Previous.GetValue(provider);
-        //            if (previous != null)
-        //            {
-        //                return previous;
-        //            }
-        //        }
-
-        //        foreach (TChunk chunk in provider.GetHeaderNodes<TChunk>() ?? new TChunk[] { })
-        //        {
-        //            if (chunk != null)
-        //            {
-        //                TValue result = this.Factory(chunk);
-        //                if (result != null)
-        //                {
-        //                    return result;
-        //                }
-        //            }
-        //        }
-        //        return null;
-        //    }
-
-        //    public HeaderChunkValueFactory<TValue, TChunk2> IfNull<TChunk2>(HeaderChunkValueFactory<TValue, TChunk2> value)
-        //        where TChunk2 : Chunk
-        //    {
-        //        if (value == null)
-        //        {
-        //            throw new ArgumentNullException(nameof(value));
-        //        }
-
-        //        value.Previous = this;
-        //        return value;
-        //    }
-
-        //    public static implicit operator HeaderChunkValueFactory<TValue, TChunk>(Func<TChunk, TValue> factory)
-        //    {
-        //        return new HeaderChunkValueFactory<TValue, TChunk>(factory);
-        //    }
-
-        //    //public static implicit operator TValue(BufferedHeaderValue<TValue, TChunk> bufferedValue)
-        //    //{
-        //    //    return bufferedValue?.GetValue();
-        //    //}
-        //}
     }
 }

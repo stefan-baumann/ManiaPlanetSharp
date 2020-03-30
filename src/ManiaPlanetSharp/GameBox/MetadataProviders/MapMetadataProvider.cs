@@ -128,6 +128,10 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         //public virtual int? EmbeddedItemInGameSize => this.GetBufferedBodyValue((MapEmbeddedItemsChunk c) => (int?)c.EmbeddedItemSize);
 
+        public virtual EmbeddedItem[] EmbeddedItems => this.GetBufferedBodyValue((MapEmbeddedItemsChunk c) => c.Items);
+
+        public virtual Dependency[] Dependencies => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.Dependencies.Deps.ToArray());
+
 
 
         public virtual Block[] Blocks => this.GetBufferedBodyValue((MapChunk c) => c.Blocks);
