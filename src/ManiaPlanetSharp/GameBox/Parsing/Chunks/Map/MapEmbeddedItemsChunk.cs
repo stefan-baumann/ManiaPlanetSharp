@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
+using SharpCompress.Archives.Zip;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
@@ -40,6 +43,29 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         [Property, Array(nameof(ActualZipSize))]
         public byte[] ZipFile { get; set; }
+
+
+
+        public IEnumerable<EmbeddedItemFile> GetEmbeddedItemFiles()
+        {
+            using (MemoryStream stream = new MemoryStream(this.ZipFile))
+            {
+                using (ZipArchive archive = ZipArchive.Open(stream))
+                {
+                    return archive.Entries
+                        .Where(entry => !entry.IsDirectory)
+                        .Select(entry =>
+                    {
+                        using (MemoryStream target = new MemoryStream((int)entry.Size))
+                        using (Stream source = entry.OpenEntryStream())
+                        {
+                            source.CopyTo(target);
+                            return new EmbeddedItemFile(entry.Key, target.ToArray());
+                        }
+                    });
+                }
+            }
+        }
     }
 
     [CustomStruct]
@@ -53,5 +79,27 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         [Property(SpecialPropertyType.LookbackString)]
         public string Author { get; set; }
+    }
+
+    
+    public class EmbeddedItemFile
+    {
+        public EmbeddedItemFile(string path, byte[] data)
+        {
+            this.Path = path;
+            this.Data = data;
+        }
+
+        public string Path { get; set; }
+
+        public byte[] Data { get; set; }
+
+        public GameBoxFile Parse()
+        {
+            using (MemoryStream stream = new MemoryStream(this.Data))
+            {
+                return GameBoxFile.Parse(stream);
+            }
+        }
     }
 }
