@@ -12,16 +12,16 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public byte Version { get; set; }
 
         [Property(SpecialPropertyType.LookbackString)]
-        public string MapUid { get; set; }
+        public string Uid { get; set; }
 
         [Property(SpecialPropertyType.LookbackString)]
-        public string MapEnvironment { get; set; }
+        public string Environment { get; set; }
 
         [Property(SpecialPropertyType.LookbackString)]
-        public string MapAuthor { get; set; }
+        public string Author { get; set; }
 
         [Property]
-        public string MapName { get; set; }
+        public string Name { get; set; }
 
         [Property]
         [Obsolete("Raw Value, use GbxCommonClass.Kind instead", false)]
@@ -46,19 +46,19 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public string DecorationEnvironmentAuthor { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 3)]
-        public Vector2D MapOrigin { get; set; }
+        public Vector2D Origin { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 4)]
-        public Vector2D MapTarget { get; set; }
+        public Vector2D Target { get; set; }
 
         [Property, Array(16), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 5)]
         public byte[] Unused { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6)]
-        public string MapType { get; set; }
+        public string Type { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6)]
-        public string MapStyle { get; set; }
+        public string Style { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6), Condition(nameof(Version), ConditionOperator.LessThanOrEqual, 8)]
         public bool UnusedFlag { get; set; }

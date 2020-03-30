@@ -15,9 +15,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public TimeSpan TimeLimit { get => TimeSpan.FromMilliseconds(this.TimeLimitU); }
 
         [Property]
-        [Obsolete("Raw Value, use GbxTimeLimitClass.AuthorScore instead", false)]
-        public uint AuthorScoreU { get; set; }
+        [Obsolete("Raw Value, use MapTimelimitChunk.AuthorTime instead", false)]
+        public uint AuthorTimeU { get; set; }
 
-        public TimeSpan AuthorScore { get => TimeSpan.FromMilliseconds(this.AuthorScoreU); }
+        public TimeSpan AuthorTime { get => TimeSpan.FromMilliseconds(this.AuthorTimeU); }
     }
 }

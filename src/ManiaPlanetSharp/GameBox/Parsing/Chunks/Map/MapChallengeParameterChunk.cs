@@ -17,7 +17,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public Node ChallengeParameters { get; set; }
 
         [Property]
-        [Obsolete("Raw Value, use GbxChallengeParameterClass.Kind instead", false)]
+        [Obsolete("Raw Value, use MapChallengeParameterChunk.Kind instead", false)]
         public uint KindU { get; set; }
 
         public MapKind Kind { get => (MapKind)(byte)this.KindU; }
