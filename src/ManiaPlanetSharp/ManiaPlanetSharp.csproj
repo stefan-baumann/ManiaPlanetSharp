@@ -15,7 +15,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DefineConstants>DEBUG; HACKY_OBJECT_MODEL_DETECTION; VALIDATE_METADATA_SOURCES</DefineConstants>
+    <DefineConstants>DEBUG; HACKY_OBJECT_MODEL_DETECTION</DefineConstants>
     <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 

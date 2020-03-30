@@ -161,7 +161,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
             public TValue GetValue()
             {
-#if !VALIDATE_METADATA_SOURCES
+#if !DEBUG
                 if (this.Previous != null)
                 {
                     var previousValue = this.Previous.GetValue();
@@ -249,7 +249,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             protected override TValue GetValueInternal()
             {
                 var chunks = this.Provider.GetHeaderNodes<TChunk>();
-#if VALIDATE_METADATA_SOURCES
+#if DEBUG
                 Console.WriteLine($"[Buffered Value][Info] {this.Name}: from {typeof(TChunk)} (Header): {chunks?.Length.ToString() ?? "no"} chunks found.");
 #endif
                 foreach (TChunk chunk in chunks ?? Array.Empty<TChunk>())
@@ -265,11 +265,6 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                 }
                 return default(TValue);
             }
-
-            //public static implicit operator TValue(BufferedHeaderValue<TChunk, TValue> bufferedValue)
-            //{
-            //    return bufferedValue?.GetBufferedValue();
-            //}
         }
 
         protected class BufferedBodyValue<TChunk, TValue>
@@ -293,7 +288,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             protected override TValue GetValueInternal()
             {
                 var chunks = this.Provider.GetBodyNodes<TChunk>();
-#if VALIDATE_METADATA_SOURCES
+#if DEBUG
                 Console.WriteLine($"[Buffered Value][Info] {this.Name}: from {typeof(TChunk)} (Body): {chunks?.Length.ToString() ?? "no"} chunks found.");
 #endif
                 foreach (TChunk chunk in chunks ?? Array.Empty<TChunk>())
@@ -309,11 +304,6 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                 }
                 return default(TValue);
             }
-
-            //public static implicit operator TValue(BufferedBodyValue<TChunk, TValue> bufferedValue)
-            //{
-            //    return bufferedValue?.GetBufferedValue();
-            //}
         }
     }
 }
