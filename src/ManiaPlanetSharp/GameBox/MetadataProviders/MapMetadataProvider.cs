@@ -2,7 +2,11 @@
 using ManiaPlanetSharp.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.MetadataProviders
@@ -149,6 +153,22 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         public EmbeddedItemFile[] GetEmbeddedItemFiles()
         {
             return this.GetBodyNodes<MapEmbeddedItemsChunk>()?.FirstOrDefault()?.GetEmbeddedItemFiles().ToArray();
+        }
+
+        public Image GenerateThumbnailImage()
+        {
+            if (this.Thumbnail == null)
+            {
+                return null;
+            }
+            using (MemoryStream stream = new MemoryStream(this.Thumbnail))
+            {
+                using (var image = (Bitmap)Bitmap.FromStream(stream)) //This image can only be used while the stream is not disposed, so we have to create a copy
+                {
+                    image.RotateFlip(RotateFlipType.Rotate180FlipX);
+                    return image.Clone(new Rectangle(0, 0, image.Width, image.Height), PixelFormat.Format32bppArgb);
+                }
+            }
         }
     }
 }
