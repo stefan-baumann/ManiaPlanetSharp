@@ -6,10 +6,15 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace ManiaPlanetSharp.GameBoxView
 {
@@ -99,6 +104,8 @@ namespace ManiaPlanetSharp.GameBoxView
             yield return new VehicleTreeNode("Vehicle", map.Vehicle, map.VehicleAuthor, map.VehicleCollection);
             yield return new MetadataTreeNode("Mod", string.IsNullOrWhiteSpace(map.Mod) ? "no mod" : map.Mod);
 
+            yield return new MetadataTreeNode("Thumbnail") { Nodes = new ObservableCollection<MetadataTreeNode>() { new ImageTreeNode(this.ImageSourceFromImage(map.GenerateThumbnailImage())) } };
+
             yield return new TimesTreeNode("Author Time", map.AuthorTime, map.AuthorScore, map.GoldTime, map.SilverTime, map.BronzeTime);
 
             yield return new MetadataTreeNode("Checkpoints", map.Checkpoints?.ToString() ?? NotAvailable);
@@ -117,7 +124,28 @@ namespace ManiaPlanetSharp.GameBoxView
             {
                 Nodes = new ObservableCollection<MetadataTreeNode>((map.Dependencies ?? Array.Empty<Dependency>()).Select(d => new DependencyTreeNode(d)))
             };
+
+            yield return new MetadataTreeNode("Display Cost", map.DisplayCost?.ToString() ?? NotAvailable);
+            yield return new MetadataTreeNode("Validated", map.Validated != null ? map.Validated.Value ? "True" : "False" : NotAvailable);
+
             yield return new DecorationTreeNode("Decoration", map.TimeOfDay, map.DecorationEnvironment, map.DecorationEnvironmentAuthor, map.Size);
+
+            yield return new MetadataTreeNode("Embedded Items", $"{map.EmbeddedItems?.Length ?? 0} embedded item{(map.EmbeddedItems?.Length == 1 ? "" : "s")}")
+            {
+                Nodes = new ObservableCollection<MetadataTreeNode>((map.EmbeddedItems ?? Array.Empty<EmbeddedItem>()).Select(i => new EmbeddedItemTreeNode(i, null)))
+            };
+
+            yield return new MetadataTreeNode("Other")
+            {
+                Nodes = new ObservableCollection<MetadataTreeNode>()
+                {
+                    new MetadataTreeNode("Locked", map.Locked != null ? map.Locked.Value ? "True" : "False" : NotAvailable),
+                    new MetadataTreeNode("Uses Advanced Editor", map.UsesAdvancedEditor != null ? map.UsesAdvancedEditor.Value ? "True" : "False" : NotAvailable),
+                    new MetadataTreeNode("Has Ghost blocks", map.HasGhostBlocks != null ? map.HasGhostBlocks.Value ? "True" : "False" : NotAvailable),
+                    new MetadataTreeNode("Origin", map.Origin != null ? $"{{ X = {map.Origin.Value.X}, Y = {map.Origin.Value.Y} }}" : NotAvailable),
+                    new MetadataTreeNode("Target", map.Target != null ? $"{{ X = {map.Target.Value.X}, Y = {map.Target.Value.Y} }}" : NotAvailable),
+                }
+            };
 
             yield return new MetadataTreeNode("Version", map.ExecutableVersion ?? NotAvailable)
             {
@@ -182,6 +210,23 @@ namespace ManiaPlanetSharp.GameBoxView
             };
 
             yield break;
+        }
+
+        protected ImageSource ImageSourceFromImage(System.Drawing.Image source)
+        {
+            using (var ms = new MemoryStream())
+            {
+                source.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                ms.Position = 0;
+
+                var bi = new BitmapImage();
+                bi.BeginInit();
+                bi.CacheOption = BitmapCacheOption.OnLoad;
+                bi.StreamSource = ms;
+                bi.EndInit();
+
+                return bi;
+            }
         }
 
 
@@ -338,7 +383,112 @@ namespace ManiaPlanetSharp.GameBoxView
             }
         }
 
+        public virtual List<TextWithFormat> ValueFormatted
+        {
+            get
+            {
+                List<TextWithFormat> parts = new List<TextWithFormat>();
+                List<Action<TextWithFormat>> styles = new List<Action<TextWithFormat>>();
+                for (string remaining = this.FormattedText; remaining.Length > 0; )
+                {
+                    if (remaining.StartsWith("$") && !remaining.StartsWith("$$"))
+                    {
+                        var colorMatch = Regex.Match(remaining, @"^\$([0-9a-f]){3}", RegexOptions.IgnoreCase);
+                        if (colorMatch.Success)
+                        {
+                            var colorString = $"#{colorMatch.Groups[1].Captures[0].Value}{colorMatch.Groups[1].Captures[0].Value}{colorMatch.Groups[1].Captures[1].Value}{colorMatch.Groups[1].Captures[1].Value}{colorMatch.Groups[1].Captures[2].Value}{colorMatch.Groups[1].Captures[2].Value}";
+                            styles.Add(t => t.Foreground = (SolidColorBrush)new BrushConverter().ConvertFrom(colorString));
+
+                            remaining = remaining.Substring(4);
+                            continue;
+                        }
+                        var formatMatch = Regex.Match(remaining, @"^\$([wnmhoitsgzf])");
+                        if (formatMatch.Success)
+                        {
+                            //TODO: Implement modifiers
+                            char modifier = formatMatch.Groups[1].Value[0];
+                            switch (char.ToLowerInvariant(modifier))
+                            {
+                                case 'z':
+                                    styles.Clear();
+                                    break;
+                            }
+
+                            remaining = remaining.Substring(2);
+                            continue;
+                        }
+                        var linkMatch = Regex.Match(remaining, @"^\$l(\[.*?\])?");
+                        if (linkMatch.Success)
+                        {
+                            //TODO: Add hyperlink
+
+                            remaining = remaining.Substring(linkMatch.Length);
+                            continue;
+                        }
+                    }
+                    var textLength = remaining.Substring(remaining.StartsWith("$$") ? 2 : 1).IndexOf('$') + (remaining.StartsWith("$$") ? 2 : 1);
+                    var text = new TextWithFormat(textLength == 0 ? remaining : remaining.Substring(0, textLength));
+                    foreach (var style in styles)
+                    {
+                        style(text);
+                    }
+                    parts.Add(text);
+                    remaining = remaining.Substring(text.Text.Length);
+                }
+                return parts;
+            }
+        }
+
         public override string Tooltip => this.FormattedText;
+
+        public class TextWithFormat
+        {
+            public TextWithFormat(string text)
+            {
+                this.Text = text;
+            }
+
+            public string Text { get; set; }
+            public Brush Foreground { get; set; } = Brushes.White;
+        }
+    }
+
+    public class ImageTreeNode
+        : MetadataTreeNode
+    {
+        public ImageTreeNode(ImageSource imageSource)
+            : base(null)
+        {
+            this.ImageSource = imageSource;
+        }
+
+        public virtual ImageSource ImageSource { get; private set; }
+    }
+
+    public class HyperlinkTreeNode
+        : MetadataTreeNode
+    {
+        public HyperlinkTreeNode(string name, string url)
+            : this(name, url, url)
+        { }
+
+        public HyperlinkTreeNode(string name, string text, string url)
+            : base(name, text)
+        {
+            this.Url = url;
+        }
+
+        public virtual string Url { get; private set; }
+    }
+
+    public class ButtonTreeNode
+        : MetadataTreeNode
+    {
+        public ButtonTreeNode(string name, string value)
+            : base(name, value)
+        { }
+
+        public virtual void OnButtonClicked() { }
     }
 
 
@@ -415,7 +565,7 @@ namespace ManiaPlanetSharp.GameBoxView
             if (this.Reference != null && !string.IsNullOrWhiteSpace(this.Reference.FilePath))
             {
                 this.Nodes.Add(new MetadataTreeNode("Path", $"{this.Reference.FilePath}{(this.Reference.IsRelativePath ? " (relative)" : "")}"));
-                this.Nodes.Add(new MetadataTreeNode("Url", this.Reference.LocatorUrl));
+                this.Nodes.Add(new HyperlinkTreeNode("Url", this.Reference.LocatorUrl));
                 this.Nodes.Add(new MetadataTreeNode("Checksum", string.Join("", this.Reference.Checksum.Select(b => b.ToString("X2")))));
             }
         }
@@ -622,10 +772,28 @@ namespace ManiaPlanetSharp.GameBoxView
             {
                 this.Nodes.Add(new MetadataTreeNode("Path", dependency.File));
                 if (!string.IsNullOrWhiteSpace(dependency.Url))
-                    this.Nodes.Add(new MetadataTreeNode("Url", dependency.Url));
+                    this.Nodes.Add(new HyperlinkTreeNode("Url", dependency.Url));
             }
         }
 
         public virtual Dependency Dependency { get; private set; }
+    }
+
+    public class EmbeddedItemTreeNode
+        : MetadataTreeNode
+    {
+        public EmbeddedItemTreeNode(EmbeddedItem item, EmbeddedItemFile file)
+            : base(System.IO.Path.GetFileName(item.Path))
+        {
+            this.Item = item;
+            this.File = file;
+            this.Nodes.Add(new MetadataTreeNode("Path", this.Item.Path));
+            this.Nodes.Add(new MetadataTreeNode("Author", this.Item.Author));
+            this.Nodes.Add(new MetadataTreeNode("Collection", this.Item.Collection));
+            this.Nodes.Add(new ButtonTreeNode("Item File", "Analyze"));
+        }
+
+        public EmbeddedItem Item { get; set; }
+        public EmbeddedItemFile File { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using ManiaPlanetSharp.GameBox.MetadataProviders;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,6 +61,21 @@ namespace ManiaPlanetSharp.GameBoxView
                     e.Effects = DragDropEffects.Copy;
                 }
             }
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true, Verb = "open" });
+            }
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
+            }
+            e.Handled = true;
         }
     }
 }
