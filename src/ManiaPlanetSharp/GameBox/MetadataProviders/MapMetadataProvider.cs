@@ -142,6 +142,8 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public virtual string ExecutableVersion => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.ExecutableVersion);
 
+        public virtual ulong? LightmapCacheUid => this.GetBufferedHeaderValue((MapCommonChunk c) => c?.LightmapCacheUid);
+
 
 
         public EmbeddedItemFile[] GetEmbeddedItemFiles()
