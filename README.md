@@ -68,7 +68,7 @@ public class MapChunk
 
         //This count of blocks that specified the length of the array does not count blocks with empty flags, so we have to read them one by one and check if they are actually counted
         Block[] blocks = new Block[reader.ReadUInt32()];
-        for (int i = 0; i < this.Blocks.Length; i++)
+        for (int i = 0; i < blocks.Length; i++)
         {
             //Use the auto-generated block parser to parse a block instance
             Block block = blockParser.Parse(reader);
@@ -78,7 +78,7 @@ public class MapChunk
             }
             else
             {
-                this.Blocks[i] = block;
+                blocks[i] = block;
             }
         }
 
@@ -111,14 +111,14 @@ public class Block
     public BlockFlags Flags => (BlockFlags)this.FlagsU;
     
     //This is a conditional property - it only gets parsed if the condition is fulfilled (in this case if the Flags property of the current Block instance has the CustomBlock flag)
-    [Property, Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
+    [Property, Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
     public string Author { get; set; }
 
     //This is a subnode inside of a chunk/struct. If it's not a node reference, nothing special has to be specified and if the type of node/chunk that is present is known, the specific type can be specified
-    [Property, Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
+    [Property(SpecialPropertyType.NodeReference), Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
     public Node Skin { get; set; }
     
-    [Property, Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.HasBlockParameters)]
+    [Property(SpecialPropertyType.NodeReference), Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.HasBlockParameters)]
     public Node BlockParameters { get; set; }
 }
 
@@ -142,7 +142,7 @@ Status: Planned in the near future
 Status: Implemented, missing new features
 
 ## NadeoImporter
-Status: Private prototype exists and works, needs proper implementation for MP#
+Status: Prototype exists and works, needs proper implementation for MP#
 
 ## Dedimania API
 Status: Planned
