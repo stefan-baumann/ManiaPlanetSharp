@@ -33,16 +33,33 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             var start = reader.Stream.Position;
             var parser = ParserFactory.GetCustomStructParser<EmbeddedItem>();
             var items = new EmbeddedItem[this.ItemCount];
-            for (int i = 0; i < this.ItemCount; i++)
+            using (reader.GetNewLookbackStringContext())
             {
-                items[i] = parser.Parse(reader);
+                for (int i = 0; i < this.ItemCount; i++)
+                {
+                    items[i] = parser.Parse(reader);
+                }
             }
             this.ActualZipSize = this.ZipSize - (uint)(reader.Stream.Position - start);
             return items;
         }
 
-        [Property, Array(nameof(ActualZipSize))]
+        [Property]
+        public uint EmbeddedItemSize { get; set; }
+
+        [Property, Array(nameof(EmbeddedItemSize))]
         public byte[] ZipFile { get; set; }
+
+        [Property, CustomParserMethod(nameof(ParseUnknownZipRest))]
+        public byte[] UnknownZipRest { get; set; }
+        public byte[] ParseUnknownZipRest(GameBoxReader reader)
+        {
+            if (this.ActualZipSize > this.EmbeddedItemSize)
+            {
+                return reader.ReadRaw((int)(this.ActualZipSize - this.EmbeddedItemSize));
+            }
+            return null;
+        }
 
 
 
@@ -52,19 +69,22 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             {
                 using (ZipArchive archive = ZipArchive.Open(stream))
                 {
-                    return archive.Entries
-                        .Where(entry => !entry.IsDirectory)
-                        .Select(entry =>
+                    foreach (var entry in archive.Entries)
                     {
-                        using (MemoryStream target = new MemoryStream((int)entry.Size))
-                        using (Stream source = entry.OpenEntryStream())
+                        if (!entry.IsDirectory)
                         {
-                            source.CopyTo(target);
-                            return new EmbeddedItemFile(entry.Key, target.ToArray());
+                            using (MemoryStream target = new MemoryStream((int)entry.Size))
+                            using (Stream source = entry.OpenEntryStream())
+                            {
+                                source.CopyTo(target);
+                                yield return new EmbeddedItemFile(entry.Key, target.ToArray());
+                            }
                         }
-                    });
+                    }
                 }
             }
+
+            yield break;
         }
     }
 

@@ -265,12 +265,21 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             }
         }
 
+        ///// <summary>
+        ///// Resets the lookback string cache.
+        ///// </summary>
+        //public void ResetLocalLookbackStringCache()
+        //{
+        //    this.LookbackStrings.Clear();
+        //}
+
         /// <summary>
-        /// Resets the lookback string cache.
+        /// Creates a new lookback string context temporarily until the <c>LookbackStringContext</c> instance is disposed.
         /// </summary>
-        public void ResetLocalLookbackStringCache()
+        /// <returns></returns>
+        public LookbackStringContext GetNewLookbackStringContext()
         {
-            this.LookbackStrings.Clear();
+            return new LookbackStringContext(this);
         }
 
         /// <summary>
@@ -393,21 +402,6 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             return false;
         }
 
-        //private uint? lastChunkId;
-        //public uint GetChunkId()
-        //{
-        //    if (this.lastChunkId != null)
-        //    {
-        //        var id = this.lastChunkId.Value;
-        //        this.lastChunkId = null;
-        //        return id;
-        //    }
-        //    else
-        //    {
-        //        return Reader.ReadUInt32();
-        //    }
-        //}
-
 
 
         /// <summary>
@@ -452,6 +446,39 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         public virtual void Dispose()
         {
             this.Reader.Dispose();
+        }
+
+
+
+        public sealed class LookbackStringContext
+            : IDisposable
+        {
+            public LookbackStringContext(GameBoxReader reader)
+            {
+                if (reader == null)
+                {
+                    throw new ArgumentNullException(nameof(reader));
+                }
+
+                this.Reader = reader;
+
+                this.LookbackStringVersion = this.Reader.LookbackStringVersion;
+                this.LookbackStrings = this.Reader.LookbackStrings;
+
+                this.Reader.LookbackStringVersion = null;
+                this.Reader.LookbackStrings = new List<string>();
+            }
+
+            protected GameBoxReader Reader { get; private set; }
+
+            protected uint? LookbackStringVersion { get; private set; }
+            protected List<string> LookbackStrings { get; private set; }
+
+            public void Dispose()
+            {
+                this.Reader.LookbackStringVersion = this.LookbackStringVersion;
+                this.Reader.LookbackStrings = this.LookbackStrings;
+            }
         }
     }
 }
