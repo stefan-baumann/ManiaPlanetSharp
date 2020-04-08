@@ -11,13 +11,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property]
         public uint Version { get; set; }
 
-        [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]
+        [Property(SpecialPropertyType.LookbackString), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]
         public string TrackUid { get; set; }
 
-        [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]
+        [Property(SpecialPropertyType.LookbackString), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]
         public string TrackEnvironment { get; set; }
 
-        [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]
+        [Property(SpecialPropertyType.LookbackString), Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]
         public string TrackAuthor { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 2)]

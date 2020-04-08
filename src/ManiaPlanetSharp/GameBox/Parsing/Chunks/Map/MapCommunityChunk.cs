@@ -36,29 +36,38 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
     public class MapCommunityRoot
     {
         [XmlElement(ElementName = "ident")]
-        public Identity Identity { get; set; }
+        public MapCommunityIdentity Identity { get; set; }
+
         [XmlElement(ElementName = "desc")]
-        public Description Description { get; set; }
+        public MapCommunityDescription Description { get; set; }
+
         [XmlElement(ElementName = "playermodel")]
-        public PlayerModel PlayerModel { get; set; }
+        public MapCommunityPlayerModel PlayerModel { get; set; }
+
         [XmlElement(ElementName = "times")]
-        public Times Times { get; set; }
+        public MapCommunityTimes Times { get; set; }
+
         [XmlElement(ElementName = "deps")]
-        public Dependencies Dependencies { get; set; }
+        public MapCommunityDependencies Dependencies { get; set; }
+
         [XmlAttribute(AttributeName = "type")]
         public string Type { get; set; }
+
         [XmlAttribute(AttributeName = "exever")]
         public string ExecutableVersion { get; set; }
+
         [XmlAttribute(AttributeName = "exebuild")]
         public string ExecutableBuildDate { get; set; }
+
         [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
+
         [XmlAttribute(AttributeName = "lightmap")]
         public int Lightmap { get; set; }
     }
 
     [XmlRoot(ElementName = "ident")]
-    public class Identity
+    public class MapCommunityIdentity
     {
         [XmlAttribute(AttributeName = "uid")]
         public string Uid { get; set; }
@@ -71,7 +80,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
     }
 
     [XmlRoot(ElementName = "desc")]
-    public class Description
+    public class MapCommunityDescription
     {
         [XmlAttribute(AttributeName = "envir")]
         public string Environment { get; set; }
@@ -101,16 +110,15 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public bool HasGhostBlocks { get => this.HasGhostBlocksB == "1"; }
     }
 
-    //Todo: Find out 
     [XmlRoot(ElementName = "playermodel")]
-    public class PlayerModel
+    public class MapCommunityPlayerModel
     {
         [XmlAttribute(AttributeName = "id")]
         public string Id { get; set; }
     }
 
     [XmlRoot(ElementName = "times")]
-    public class Times
+    public class MapCommunityTimes
     {
         [XmlAttribute(AttributeName = "bronze")]
         public int Bronze { get; set; }
@@ -133,7 +141,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
     }
 
     [XmlRoot(ElementName = "deps")]
-    public class Dependencies
+    public class MapCommunityDependencies
     {
         [XmlElement(ElementName = "dep")]
         public List<Dependency> Deps { get; set; }
