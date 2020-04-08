@@ -8,9 +8,10 @@
     <RepositoryUrl>https://github.com/stefan-baumann/ManiaPlanetSharp</RepositoryUrl>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageTags>ManiaPlanet, Trackmania, Shootmania, GameBox, Parser, Metadata, ManiaExchange</PackageTags>
-    <Copyright>Copyright © 2020 Stefan Baumann</Copyright>
+    <Copyright>Copyright © 2017-2020 Stefan Baumann</Copyright>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/stefan-baumann/ManiaPlanetSharp</PackageProjectUrl>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -35,6 +36,13 @@
     </PackageReference>
     <PackageReference Include="sharpcompress" Version="0.24.0" />
     <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
