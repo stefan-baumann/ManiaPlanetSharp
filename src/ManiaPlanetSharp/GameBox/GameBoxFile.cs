@@ -264,25 +264,6 @@ namespace ManiaPlanetSharp.GameBox
                 for (long offset = 0; offset < stream.Length - 4; offset++)
                 {
                     stream.Position = offset;
-                    //uint id = reader.ReadUInt32();
-                    //if (ParserFactory.IsParseableChunkId(id))
-                    //{
-                    //    try
-                    //    {
-                    //        if (ParserFactory.TryGetChunkParser(id, out var parser))
-                    //        {
-                    //            Chunk chunk = parser.Parse(reader, id);
-
-                    //            chunks.Add(chunk);
-                    //        }
-
-                    //        offset = stream.Position - 1;
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        Console.WriteLine($"GameBox Parser: Encountered Exception of type {ex.GetType()} (\"{ex.Message}\") while parsing body chunk with id 0x{id:X8}/{KnownClassIds.GetClassName(id & 0xFFFFF000)}.");
-                    //    }
-                    //}
                     uint id = reader.ReadUInt32();
                     if (ParserFactory.IsParseableChunkId(id))
                     {
@@ -290,12 +271,23 @@ namespace ManiaPlanetSharp.GameBox
                         {
                             try
                             {
+                                //Compared to the solution via the lambda that was commented out below, this saves a lot (up to multiple million in big files) allocations
+                                bool skippable = false;
+                                foreach (var parserId in parser.ParseableIds)
+                                {
+                                    if (parserId.Item1 == id)
+                                    {
+                                        skippable = true;
+                                    }
+                                }
                                 //If skippable
-                                if (parser.ParseableIds.First(p => p.Item1 == id).Item2)
+                                if (skippable) //(parser.ParseableIds.First(p => p.Item1 == id).Item2)
                                 {
                                     if (reader.ReadUInt32() != GameBoxReader.SkipMarker)
                                     {
+#if DETAILED_CONSOLE_DIAGNOSTICS || DEBUG
                                         Console.WriteLine($"Expected skip marker in chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)}.");
+#endif
                                         continue;
                                     }
                                     uint size = reader.ReadUInt32();
@@ -306,7 +298,9 @@ namespace ManiaPlanetSharp.GameBox
 
                                         if (reader.Stream.Position != start + size)
                                         {
+#if DETAILED_CONSOLE_DIAGNOSTICS || DEBUG
                                             Console.WriteLine($"GameBox Parser: Reader for skippable chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)} did not read the correct length. Adjusting read position.");
+#endif
 
                                             offset = start + size - 1;
                                         }
