@@ -35,6 +35,7 @@ foreach (var structType in structTypes)
 <#
 foreach (var structType in structTypes)
 {
+	Console.WriteLine($"Generating parser for type {structType.Name}");
 	string code = (string)typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GenerateStructParserString), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(structType).Invoke(null, null);
 #>
 

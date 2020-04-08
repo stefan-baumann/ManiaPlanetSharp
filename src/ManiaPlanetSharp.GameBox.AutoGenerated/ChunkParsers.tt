@@ -35,6 +35,7 @@ foreach (var chunkType in chunkTypes)
 <#
 foreach (var chunkType in chunkTypes)
 {
+	Console.WriteLine($"Generating parser for type {chunkType.Name}");
 	string code = (string)typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GenerateChunkParserString), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(chunkType).Invoke(null, null);
 	List<Tuple<uint, bool>> ids = (List<Tuple<uint, bool>>)typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GetParserChunkIds), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(chunkType).Invoke(null, null);
 #>
