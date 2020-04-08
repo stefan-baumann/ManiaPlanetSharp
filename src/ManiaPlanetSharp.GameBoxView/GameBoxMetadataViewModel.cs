@@ -32,6 +32,8 @@ namespace ManiaPlanetSharp.GameBoxView
             this.Path = path;
             this.File = GameBoxFile.Parse(this.Path);
 
+            this.MetadataTreeItems.Add(new FileMetadataTreeNode(this.File));
+
             if (path.ToLowerInvariant().EndsWith(".map.gbx"))
             {
                 this.FileType = "Map";
@@ -50,7 +52,6 @@ namespace ManiaPlanetSharp.GameBoxView
 
             if (this.MetadataProvider != null)
             {
-                this.MetadataTreeItems.Add(new FileMetadataTreeNode(this.File));
                 if (this.MetadataProvider is MapMetadataProvider map)
                 {
                     this.MetadataTreeItems.Add(new MapMetadataTreeNode(map) { IsExpanded = true });

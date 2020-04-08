@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
 
 namespace ManiaPlanetSharp.GameBoxView
 {
@@ -87,6 +89,21 @@ namespace ManiaPlanetSharp.GameBoxView
                     }
                 }
             }
+        }
+
+
+
+        private ICommand copyCommand;
+
+        public ICommand CopyCommand => this.copyCommand ?? (this.copyCommand = new RelayCommand(_ => this.OnCopy()));
+        public virtual void OnCopy()
+        {
+            Clipboard.SetText(this.GenerateCopyString());
+        }
+
+        protected virtual string GenerateCopyString()
+        {
+            return this.Value;
         }
 
 

@@ -68,6 +68,12 @@ namespace ManiaPlanetSharp.GameBoxView
                 }
             };
 
+            var bodyNodes = this.File.ParseBody().ToList();
+            yield return new TextTreeNode("Body", $"{bodyNodes.Count} chunks")
+            {
+                Nodes = new ObservableCollection<TextTreeNode>(bodyNodes.Select(c => new ChunkTreeNode(c.ToString(), (Chunk)c)))
+            };
+
             yield break;
         }
     }
