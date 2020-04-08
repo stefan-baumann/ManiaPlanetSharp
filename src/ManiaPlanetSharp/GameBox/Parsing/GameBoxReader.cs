@@ -89,12 +89,30 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         }
 
         /// <summary>
+        /// Reads a signed byte.
+        /// </summary>
+        /// <returns></returns>
+        public sbyte ReadSByte()
+        {
+            return this.Reader.ReadSByte();
+        }
+
+        /// <summary>
         /// Reads a character.
         /// </summary>
         /// <returns>A <c>byte</c> read from the file casted to a <c>char</c>.</returns>
         public char ReadChar()
         {
             return (char)this.Reader.ReadByte();
+        }
+
+        /// <summary>
+        /// Reads a 16-bit signed integer.
+        /// </summary>
+        /// <returns></returns>
+        public short ReadInt16()
+        {
+            return this.Reader.ReadInt16();
         }
 
         /// <summary>

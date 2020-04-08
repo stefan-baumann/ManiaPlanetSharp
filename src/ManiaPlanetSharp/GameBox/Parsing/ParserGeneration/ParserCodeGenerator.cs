@@ -85,6 +85,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         {
             string parseCode;
             Type singleValueType = field.IsArray ? field.Property.PropertyType.GetElementType() : field.Property.PropertyType;
+            if (singleValueType == null)
+            {
+                throw new ArgumentNullException($"The single value type of property {field.Property.Name} is null. This could be caused by adding an [Array] attribute to a property whose type is not an array.");
+            }
+
             if (field.HasCustomParser)
             {
                 parseCode = $"result.{field.CustomParserMethod}(reader)";
@@ -173,7 +178,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         {
             { typeof(bool), nameof(GameBoxReader.ReadBool) },
             { typeof(byte), nameof(GameBoxReader.ReadByte) },
+            { typeof(sbyte), nameof(GameBoxReader.ReadSByte) },
             { typeof(char), nameof(GameBoxReader.ReadChar) },
+            { typeof(short), nameof(GameBoxReader.ReadInt16) },
             { typeof(ushort), nameof(GameBoxReader.ReadUInt16) },
             { typeof(int), nameof(GameBoxReader.ReadInt32) },
             { typeof(uint), nameof(GameBoxReader.ReadUInt32) },
@@ -195,7 +202,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 case BinaryCondition binaryCondition:
                     return "result." + (binaryCondition.ReferenceValue == true ? binaryCondition.DependentProperty : "!" + binaryCondition.DependentProperty);
                 case ValueCondition valueCondition:
-                    string valueCode = valueCondition.ReferenceValue == null ? "null" : valueCondition.ReferenceValue is string s ? $"\"{s}\"" : valueCondition.ReferenceValue is Enum e ? $"{e.GetType().FullName}.{Enum.GetName(e.GetType(), e)}" : valueCondition.ReferenceValue.ToString();
+                    string valueCode = valueCondition.ReferenceValue == null ? "null" : valueCondition.ReferenceValue is string s ? $"\"{s}\"" : valueCondition.ReferenceValue is Enum e ? $"{e.GetType().FullName}.{Enum.GetName(e.GetType(), e)}" : valueCondition.ReferenceValue is bool b ? (b ? "true" : "false") : valueCondition.ReferenceValue.ToString();
                     
                     switch (valueCondition.Comparison)
                     {

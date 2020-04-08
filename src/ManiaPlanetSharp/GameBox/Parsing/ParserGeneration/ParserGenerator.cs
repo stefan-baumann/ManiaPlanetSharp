@@ -175,7 +175,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
         {
             { typeof(bool), nameof(GameBoxReader.ReadBool) },
             { typeof(char), nameof(GameBoxReader.ReadChar) },
+            { typeof(sbyte), nameof(GameBoxReader.ReadSByte) },
             { typeof(byte), nameof(GameBoxReader.ReadByte) },
+            { typeof(short), nameof(GameBoxReader.ReadInt16) },
             { typeof(ushort), nameof(GameBoxReader.ReadUInt16) },
             { typeof(int), nameof(GameBoxReader.ReadInt32) },
             { typeof(uint), nameof(GameBoxReader.ReadUInt32) },
