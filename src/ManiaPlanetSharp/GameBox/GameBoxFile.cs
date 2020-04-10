@@ -287,7 +287,7 @@ namespace ManiaPlanetSharp.GameBox
                                     if (reader.ReadUInt32() != GameBoxReader.SkipMarker)
                                     {
 #if DETAILED_CONSOLE_DIAGNOSTICS || DEBUG
-                                        Console.WriteLine($"Expected skip marker in chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)}.");
+                                        Console.WriteLine($"Expected skip marker in chunk with id 0x{id:X8}.");
 #endif
                                         continue;
                                     }
@@ -300,7 +300,7 @@ namespace ManiaPlanetSharp.GameBox
                                         if (reader.Stream.Position != start + size)
                                         {
 #if DETAILED_CONSOLE_DIAGNOSTICS || DEBUG
-                                            Console.WriteLine($"GameBox Parser: Reader for skippable chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)} did not read the correct length. Adjusting read position.");
+                                            Console.WriteLine($"GameBox Parser: Reader for skippable chunk with id 0x{id:X8} did not read the correct length. Adjusting read position.");
 #endif
 
                                             offset = start + size - 1;
@@ -322,7 +322,7 @@ namespace ManiaPlanetSharp.GameBox
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine($"GameBox Parser: Encountered Exception of type {ex.GetType()} (\"{ex.Message}\") while parsing body chunk with id 0x{id:X8}/{KnownClassIds.GetClassName(id & 0xFFFFF000)}.");
+                                Console.WriteLine($"GameBox Parser: Encountered Exception of type {ex.GetType()} (\"{ex.Message}\") while parsing body chunk with id 0x{id:X8}.");
                             }
                         }
                     }
