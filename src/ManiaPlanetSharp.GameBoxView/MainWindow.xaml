@@ -11,7 +11,7 @@
         <local1:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Window.Resources>
     <Grid DragEnter="Grid_Drag" DragOver="Grid_Drag" Drop="Grid_Drop" AllowDrop="true">
-        <TreeView Name="MetadataTreeView" ItemsSource="{Binding MetadataTreeItems}" BorderThickness="0">
+        <TreeView Name="MetadataTreeView" ItemsSource="{Binding MetadataTreeItems}" BorderThickness="0" Margin="0,-2,0,2">
             <TreeView.Style>
                 <Style TargetType="{x:Type TreeView}">
                     <Style.Resources>

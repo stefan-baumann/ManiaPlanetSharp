@@ -104,6 +104,10 @@ namespace ManiaPlanetSharp.GameBoxView
 
         protected ImageSource ImageSourceFromImage(System.Drawing.Image source)
         {
+            if (source == null)
+            {
+                return null;
+            }
             using (var ms = new MemoryStream())
             {
                 source.Save(ms, System.Drawing.Imaging.ImageFormat.Png);

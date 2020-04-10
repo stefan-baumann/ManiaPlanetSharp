@@ -14,8 +14,8 @@ namespace ManiaPlanetSharp.GameBox.Parsing
     public class GameBoxReader
         : IDisposable
     {
-        protected internal const uint EndMarkerClassId = 0xFACADE01;
-        protected internal const uint SkipMarker = 0x534B4950; //SKIP
+        public const uint EndMarkerClassId = 0xFACADE01;
+        public const uint SkipMarker = 0x534B4950; //SKIP
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameBoxStreamReader"/> class.
@@ -248,6 +248,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     case 23: return "Lagoon256";
                     case 24: return "Stadium4";
                     case 25: return "Stadium256";
+                    case 26: return "TMNext";
 
                     case 100: return "History";
                     case 101: return "Society";

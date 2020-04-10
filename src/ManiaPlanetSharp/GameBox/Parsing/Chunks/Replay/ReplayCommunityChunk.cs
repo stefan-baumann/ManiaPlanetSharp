@@ -8,7 +8,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
     [Chunk(0x03093001)]
     public class ReplayCommunityChunk
-    : Chunk
+		: Chunk
     {
         private string xmlString;
         [Property]
