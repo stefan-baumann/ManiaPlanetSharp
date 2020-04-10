@@ -5,7 +5,7 @@ namespace ManiaPlanetSharp.GameBoxView
     public class DependencyTreeNode
         : TextTreeNode
     {
-        public DependencyTreeNode(Dependency dependency)
+        public DependencyTreeNode(MapCommunityDependency dependency)
             : base($"{System.IO.Path.GetFileName(dependency?.File)} ({(string.IsNullOrWhiteSpace(dependency.Url) ? "local" : "remote")})")
         {
             this.Dependency = dependency;
@@ -17,6 +17,6 @@ namespace ManiaPlanetSharp.GameBoxView
             }
         }
 
-        public virtual Dependency Dependency { get; private set; }
+        public virtual MapCommunityDependency Dependency { get; private set; }
     }
 }

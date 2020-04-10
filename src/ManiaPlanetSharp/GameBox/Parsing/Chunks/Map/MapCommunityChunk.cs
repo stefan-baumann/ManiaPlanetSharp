@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
@@ -20,139 +22,186 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             }
             set
             {
-                this.xmlString = value;
-                XmlSerializer serializer = new XmlSerializer(typeof(MapCommunityRoot));
-                using (StringReader stringReader = new StringReader(this.xmlString.Replace("&", "&amp;")))
+                if (this.xmlString != value)
                 {
-                    this.Root = (MapCommunityRoot)serializer.Deserialize(stringReader);
+                    this.xmlString = value;
+                    this.Root = this.ParseXmlString(this.xmlString.Replace("&", "&amp;"));
                 }
             }
         }
 
-        public MapCommunityRoot Root { get; set; }
+        private MapCommunityRoot ParseXmlString(string xmlString)
+        {
+            XDocument document = XDocument.Parse(xmlString);
+            if (document.Root.Name != "header")
+            {
+                return null;
+            }
+
+            MapCommunityRoot root = new MapCommunityRoot()
+            {
+                Type = document.Root.Attribute("type")?.Value,
+                ExecutableVersion = document.Root.Attribute("exever")?.Value,
+                ExecutableBuildDate = document.Root.Attribute("exebuild")?.Value,
+                Title = document.Root.Attribute("title")?.Value,
+                Lightmap = int.TryParse(document.Root.Attribute("lightmap")?.Value ?? string.Empty, out int i0) ? i0 : 0
+            };
+
+            var identity = document.Root.Element("ident");
+            if (identity != null)
+            {
+                root.Identity = new MapCommunityIdentity()
+                {
+                    Uid = identity.Attribute("uid")?.Value,
+                    Name = identity.Attribute("name")?.Value,
+                    Author = identity.Attribute("author")?.Value,
+                    AuthorZone = identity.Attribute("authorzone")?.Value,
+                };
+            }
+
+            var description = document.Root.Element("desc");
+            if (description != null)
+            {
+                root.Description = new MapCommunityDescription()
+                {
+                    Environment = identity.Attribute("envir")?.Value,
+                    Mood = identity.Attribute("mood")?.Value,
+                    Type = identity.Attribute("type")?.Value,
+                    MapType = identity.Attribute("maptype")?.Value,
+                    MapStyle = identity.Attribute("mapstyle")?.Value,
+                    Validated = identity.Attribute("validated")?.Value == "1",
+                    LapCount = int.TryParse(identity.Attribute("nblaps")?.Value ?? string.Empty, out int i1) ? i1 : 0,
+                    DisplayCost = int.TryParse(identity.Attribute("displaycost")?.Value ?? string.Empty, out int i2) ? i2 : 0,
+                    Mod = identity.Attribute("mod")?.Value,
+                    HasGhostBlocks = identity.Attribute("hasghostblocks")?.Value == "1"
+                };
+            }
+
+            var playermodel = document.Root.Element("playermodel");
+            if (playermodel != null)
+            {
+                root.PlayerModel = new MapCommunityPlayerModel()
+                {
+                    Id = playermodel.Attribute("id")?.Value
+                };
+            }
+
+            var times = document.Root.Element("times");
+            if (times != null)
+            {
+                root.Times = new MapCommunityTimes()
+                {
+                    Bronze = int.TryParse(identity.Attribute("bronze")?.Value ?? string.Empty, out int i1) ? i1 : 0,
+                    Silver = int.TryParse(identity.Attribute("silver")?.Value ?? string.Empty, out int i2) ? i2 : 0,
+                    Gold = int.TryParse(identity.Attribute("gold")?.Value ?? string.Empty, out int i3) ? i3 : 0,
+                    AuthorTime = int.TryParse(identity.Attribute("authortime")?.Value ?? string.Empty, out int i4) ? i4 : 0,
+                    AuthorScore = int.TryParse(identity.Attribute("authorscore")?.Value ?? string.Empty, out int i5) ? i5 : 0,
+                };
+            }
+
+            var dependencies = document.Root.Element("deps");
+            if (dependencies != null)
+            {
+                root.Dependencies = dependencies.Elements("dep").Select(dep => new MapCommunityDependency()
+                {
+                    File = dep.Attribute("file")?.Value,
+                    Url = dep.Attribute("url")?.Value
+                }).ToList();
+            }
+
+            return root;
+        }
+
+        public MapCommunityRoot Root { get; private set; }
     }
 
-    [XmlRoot(ElementName = "header")]
     public class MapCommunityRoot
     {
-        [XmlElement(ElementName = "ident")]
         public MapCommunityIdentity Identity { get; set; }
 
-        [XmlElement(ElementName = "desc")]
         public MapCommunityDescription Description { get; set; }
 
-        [XmlElement(ElementName = "playermodel")]
         public MapCommunityPlayerModel PlayerModel { get; set; }
 
-        [XmlElement(ElementName = "times")]
         public MapCommunityTimes Times { get; set; }
 
-        [XmlElement(ElementName = "deps")]
-        public MapCommunityDependencies Dependencies { get; set; }
+        public List<MapCommunityDependency> Dependencies { get; set; }
 
-        [XmlAttribute(AttributeName = "type")]
         public string Type { get; set; }
 
-        [XmlAttribute(AttributeName = "exever")]
         public string ExecutableVersion { get; set; }
 
-        [XmlAttribute(AttributeName = "exebuild")]
         public string ExecutableBuildDate { get; set; }
 
-        [XmlAttribute(AttributeName = "title")]
         public string Title { get; set; }
 
-        [XmlAttribute(AttributeName = "lightmap")]
         public int Lightmap { get; set; }
     }
 
-    [XmlRoot(ElementName = "ident")]
     public class MapCommunityIdentity
     {
-        [XmlAttribute(AttributeName = "uid")]
         public string Uid { get; set; }
-        [XmlAttribute(AttributeName = "name")]
+
         public string Name { get; set; }
-        [XmlAttribute(AttributeName = "author")]
+
         public string Author { get; set; }
-        [XmlAttribute(AttributeName = "authorzone")]
+
         public string AuthorZone { get; set; }
     }
 
-    [XmlRoot(ElementName = "desc")]
     public class MapCommunityDescription
     {
-        [XmlAttribute(AttributeName = "envir")]
         public string Environment { get; set; }
-        [XmlAttribute(AttributeName = "mood")]
+
         public string Mood { get; set; }
-        [XmlAttribute(AttributeName = "type")]
+
         public string Type { get; set; }
-        [XmlAttribute(AttributeName = "maptype")]
+
         public string MapType { get; set; }
-        [XmlAttribute(AttributeName = "mapstyle")]
+
         public string MapStyle { get; set; }
-        [XmlAttribute(AttributeName = "validated")]
-        //[Obsolete("Use the property Validated instead of ValidatedB.", false)] //The obsolete-attribute prevents the xml parser to parse
-        public string ValidatedB { get; set; }
-        [XmlIgnore()]
-        public bool Validated { get => this.ValidatedB == "1"; }
-        [XmlAttribute(AttributeName = "nblaps")]
+
+        public bool Validated { get; set; }
+
         public int LapCount { get; set; }
-        [XmlAttribute(AttributeName = "displaycost")]
+
         public int DisplayCost { get; set; }
-        [XmlAttribute(AttributeName = "mod")]
+
         public string Mod { get; set; }
-        [XmlAttribute(AttributeName = "hasghostblocks")]
-        //[Obsolete("Use the property HasGhostBlocks instead of HasGhostBlocksB.", false)] //The obsolete-attribute prevents the xml parser to parse
-        public string HasGhostBlocksB { get; set; }
-        [XmlIgnore()]
-        public bool HasGhostBlocks { get => this.HasGhostBlocksB == "1"; }
+
+        public bool HasGhostBlocks { get; set; }
     }
 
-    [XmlRoot(ElementName = "playermodel")]
     public class MapCommunityPlayerModel
     {
-        [XmlAttribute(AttributeName = "id")]
         public string Id { get; set; }
     }
 
-    [XmlRoot(ElementName = "times")]
     public class MapCommunityTimes
     {
-        [XmlAttribute(AttributeName = "bronze")]
         public int Bronze { get; set; }
-        [XmlIgnore()]
+
         public TimeSpan BronzeTimeSpan { get => TimeSpan.FromMilliseconds(this.Bronze); }
-        [XmlAttribute(AttributeName = "silver")]
+
         public int Silver { get; set; }
-        [XmlIgnore()]
+
         public TimeSpan SilverTimeSpan { get => TimeSpan.FromMilliseconds(this.Silver); }
-        [XmlAttribute(AttributeName = "gold")]
+
         public int Gold { get; set; }
-        [XmlIgnore()]
+
         public TimeSpan GoldTimeSpan { get => TimeSpan.FromMilliseconds(this.Gold); }
-        [XmlAttribute(AttributeName = "authortime")]
+
         public int AuthorTime { get; set; }
-        [XmlIgnore()]
+
         public TimeSpan AuthorTimeSpan { get => TimeSpan.FromMilliseconds(this.AuthorTime); }
-        [XmlAttribute(AttributeName = "authorscore")]
+
         public int AuthorScore { get; set; }
     }
 
-    [XmlRoot(ElementName = "deps")]
-    public class MapCommunityDependencies
+    public class MapCommunityDependency
     {
-        [XmlElement(ElementName = "dep")]
-        public List<Dependency> Deps { get; set; }
-    }
-
-    [XmlRoot(ElementName = "dep")]
-    public class Dependency
-    {
-        [XmlAttribute(AttributeName = "file")]
         public string File { get; set; }
-        [XmlAttribute(AttributeName = "url")]
+
         public string Url { get; set; }
     }
 }

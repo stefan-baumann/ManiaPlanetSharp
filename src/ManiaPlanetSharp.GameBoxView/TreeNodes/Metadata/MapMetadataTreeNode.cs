@@ -62,7 +62,7 @@ namespace ManiaPlanetSharp.GameBoxView
             yield return new FileReferenceTreeNode("Custom Music", Map.CustomMusic);
             yield return new TextTreeNode("Dependencies", $"{Map.Dependencies?.Length ?? 0} dependencies")
             {
-                Nodes = new ObservableCollection<TextTreeNode>((Map.Dependencies ?? Array.Empty<Dependency>()).Select(d => new DependencyTreeNode(d)))
+                Nodes = new ObservableCollection<TextTreeNode>((Map.Dependencies ?? Array.Empty<MapCommunityDependency>()).Select(d => new DependencyTreeNode(d)))
             };
 
             yield return new TextTreeNode("Display Cost", Map.DisplayCost?.ToString() ?? NotAvailable);
