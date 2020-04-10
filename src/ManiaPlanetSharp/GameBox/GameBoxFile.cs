@@ -277,7 +277,8 @@ namespace ManiaPlanetSharp.GameBox
                                 {
                                     if (parserId.Item1 == id)
                                     {
-                                        skippable = true;
+                                        skippable = parserId.Item2;
+                                        break;
                                     }
                                 }
                                 //If skippable

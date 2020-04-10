@@ -170,20 +170,38 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         }
 
         /// <summary>
-        /// Reads a string that is preceded by a 32-bit unsigned integer stating its length.
+        /// The maximum length of string that will be parsed automatically.
+        /// </summary>
+        public int MaxStringLength { get; set; } = 16384;
+
+        /// <summary>
+        /// Reads a string that is preceded by a 32-bit unsigned integer stating its length. This will throw a <c>InvalidDataException</c> for strings that exceed the length specified in <c>GameBoxReader.MaxStringLength</c> to prevent massive allocations caused by wrongly parsed strings. If you don't want this behaviour, use <c>GameBoxReader.ReadLongString()</c> instead.
         /// </summary>
         /// <returns></returns>
         public string ReadString()
         {
             uint length = this.ReadUInt32();
-            if (length == 0)
+            if (length > this.MaxStringLength)
             {
-                return null;
+                throw new InvalidDataException("The specified string length exceeds the specified maximum string length.");
             }
 
             return this.ReadString((int)length);
         }
 
+        /// <summary>
+        /// Reads a string of arbitrary length that may exceed <c>GameBoxReader.MaxStringLength</c>.
+        /// </summary>
+        /// <returns></returns>
+        public string ReadLongString()
+        {
+            uint length = this.ReadUInt32();
+            return this.ReadString((int)length);
+        }
+
+        //Pre-allocated buffer 
+        private const int stringReadBufferLength = 256;
+        private byte[] stringReadBuffer = new byte[stringReadBufferLength];
         /// <summary>
         /// Reads a string of a specified length.
         /// </summary>
@@ -191,8 +209,20 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <returns></returns>
         public string ReadString(int length)
         {
-            byte[] data = this.Reader.ReadBytes(length);
-            return Encoding.UTF8.GetString(data);
+            if (length == 0)
+            {
+                return null;
+            }
+            
+            if (length <= stringReadBufferLength)
+            {
+                this.Reader.Read(stringReadBuffer, 0, length);
+                return Encoding.UTF8.GetString(stringReadBuffer, 0, length);
+            }
+            else
+            {
+                return Encoding.UTF8.GetString(this.Reader.ReadBytes(length));
+            }
         }
 
         private uint? LookbackStringVersion { get; set; }
