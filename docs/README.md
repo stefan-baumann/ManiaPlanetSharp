@@ -11,7 +11,7 @@ This library includes one of the most - if not the most - extensive gbx file par
 
 If you just want to look at the metadata of a `.gbx` file, you can use the `GameBoxView` application, which is a part of this project. Just drag the file in question into the app window and it will show you all of the available information, including advanced features like examining embedded items, which are not available in other applications.
 
-![GameBoxView](GameBoxView.PNG)
+![GameBoxView](img/GameBoxView.PNG)
 
 ### Code Example: Parsing a `.gbx` map file
 
