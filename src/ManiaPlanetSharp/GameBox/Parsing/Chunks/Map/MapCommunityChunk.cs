@@ -64,16 +64,16 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             {
                 root.Description = new MapCommunityDescription()
                 {
-                    Environment = identity.Attribute("envir")?.Value,
-                    Mood = identity.Attribute("mood")?.Value,
-                    Type = identity.Attribute("type")?.Value,
-                    MapType = identity.Attribute("maptype")?.Value,
-                    MapStyle = identity.Attribute("mapstyle")?.Value,
-                    Validated = identity.Attribute("validated")?.Value == "1",
-                    LapCount = int.TryParse(identity.Attribute("nblaps")?.Value ?? string.Empty, out int i1) ? i1 : 0,
-                    DisplayCost = int.TryParse(identity.Attribute("displaycost")?.Value ?? string.Empty, out int i2) ? i2 : 0,
-                    Mod = identity.Attribute("mod")?.Value,
-                    HasGhostBlocks = identity.Attribute("hasghostblocks")?.Value == "1"
+                    Environment = description.Attribute("envir")?.Value,
+                    Mood = description.Attribute("mood")?.Value,
+                    Type = description.Attribute("type")?.Value,
+                    MapType = description.Attribute("maptype")?.Value,
+                    MapStyle = description.Attribute("mapstyle")?.Value,
+                    Validated = description.Attribute("validated")?.Value == "1",
+                    LapCount = int.TryParse(description.Attribute("nblaps")?.Value ?? string.Empty, out int i1) ? i1 : 0,
+                    DisplayCost = int.TryParse(description.Attribute("displaycost")?.Value ?? string.Empty, out int i2) ? i2 : 0,
+                    Mod = description.Attribute("mod")?.Value,
+                    HasGhostBlocks = description.Attribute("hasghostblocks")?.Value == "1"
                 };
             }
 
@@ -91,11 +91,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             {
                 root.Times = new MapCommunityTimes()
                 {
-                    Bronze = int.TryParse(identity.Attribute("bronze")?.Value ?? string.Empty, out int i1) ? i1 : 0,
-                    Silver = int.TryParse(identity.Attribute("silver")?.Value ?? string.Empty, out int i2) ? i2 : 0,
-                    Gold = int.TryParse(identity.Attribute("gold")?.Value ?? string.Empty, out int i3) ? i3 : 0,
-                    AuthorTime = int.TryParse(identity.Attribute("authortime")?.Value ?? string.Empty, out int i4) ? i4 : 0,
-                    AuthorScore = int.TryParse(identity.Attribute("authorscore")?.Value ?? string.Empty, out int i5) ? i5 : 0,
+                    Bronze = int.TryParse(times.Attribute("bronze")?.Value ?? string.Empty, out int i1) ? i1 : 0,
+                    Silver = int.TryParse(times.Attribute("silver")?.Value ?? string.Empty, out int i2) ? i2 : 0,
+                    Gold = int.TryParse(times.Attribute("gold")?.Value ?? string.Empty, out int i3) ? i3 : 0,
+                    AuthorTime = int.TryParse(times.Attribute("authortime")?.Value ?? string.Empty, out int i4) ? i4 : 0,
+                    AuthorScore = int.TryParse(times.Attribute("authorscore")?.Value ?? string.Empty, out int i5) ? i5 : 0,
                 };
             }
 
