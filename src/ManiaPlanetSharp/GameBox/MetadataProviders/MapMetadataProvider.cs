@@ -22,27 +22,34 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public virtual string Name => this.GetBufferedHeaderValue((MapCommonChunk c) => c.Name)
             .IfNull((MapCommunityChunk c) => c.Root?.Identity?.Name)
-            .IfNullBody((MapChunk c) => c.Name);
+            .IfNullBody((MapChunk c) => c.Name)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual string Environment => this.GetBufferedHeaderValue((MapCommonChunk c) => c.Environment)
             .IfNull((MapCommunityChunk c) => c.Root?.Description?.Environment)
-            .IfNullBody((MapChunk c) => c.Environment);
+            .IfNullBody((MapChunk c) => c.Environment)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual string Author => this.GetBufferedHeaderValue((MapCommonChunk c) => c.Author)
             .IfNull((MapAuthorChunk c) => c.Login)
-            .IfNullBody((MapChunk c) => c.Author);
+            .IfNullBody((MapChunk c) => c.Author)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
-        public virtual string AuthorNickname => this.GetBufferedHeaderValue((MapAuthorChunk c) => c.Nick);
+        public virtual string AuthorNickname => this.GetBufferedHeaderValue((MapAuthorChunk c) => c.Nick)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual string AuthorZone => this.GetBufferedHeaderValue((MapAuthorChunk c) => c.Zone)
-            .IfNull((MapCommunityChunk c) => c.Root?.Identity?.AuthorZone);
+            .IfNull((MapCommunityChunk c) => c.Root?.Identity?.AuthorZone)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual string Uid => this.GetBufferedHeaderValue((MapCommonChunk c) => c.Uid)
             .IfNull((MapCommunityChunk c) => c.Root?.Identity?.Uid)
-            .IfNullBody((MapChunk c) => c.Uid);
+            .IfNullBody((MapChunk c) => c.Uid)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual string Titlepack => this.GetBufferedHeaderValue((MapCommonChunk c) => c.TitleUid)
-            .IfNull((MapCommunityChunk c) => c.Root?.Title);
+            .IfNull((MapCommunityChunk c) => c.Root?.Title)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual int? Checkpoints => this.GetBufferedHeaderValue((MapDescriptionChunk c) => (int?)c.Checkpoints);
 
@@ -61,31 +68,38 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public virtual bool? Validated => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.Description?.Validated);
 
-        public virtual string TypeFull => this.GetBufferedHeaderValue((MapCommonChunk c) => c.Type);
+        public virtual string TypeFull => this.GetBufferedHeaderValue((MapCommonChunk c) => c.Type)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
-        public virtual string Type => this.GetBufferedHeaderValue((MapDescriptionChunk c) => c.TrackType.ToString());
+        public virtual string Type => this.GetBufferedHeaderValue((MapDescriptionChunk c) => c.TrackType.ToString())
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual MapKind? Kind => this.GetBufferedHeaderValue((MapCommonChunk c) => (MapKind?)c.Kind);
 
         public virtual bool? Locked => this.GetBufferedHeaderValue((MapCommonChunk c) => (bool?)c.Locked)
             .IfNullBody((MapChunk c) => c.NeedsUnlock);
 
-        public virtual string Mod => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.Description.Mod);
+        public virtual string Mod => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.Description.Mod)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
 
 
         public virtual byte[] Thumbnail => this.GetBufferedHeaderValue((MapThumbnailChunk c) => c.ThumbnailData);
 
-        public virtual string Comment => this.GetBufferedHeaderValue((MapThumbnailChunk c) => c.Comment);
+        public virtual string Comment => this.GetBufferedHeaderValue((MapThumbnailChunk c) => c.Comment)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
 
 
         public virtual string Vehicle => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.PlayerModel?.Id)
-            .IfNullBody((MapVehicleChunk c) => c.Name);
+            .IfNullBody((MapVehicleChunk c) => c.Name)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
-        public virtual string VehicleAuthor => this.GetBufferedBodyValue((MapVehicleChunk c) => c.Author);
+        public virtual string VehicleAuthor => this.GetBufferedBodyValue((MapVehicleChunk c) => c.Author)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
-        public virtual string VehicleCollection => this.GetBufferedBodyValue((MapVehicleChunk c) => c.Collection);
+        public virtual string VehicleCollection => this.GetBufferedBodyValue((MapVehicleChunk c) => c.Collection)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
 
 
@@ -108,13 +122,16 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
 
         public virtual string TimeOfDay => this.GetBufferedHeaderValue((MapCommonChunk c) => c.DecorationTimeOfDay)
-            .IfNullBody((MapChunk c) => c.TimeOfDay);
+            .IfNullBody((MapChunk c) => c.TimeOfDay)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual string DecorationEnvironment => this.GetBufferedHeaderValue((MapCommonChunk c) => c.DecorationEnvironment)
-            .IfNullBody((MapChunk c) => c.DecorationEnvironment);
+            .IfNullBody((MapChunk c) => c.DecorationEnvironment)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual string DecorationEnvironmentAuthor => this.GetBufferedHeaderValue((MapCommonChunk c) => c.DecorationEnvironmentAuthor)
-            .IfNullBody((MapChunk c) => c.DecorationEnvironmentAuthor);
+            .IfNullBody((MapChunk c) => c.DecorationEnvironmentAuthor)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual Size3D? Size => this.GetBufferedBodyValue((MapChunk c) => (Size3D?)c.Size);
 
@@ -142,9 +159,11 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
 
 
-        public virtual string ExecutableBuildDate => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.ExecutableBuildDate);
+        public virtual string ExecutableBuildDate => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.ExecutableBuildDate)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
-        public virtual string ExecutableVersion => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.ExecutableVersion);
+        public virtual string ExecutableVersion => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.ExecutableVersion)
+            .Modify(s => string.IsNullOrWhiteSpace(s) ? null : s);
 
         public virtual ulong? LightmapCacheUid => this.GetBufferedHeaderValue((MapCommonChunk c) => c?.LightmapCacheUid);
 
