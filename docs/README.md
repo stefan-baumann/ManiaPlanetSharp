@@ -2,7 +2,7 @@
 A .NET library, written in C#, which provides easy-to-use, object-oriented ways to access data and services related to ManiaPlanet.
 
 ## License
-All of the code in this repository will soon be available as open source under the terms of the [MIT License](https://tldrlegal.com/license/mit-license).
+All of the code in this repository will soon be available as open source under the terms of the [MIT License](https://tldrlegal.com/license/mit-license). If you would like access before the public release, contact me via email at stefan-baumann@outlook.com.
 
 ## GameBox file parsing
 This library includes one of the most - if not the most - extensive gbx file parsers available. There is a general framework for parsing gbx files and implementations for the parsing of over 100 different chunks present in them, with dozens more currently being in the testing stage. The full structure of data nodes in a gbx file can be obtained via the `GameBoxFile.Parse()` method. For easy access to the most commonly needed metadata, there exist special `MetadataProvider` classes which take a `GameBoxFile` and provide direct access to the metadata - no need to dig through data nodes. Furthermore, these metadata provider classes have multiple sources for most of the properties provided, so even if there are some chunks missing in the gbx file, it can mostly still provide all of the metadata properties provided. If the specific property is present multiple times in the file, the metadata provider offers the possibility to validate the data between the different sources to detect manipulation attempts.
@@ -11,7 +11,7 @@ This library includes one of the most - if not the most - extensive gbx file par
 
 If you just want to look at the metadata of a `.gbx` file, you can use the `GameBoxView` application, which is a part of this project. Just drag the file in question into the app window and it will show you all of the available information, including advanced features like examining embedded items, which are not available in other applications.
 
-![GameBoxView](docs/img/GameBoxView.PNG)
+![GameBoxView](GameBoxView.PNG)
 
 ### Code Example: Parsing a `.gbx` map file
 
