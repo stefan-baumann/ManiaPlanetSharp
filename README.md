@@ -34,9 +34,7 @@ Console.WriteLine($"Titlepack: {metadata.Titlepack}");
 
 ### Implementation of chunks and structs
 
-For almost all use cases, you should never have the need to implement additional chunks for parsing. If you should need additional functionality or just want to contribute to the project to make the parser more complete, 
-
-This library uses various methods to make implementing chunk and custom struct layouts as easy as possible. For most chunks, it's sufficient to just define the chunk/struct as a class with the fields decorated with the `[Property]` and the chunk/struct with the `[Chunk(0xCHUNKID)]`/`[CustomStruct]` attribute.
+For most use cases, you should never have the need to implement additional chunks for parsing. If you should need additional functionality or just want to contribute to the project to make the parser more complete, this library provides various methods to make implementing chunk and custom struct layouts as easy as possible. For most chunks, it's sufficient to just define the chunk/struct as a class with the fields decorated with the `[Property]` and the chunk/struct with the `[Chunk(0xCHUNKID)]`/`[CustomStruct]` attribute.
 
 A typical example of how an implementation of a chunk looks like is the chunk `0x03043308`:
 
