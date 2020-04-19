@@ -43,7 +43,7 @@
                         <TextBlock Text=": " Visibility="{Binding HasValue, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                         <TextBlock Text="{Binding DisplayText}" />
                         <StackPanel.ToolTip>
-                            <ToolTip Background="#333333">
+                            <ToolTip Background="#ffffff">
                                 <ItemsControl ItemsSource="{Binding ValueFormatted}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -52,7 +52,11 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock Text="{Binding Text}" Foreground="{Binding Foreground}" />
+                                            <TextBlock Text="{Binding Text}" Foreground="{Binding Foreground}">
+                                                <!--<TextBlock.Effect>
+                                                    <DropShadowEffect ShadowDepth="0" Direction="330" Color="#333333" Opacity=".5" BlurRadius="10"/>
+                                                </TextBlock.Effect>-->
+                                            </TextBlock>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
