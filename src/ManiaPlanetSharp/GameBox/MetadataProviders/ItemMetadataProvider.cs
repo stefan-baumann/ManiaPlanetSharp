@@ -11,41 +11,32 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
     {
         public ItemMetadataProvider(GameBoxFile file)
             : base(file)
-        {
-            this.ParseBody();
-        }
+        { }
 
-        private string description;
-        public virtual string Description => this.description ?? (this.description = this.GetBodyNodes<CollectorDescriptionChunk>()?.FirstOrDefault()?.Description);
+        public virtual string Description => this.GetBufferedBodyValue((CollectorDescriptionChunk c) => c.Description)
+            .IgnoreIfEmpty();
 
-        private bool? useAutoRenderedIcon;
-        public virtual bool? UseAutoRenderedIcon => this.useAutoRenderedIcon ?? (this.useAutoRenderedIcon = this.GetBodyNodes<CollectorIconMetadataChunk>()?.FirstOrDefault()?.UseAutoRenderedIcon);
+        public virtual bool? UseAutoRenderedIcon => this.GetBufferedBodyValue((CollectorIconMetadataChunk c) => c?.UseAutoRenderedIcon);
 
-        private uint? quarterRotationY;
-        public override uint? IconQuarterRotations => this.quarterRotationY ?? (this.quarterRotationY = this.GetBodyNodes<CollectorIconMetadataChunk>()?.FirstOrDefault()?.QuarterRotationY);
+        public override int? IconQuarterRotations => this.GetBufferedBodyValue((CollectorIconMetadataChunk c) => (int?)c.QuarterRotationY);
 
-        private Vector3D? groundPoint;
-        public virtual Vector3D? GroundPoint => this.groundPoint ?? (this.groundPoint = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.GroundPoint);
+        public virtual Vector3D? GroundPoint => this.GetBufferedBodyValue((ObjectGroundPointChunk c) => c?.GroundPoint);
 
-        private float? painterGroundMargin;
-        public virtual float? PainterGroundMargin => this.painterGroundMargin ?? (this.painterGroundMargin = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.PainterGroundMargin);
+        public virtual float? PainterGroundMargin => this.GetBufferedBodyValue((ObjectGroundPointChunk c) => c?.PainterGroundMargin);
 
-        private float? orbitalCenterHeightFromGround;
-        public virtual float? OrbitalCenterHeightFromGround => this.orbitalCenterHeightFromGround ?? (this.orbitalCenterHeightFromGround = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.OrbitalCenterHeightFromGround);
+        public virtual float? OrbitalCenterHeightFromGround => this.GetBufferedBodyValue((ObjectGroundPointChunk c) => c?.OrbitalCenterHeightFromGround);
 
-        private float? orbitalRadiusBase;
-        public virtual float? OrbitalRadiusBase => this.orbitalRadiusBase ?? (this.orbitalRadiusBase = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.OrbitalRadiusBase);
+        public virtual float? OrbitalRadiusBase => this.GetBufferedBodyValue((ObjectGroundPointChunk c) => c?.OrbitalRadiusBase);
 
-        private float? orbitalPreviewAngle;
-        public virtual float? OrbitalPreviewAngle => this.orbitalPreviewAngle ?? (this.orbitalPreviewAngle = this.GetBodyNodes<ObjectGroundPointChunk>()?.FirstOrDefault()?.OrbitalPreviewAngle);
+        public virtual float? OrbitalPreviewAngle => this.GetBufferedBodyValue((ObjectGroundPointChunk c) => c?.OrbitalPreviewAngle);
 
-        private string meshName;
-        public virtual string MeshName => this.meshName ?? (this.meshName = this.GetBodyNodes<ObjectModelChunk>()?.FirstOrDefault()?.MeshName);
+        public virtual string MeshName => this.GetBufferedBodyValue((ObjectModelChunk c) => c.MeshName)
+            .IgnoreIfEmpty();
 
-        private string shapeName;
-        public virtual string ShapeName => this.shapeName ?? (this.shapeName = this.GetBodyNodes<ObjectModelChunk>()?.FirstOrDefault()?.ShapeName);
+        public virtual string ShapeName => this.GetBufferedBodyValue((ObjectModelChunk c) => c.ShapeName)
+            .IgnoreIfEmpty();
 
-        private string triggerShapeName;
-        public virtual string TriggerShapeName => this.triggerShapeName ?? (this.triggerShapeName = this.GetBodyNodes<ObjectModelChunk>()?.FirstOrDefault()?.TriggerShapeName);
+        public virtual string TriggerShapeName => this.GetBufferedBodyValue((ObjectModelChunk c) => c.TriggerShapeName)
+            .IgnoreIfEmpty();
     }
 }

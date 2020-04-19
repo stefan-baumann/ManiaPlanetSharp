@@ -14,35 +14,31 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
     {
         public ItemBasicMetadataProvider(GameBoxFile file)
             : base(file)
-        {
-            this.Name = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Name2 ?? this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Name;
-            this.Author = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Author;
-            this.Collection = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Collection;
-            this.Type = this.GetHeaderNodes<ObjectItemTypeChunk>()?.FirstOrDefault()?.ItemType;
-            this.Path = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.Path;
-            this.ProductState = this.GetHeaderNodes<CollectorMetadataChunk>()?.FirstOrDefault()?.ProductState;
-            this.IconData = this.GetHeaderNodes<CollectorIconChunk>()?.FirstOrDefault()?.IconData;
-            this.IconSize = this.GetHeaderNodes<CollectorIconChunk>()?.FirstOrDefault()?.Size;
-        }
+        { }
 
-        public virtual string Name { get; protected set; }
+        public virtual string Name => this.GetBufferedHeaderValue((CollectorMetadataChunk c) => c.Name2)
+            .IfNull((CollectorMetadataChunk c) => c.Name)
+            .IgnoreIfEmpty();
 
-        public virtual string Author { get; protected set; }
+        public virtual string Author => this.GetBufferedHeaderValue((CollectorMetadataChunk c) => c.Author)
+            .IgnoreIfEmpty();
 
-        public virtual string Collection { get; protected set; }
+        public virtual string Collection => this.GetBufferedHeaderValue((CollectorMetadataChunk c) => c.Collection)
+            .IgnoreIfEmpty();
 
-        public virtual ObjectType? Type { get; protected set; }
+        public virtual ObjectType? Type => this.GetBufferedHeaderValue((ObjectItemTypeChunk c) => c?.ItemType);
 
-        public virtual string Path { get; protected set; }
+        public virtual string Path => this.GetBufferedHeaderValue((CollectorMetadataChunk c) => c.Path)
+            .IgnoreIfEmpty();
 
-        public virtual ProductState? ProductState { get; protected set; }
+        public virtual ProductState? ProductState => this.GetBufferedHeaderValue((CollectorMetadataChunk c) => c?.ProductState);
 
-        public virtual byte[] IconData { get; protected set; }
+        public virtual byte[] IconData => this.GetBufferedHeaderValue((CollectorIconChunk c) => c.IconData);
 
-        public virtual Size? IconSize { get; protected set; }
+        public virtual Size? IconSize => this.GetBufferedHeaderValue((CollectorIconChunk c) => c?.Size);
 
         //Not assigned currently
-        public virtual uint? IconQuarterRotations { get; protected set; }
+        public virtual int? IconQuarterRotations => null;
 
         public Bitmap GenerateIconBitmap()
         {

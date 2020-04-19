@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using static ManiaPlanetSharp.GameBox.MetadataProviders.MetadataProvider;
 
 namespace ManiaPlanetSharp.GameBox.MetadataProviders
 {
@@ -105,31 +106,21 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
 
 
-        private class NodeTypeComparer
-            : IEqualityComparer<Tuple<Type, Node>>
-        {
-            bool IEqualityComparer<Tuple<Type, Node>>.Equals(Tuple<Type, Node> x, Tuple<Type, Node> y)
-            {
-                return x?.Item1 == y?.Item1;
-            }
-
-            int IEqualityComparer<Tuple<Type, Node>>.GetHashCode(Tuple<Type, Node> obj)
-            {
-                return obj?.Item1.GetType().GetHashCode() ?? 0;
-            }
-        }
-
-        protected interface IBufferedChunkValue<out TChunk, TValue>
+        public interface IBufferedChunkValue<out TChunk, TValue>
             where TChunk : Chunk
         {
             MetadataProvider Provider { get; }
+
+            IBufferedChunkValue<Chunk, TValue> Previous { get; }
+
+            bool IgnoreIfEmptyString { get; set; }
 
             TValue GetBufferedValue();
 
             TValue GetValue();
         }
 
-        protected abstract class BufferedChunkValue<TChunk, TValue>
+        public abstract class BufferedChunkValue<TChunk, TValue>
             : IBufferedChunkValue<TChunk, TValue>
             where TChunk : Chunk
         {
@@ -152,7 +143,9 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
             protected Func<TChunk, TValue> Factory { get; private set; }
 
-            protected IBufferedChunkValue<Chunk, TValue> Previous { get; private set; }
+            public IBufferedChunkValue<Chunk, TValue> Previous { get; private set; }
+
+            public bool IgnoreIfEmptyString { get; set; }
 
             public TValue GetBufferedValue()
             {
@@ -167,15 +160,20 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                     var previousValue = this.Previous.GetValue();
                     if (previousValue != null)
                     {
-                        var value = this.GetValueInternal();
-                        if (value != null && !previousValue.Equals(value) && this.Provider.ValidatingMode)
+                        var referenceValue = this.GetValueInternal();
+                        if (this.Provider.ValidatingMode && referenceValue != null && !previousValue.Equals(referenceValue))
                         {
                             throw new InvalidDataException($"Parameter {this.Name} failed cross validation.");
                         }
                         return previousValue;
                     }
                 }
-                return this.GetValueInternal();
+                var value = this.GetValueInternal();
+                if (this.IgnoreIfEmptyString && value is string s && string.IsNullOrEmpty(s))
+                {
+                    return default(TValue);
+                }
+                return value;
 #else
                 var value = this.GetValueInternal();
                 if (value == null)
@@ -304,6 +302,19 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                 }
                 return default(TValue);
             }
+        }
+    }
+
+    public static class BufferedChunkValueExtensions
+    {
+        public static BufferedChunkValue<TChunk, string> IgnoreIfEmpty<TChunk>(this BufferedChunkValue<TChunk, string> bufferedChunkValue)
+            where TChunk : Chunk
+        {
+            for (IBufferedChunkValue<Chunk, string> value = bufferedChunkValue ?? throw new ArgumentNullException(nameof(bufferedChunkValue)); value.Previous != null; value = value.Previous)
+            {
+                value.IgnoreIfEmptyString = true;
+            }
+            return bufferedChunkValue;
         }
     }
 }
