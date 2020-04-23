@@ -56,7 +56,8 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                 Marshal.Copy(this.IconData, 0, data.Scan0, this.IconData.Length);
                 bmp.UnlockBits(data);
 
-                bmp.RotateFlip((new[] { RotateFlipType.RotateNoneFlipY, RotateFlipType.Rotate90FlipY, RotateFlipType.Rotate180FlipY, RotateFlipType.Rotate270FlipY })[this.IconQuarterRotations ?? 0]);
+                //bmp.RotateFlip((new[] { RotateFlipType.RotateNoneFlipY, RotateFlipType.Rotate90FlipY, RotateFlipType.Rotate180FlipY, RotateFlipType.Rotate270FlipY })[this.IconQuarterRotations ?? 0]);
+                bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
 
                 return bmp.Clone(new Rectangle(0, 0, bmp.Width, bmp.Height), PixelFormat.Format32bppArgb);
             }
