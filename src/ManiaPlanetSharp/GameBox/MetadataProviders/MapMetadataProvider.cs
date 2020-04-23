@@ -48,7 +48,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             .IgnoreIfEmpty();
 
         public virtual string Titlepack => this.GetBufferedHeaderValue((MapCommonChunk c) => c.TitleUid)
-            .IfNull((MapCommunityChunk c) => c.Root?.Title)
+            .IfNull((MapCommunityChunk c) => c.Root?.Title) //Also 051
             .IgnoreIfEmpty();
 
         public virtual int? Checkpoints => this.GetBufferedHeaderValue((MapDescriptionChunk c) => (int?)c.Checkpoints);

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 {
-    internal static class Fields
+    public static class Fields
     {
         public static IEnumerable<Field> GetFields<T>()
         {

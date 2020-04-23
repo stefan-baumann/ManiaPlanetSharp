@@ -7,18 +7,14 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.MetadataProviders
 {
     public class ItemMetadataProvider
-        : ItemBasicMetadataProvider
+        : CollectorMetadataProvider
     {
         public ItemMetadataProvider(GameBoxFile file)
             : base(file)
         { }
 
-        public virtual string Description => this.GetBufferedBodyValue((CollectorDescriptionChunk c) => c.Description)
-            .IgnoreIfEmpty();
 
-        public virtual bool? UseAutoRenderedIcon => this.GetBufferedBodyValue((CollectorIconMetadataChunk c) => c?.UseAutoRenderedIcon);
-
-        public override int? IconQuarterRotations => this.GetBufferedBodyValue((CollectorIconMetadataChunk c) => (int?)c.QuarterRotationY);
+        public virtual ObjectType? Type => this.GetBufferedHeaderValue((ObjectItemTypeChunk c) => c?.ItemType);
 
         public virtual Vector3D? GroundPoint => this.GetBufferedBodyValue((ObjectGroundPointChunk c) => c?.GroundPoint);
 

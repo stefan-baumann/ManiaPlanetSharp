@@ -3,16 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.MetadataProviders
 {
-    public class ItemBasicMetadataProvider
+    public class CollectorMetadataProvider
         : MetadataProvider
     {
-        public ItemBasicMetadataProvider(GameBoxFile file)
+        public CollectorMetadataProvider(GameBoxFile file)
             : base(file)
         { }
 
@@ -26,7 +25,8 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         public virtual string Collection => this.GetBufferedHeaderValue((CollectorMetadataChunk c) => c.Collection)
             .IgnoreIfEmpty();
 
-        public virtual ObjectType? Type => this.GetBufferedHeaderValue((ObjectItemTypeChunk c) => c?.ItemType);
+        public virtual string Description => this.GetBufferedBodyValue((CollectorDescriptionChunk c) => c.Description)
+            .IgnoreIfEmpty();
 
         public virtual string Path => this.GetBufferedHeaderValue((CollectorMetadataChunk c) => c.Path)
             .IgnoreIfEmpty();
@@ -37,8 +37,11 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public virtual Size? IconSize => this.GetBufferedHeaderValue((CollectorIconChunk c) => c?.Size);
 
-        //Not assigned currently
-        public virtual int? IconQuarterRotations => null;
+        public virtual bool? UseAutoRenderedIcon => this.GetBufferedBodyValue((CollectorIconMetadataChunk c) => c?.UseAutoRenderedIcon);
+
+        public virtual int? IconQuarterRotations => this.GetBufferedBodyValue((CollectorIconMetadataChunk c) => (int?)c.QuarterRotationY);
+
+
 
         public Bitmap GenerateIconBitmap()
         {
