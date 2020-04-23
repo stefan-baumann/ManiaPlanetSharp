@@ -49,15 +49,25 @@ namespace ManiaPlanetSharp.GameBoxView
                 this.FileType = "Block";
                 this.MetadataProvider = new ItemMetadataProvider(this.File);
             }
+            else if (path.ToLowerInvariant().EndsWith(".macroblock.gbx"))
+            {
+                this.FileType = "Macroblock";
+                this.MetadataProvider = new MacroblockMetadataProvider(this.File);
+            }
 
             if (this.MetadataProvider != null)
             {
                 if (this.MetadataProvider is MapMetadataProvider map)
                 {
                     this.MetadataTreeItems.Add(new MapMetadataTreeNode(map) { IsExpanded = true });
-                } else if (this.MetadataProvider is ItemMetadataProvider item)
+                }
+                else if (this.MetadataProvider is ItemMetadataProvider item)
                 {
                     this.MetadataTreeItems.Add(new ItemMetadataTreeNode(item) { IsExpanded = true });
+                }
+                else if (this.MetadataProvider is MacroblockMetadataProvider macroblock)
+                {
+                    this.MetadataTreeItems.Add(new MacroblockMetadataTreeNode(macroblock) { IsExpanded = true });
                 }
 
                 //this.OnPropertyChanged(nameof(this.MetadataTreeItems));

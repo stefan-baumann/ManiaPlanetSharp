@@ -4,10 +4,10 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.MetadataProviders
 {
-    public class MacroBlockMetadataProvider
+    public class MacroblockMetadataProvider
         : CollectorMetadataProvider
     {
-        public MacroBlockMetadataProvider(GameBoxFile file)
+        public MacroblockMetadataProvider(GameBoxFile file)
             : base(file)
         { }
     }
