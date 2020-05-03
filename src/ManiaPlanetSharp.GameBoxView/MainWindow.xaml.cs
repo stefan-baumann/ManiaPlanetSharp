@@ -24,9 +24,13 @@ namespace ManiaPlanetSharp.GameBoxView
     public partial class MainWindow : Window
     {
         public MainWindow()
+            : this(new GameBoxMetadataViewModel())
+        { }
+
+        public MainWindow(GameBoxMetadataViewModel viewModel)
         {
             InitializeComponent();
-            this.DataContext = new GameBoxMetadataViewModel();
+            this.DataContext = viewModel;
         }
 
         private void Grid_Drop(object sender, DragEventArgs e)
