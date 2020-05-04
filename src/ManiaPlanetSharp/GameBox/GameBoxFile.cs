@@ -80,9 +80,9 @@ namespace ManiaPlanetSharp.GameBox
         public char Unused { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 3)]
-        public uint MainClassIdU { get; set; }
+        public uint MainClassId { get; set; }
 
-        public ClassId? MainClassId => ClassIds.GetClassId(this.MainClassIdU);
+        public ClassId? MainClass => ClassIds.GetClassId(this.MainClassId);
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6)]
         public uint UserDataSize { get; set; }
