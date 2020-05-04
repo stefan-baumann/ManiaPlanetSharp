@@ -314,14 +314,6 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             }
         }
 
-        ///// <summary>
-        ///// Resets the lookback string cache.
-        ///// </summary>
-        //public void ResetLocalLookbackStringCache()
-        //{
-        //    this.LookbackStrings.Clear();
-        //}
-
         /// <summary>
         /// Creates a new lookback string context temporarily until the <c>LookbackStringContext</c> instance is disposed.
         /// </summary>
@@ -378,7 +370,6 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <returns></returns>
         public Chunk ReadBodyChunk()
         {
-            //new NodeParser().ParseNode(this);
             if (!this.BodyMode)
             {
                 throw new InvalidOperationException($"{nameof(ReadBodyChunk)} can only be performed on the body of a gbx file.");
@@ -431,6 +422,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             throw new NotImplementedException($"Cannot parse chunk with id 0x{id:X8}0x/{ClassIds.GetClassName(id & 0xFFFFF000)}");
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         protected bool TrySkipChunk(out UnknownChunk skipped)
         {
             try
@@ -489,17 +481,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             return new Size3D((int)this.ReadUInt32(), (int)this.ReadUInt32(), (int)this.ReadUInt32());
         }
 
-        /// <summary>
-        /// Releases all resources used by the current instance of the <c>GameBoxReader</c> class.
-        /// </summary>
-        public virtual void Dispose()
-        {
-            this.Reader.Dispose();
-        }
-
-
-
-        public sealed class LookbackStringContext
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1063:Implement IDisposable Correctly", Justification = "<Pending>")]
+        public class LookbackStringContext
             : IDisposable
         {
             public LookbackStringContext(GameBoxReader reader)
@@ -523,11 +507,45 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             protected uint? LookbackStringVersion { get; private set; }
             protected List<string> LookbackStrings { get; private set; }
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "<Pending>")]
             public void Dispose()
             {
                 this.Reader.LookbackStringVersion = this.LookbackStringVersion;
                 this.Reader.LookbackStrings = this.LookbackStrings;
             }
         }
+
+        #region IDisposable Support
+
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    this.Reader.Dispose();
+                }
+
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+
+                disposedValue = true;
+            }
+        }
+
+
+        // This code added to correctly implement the disposable pattern.
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA1816:Dispose methods should call SuppressFinalize", Justification = "<Pending>")]
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+            // TODO: uncomment the following line if the finalizer is overridden above.
+            // GC.SuppressFinalize(this);
+        }
+
+        #endregion
     }
 }

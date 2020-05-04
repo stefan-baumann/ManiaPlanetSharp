@@ -78,7 +78,7 @@ namespace ManiaPlanetSharp.GameBox
         /// <returns></returns>
         public virtual Stream GetStream()
         {
-            return new MemoryStream(this.Data ?? throw new ArgumentNullException(nameof(this.Data)));
+            return new MemoryStream(this.Data ?? throw new NullReferenceException("This node does not have any stored data."));
         }
 
         /// <summary>

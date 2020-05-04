@@ -62,9 +62,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public string FindShapeName(GameBoxReader reader)
         {
-            Debug.WriteLine("Shape");
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             long start = reader.Stream.Position;
-            if (this.TryAdvanceUntilChunkStart(reader, 0x2E006001) && this.TryFindString(reader, name => name.ToLowerInvariant().EndsWith(".shape.gbx"), out string shapeName))
+            if (this.TryAdvanceUntilChunkStart(reader, 0x2E006001) && this.TryFindString(reader, name => name.EndsWith(".shape.gbx", StringComparison.InvariantCultureIgnoreCase), out string shapeName))
             {
                 return shapeName;
             }
@@ -74,9 +78,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public string FindTriggerShapeName(GameBoxReader reader)
         {
-            Debug.WriteLine("TriggerShape");
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             long start = reader.Stream.Position;
-            if (this.ShapeName != null && this.TryFindString(reader, name => name.ToLowerInvariant().EndsWith(".shape.gbx"), out string triggerShapeName))
+            if (this.ShapeName != null && this.TryFindString(reader, name => name.EndsWith(".shape.gbx", StringComparison.InvariantCultureIgnoreCase), out string triggerShapeName))
             {
                 return triggerShapeName;
             }
@@ -86,9 +94,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public string FindMeshName(GameBoxReader reader)
         {
-            Debug.WriteLine("Mesh");
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             long start = reader.Stream.Position;
-            if (this.TryAdvanceUntilChunkStart(reader, 0x2E007001) && this.TryFindString(reader, name => name.ToLowerInvariant().EndsWith(".mesh.gbx"), out string meshName))
+            if (this.TryAdvanceUntilChunkStart(reader, 0x2E007001) && this.TryFindString(reader, name => name.EndsWith(".mesh.gbx", StringComparison.InvariantCultureIgnoreCase), out string meshName))
             {
                 return meshName;
             }

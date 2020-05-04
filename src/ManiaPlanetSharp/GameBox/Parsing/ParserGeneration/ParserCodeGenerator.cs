@@ -1,6 +1,7 @@
 ﻿using ManiaPlanetSharp.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -149,7 +150,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                         lengthSource = "reader.ReadUInt32()";
                         break;
                     case FixedArrayLengthSource fixedLengthSource:
-                        lengthSource = fixedLengthSource.Length.ToString();
+                        lengthSource = fixedLengthSource.Length.ToString(CultureInfo.InvariantCulture);
                         break;
                     case PropertyArrayLengthSource propertyLengthSource:
                         lengthSource = $"(uint)result.{propertyLengthSource.DependentProperty}";

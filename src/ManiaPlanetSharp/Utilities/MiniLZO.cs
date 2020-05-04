@@ -59,11 +59,11 @@ namespace ManiaPlanetSharp.Utilities
     public static class MiniLZO
     {
         private const uint M2_MAX_LEN = 8;
-        private const uint M3_MAX_LEN = 33;
+        //private const uint M3_MAX_LEN = 33;
         private const uint M4_MAX_LEN = 9;
         private const byte M3_MARKER = 32;
         private const byte M4_MARKER = 16;
-        private const uint M1_MAX_OFFSET = 0x0400;
+        //private const uint M1_MAX_OFFSET = 0x0400;
         private const uint M2_MAX_OFFSET = 0x0800;
         private const uint M3_MAX_OFFSET = 0x4000;
         private const uint M4_MAX_OFFSET = 0xbfff;
@@ -73,6 +73,11 @@ namespace ManiaPlanetSharp.Utilities
 
         public unsafe static void Compress(byte[] src, out byte[] dst)
         {
+            if (src == null)
+            {
+                throw new ArgumentNullException(nameof(src));
+            }
+
             uint tmp;
             uint dstlen = (uint)(src.Length + (src.Length / 16) + 64 + 3);
             dst = new byte[dstlen];
@@ -302,6 +307,15 @@ namespace ManiaPlanetSharp.Utilities
         }
         public unsafe static void Decompress(byte[] src, byte[] dst)
         {
+            if (src == null)
+            {
+                throw new ArgumentNullException(nameof(src));
+            }
+            if (dst == null)
+            {
+                throw new ArgumentNullException(nameof(dst));
+            }
+
             uint t = 0;
             fixed (byte* input = src, output = dst)
             {

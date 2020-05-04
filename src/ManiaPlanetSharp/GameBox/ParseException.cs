@@ -13,5 +13,17 @@ namespace ManiaPlanetSharp.GameBox
         public ParseException(Exception innerException)
             : base("An internal error occured while trying to parse the gbx file", innerException)
         { }
+
+        public ParseException()
+            : base()
+        { }
+
+        public ParseException(string message)
+            : base(message)
+        { }
+
+        public ParseException(string message, Exception innerException)
+            : base(message, innerException)
+        { }
     }
 }

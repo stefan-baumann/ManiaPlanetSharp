@@ -29,7 +29,7 @@ namespace ManiaPlanetSharp.Utilities
 
         public static TResult Modify<T, TResult>(this T value, Func<T, TResult> func)
         {
-            return func(value);
+            return (func ?? throw new ArgumentNullException(nameof(func)))(value);
         }
 
 

@@ -14,6 +14,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public ReplayMainChunkContent ParseContent(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             if (reader.BodyMode)
             {
                 return ParserFactory.GetCustomStructParser<ReplayMainChunkBodyContent>().Parse(reader);
@@ -62,7 +67,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         {
             if (this.MapData == null)
             {
-                throw new ArgumentNullException(nameof(MapData));
+                throw new NullReferenceException("No map data available.");
             }
             if (this.MapData.Length == 0)
             {

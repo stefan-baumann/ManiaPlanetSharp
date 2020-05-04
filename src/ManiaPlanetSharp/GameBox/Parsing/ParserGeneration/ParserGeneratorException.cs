@@ -4,7 +4,8 @@ using System.Runtime.Serialization;
 namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 {
     [Serializable]
-    internal class ParserGeneratorException : Exception
+    public class ParserGeneratorException
+        : Exception
     {
         public ParserGeneratorException()
         { }

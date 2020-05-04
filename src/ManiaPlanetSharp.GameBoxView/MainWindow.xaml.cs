@@ -42,7 +42,7 @@ namespace ManiaPlanetSharp.GameBoxView
                         this.DataContext = new GameBoxMetadataViewModel(files[0]);
                         GC.Collect();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         throw;
                     }

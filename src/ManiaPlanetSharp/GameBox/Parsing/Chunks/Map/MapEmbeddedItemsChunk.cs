@@ -30,6 +30,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public EmbeddedItem[] ParseItems(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             var start = reader.Stream.Position;
             var parser = ParserFactory.GetCustomStructParser<EmbeddedItem>();
             var items = new EmbeddedItem[this.ItemCount];
@@ -56,7 +61,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         {
             if (this.ActualZipSize > this.EmbeddedItemSize)
             {
-                return reader.ReadRaw((int)(this.ActualZipSize - this.EmbeddedItemSize));
+                return (reader ?? throw new ArgumentNullException(nameof(reader))).ReadRaw((int)(this.ActualZipSize - this.EmbeddedItemSize));
             }
             return null;
         }

@@ -43,8 +43,14 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property, CustomParserMethod(nameof(MapChunk.ParseBlocks))]
         public Block[] Blocks { get; set; }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         public Block[] ParseBlocks(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             var start = reader.Stream.Position;
 
             //The block struct can be parsed by the automatically generated parser
@@ -68,7 +74,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 Console.WriteLine("GameBox Parser: Could not successfully parse map blocks.");
                 reader.Stream.Position = start;

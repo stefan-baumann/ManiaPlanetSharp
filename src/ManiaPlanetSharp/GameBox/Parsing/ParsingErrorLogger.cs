@@ -49,7 +49,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         public NodeInternalParsingErrorEventArgs(Node node, uint chunkId, string message)
             : base(chunkId, message)
         {
-            this.ClassId = node.ClassId;
+            this.ClassId = node?.ClassId ?? 0;
         }
 
         public uint ClassId { get; private set; }

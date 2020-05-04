@@ -25,6 +25,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public SkinFile[] ParseSkinFiles(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             SkinFile[] skinFiles = new SkinFile[reader.ReadByte()];
             for (int i = 0; i < skinFiles.Length; i++)
             {

@@ -25,7 +25,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                 if (this.xmlString != value)
                 {
                     this.xmlString = value;
-                    this.Root = this.ParseXmlString(this.xmlString.Replace("&", "&amp;"));
+                    if (this.xmlString != null)
+                    {
+                        this.Root = this.ParseXmlString(this.xmlString.Replace("&", "&amp;"));
+                    }
                 }
             }
         }
@@ -202,6 +205,8 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
     {
         public string File { get; set; }
 
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1056:Uri properties should not be strings", Justification = "<Pending>")]
         public string Url { get; set; }
     }
 }

@@ -79,6 +79,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         public virtual bool? Locked => this.GetBufferedHeaderValue((MapCommonChunk c) => (bool?)c.Locked)
             .IfNullBody((MapChunk c) => c.NeedsUnlock);
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>")]
         public virtual string Mod => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.Description.Mod)
             .IgnoreIfEmpty();
 
