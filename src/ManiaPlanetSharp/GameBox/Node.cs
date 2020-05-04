@@ -69,7 +69,7 @@ namespace ManiaPlanetSharp.GameBox
         /// <returns></returns>
         public virtual string GetClassName()
         {
-            return KnownClassIds.GetClassName(this.ClassId);
+            return GameBox.ClassIds.GetClassName(this.ClassId);
         }
 
         /// <summary>

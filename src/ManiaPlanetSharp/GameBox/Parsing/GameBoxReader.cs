@@ -399,7 +399,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     {
                         if (this.ReadUInt32() != SkipMarker)
                         {
-                            throw new InvalidDataException($"Expected skip marker in chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)}.");
+                            throw new InvalidDataException($"Expected skip marker in chunk with id 0x{id:X8}0x/{ClassIds.GetClassName(id & 0xFFFFF000)}.");
                         }
                         uint size = this.ReadUInt32();
                         var start = this.Stream.Position;
@@ -411,7 +411,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
 
                             if (this.Stream.Position != start + size)
                             {
-                                throw new InvalidOperationException($"Reader for skippable chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)} did not read the correct length.");
+                                throw new InvalidOperationException($"Reader for skippable chunk with id 0x{id:X8}0x/{ClassIds.GetClassName(id & 0xFFFFF000)} did not read the correct length.");
                             }
 
                             return result;
@@ -428,7 +428,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     }
                 }
             }
-            throw new NotImplementedException($"Cannot parse chunk with id 0x{id:X8}0x/{KnownClassIds.GetClassName(id & 0xFFFFF000)}");
+            throw new NotImplementedException($"Cannot parse chunk with id 0x{id:X8}0x/{ClassIds.GetClassName(id & 0xFFFFF000)}");
         }
 
         protected bool TrySkipChunk(out UnknownChunk skipped)

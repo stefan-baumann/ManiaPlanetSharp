@@ -22,7 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{72252899-770D-461D-82E8-461522521096}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ManiaPlanetSharp.GameBoxView", "ManiaPlanetSharp.GameBoxView\ManiaPlanetSharp.GameBoxView.csproj", "{C1C0E1D7-167A-4422-B495-0BAE78CBCAAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ManiaPlanetSharp.GameBoxView", "ManiaPlanetSharp.GameBoxView\ManiaPlanetSharp.GameBoxView.csproj", "{C1C0E1D7-167A-4422-B495-0BAE78CBCAAD}"
+EndProject
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -23,7 +23,7 @@ namespace ManiaPlanetSharp.GameBoxView
         protected override IEnumerable<TextTreeNode> GetNodes()
         {
             yield return new TextTreeNode("Version", File.Version.ToString());
-            yield return new TextTreeNode("Main Class ID", $"0x{File.MainClassID:X8} ({KnownClassIds.GetClassName(File.MainClassID & ~0xFFFU)})");
+            yield return new TextTreeNode("Main Class ID", $"0x{File.MainClassID:X8} ({ClassIds.GetClassName(File.MainClassID & ~0xFFFU)})");
             yield return new TextTreeNode("File Format", File.FileFormat.ToString())
             {
                 HideValueWhenExpanded = true,
@@ -40,7 +40,7 @@ namespace ManiaPlanetSharp.GameBoxView
                 Nodes = new ObservableCollection<TextTreeNode>(File.HeaderChunkEntries.Select(he => (he, chunk: (Chunk)File.HeaderChunks.FirstOrDefault(n => n.Id == he.ChunkID))).Select((c, i) =>
                 {
                     var chunkType = ParserFactory.TryGetChunkParser(c.he.ChunkID, out IChunkParser<Chunk> parser) ? parser.GetType().GetInterfaces().FirstOrDefault(t => t.GetGenericTypeDefinition() == typeof(IChunkParser<>))?.GetGenericArguments().FirstOrDefault()?.Name : "Unknown Chunk";
-                    return new TextTreeNode($"{chunkType}", $"0x{c.he.ChunkID:X8} ({ KnownClassIds.GetClassName(c.he.ChunkID & ~0xFFFU)})")
+                    return new TextTreeNode($"{chunkType}", $"0x{c.he.ChunkID:X8} ({ ClassIds.GetClassName(c.he.ChunkID & ~0xFFFU)})")
                     {
                         Nodes = new ObservableCollection<TextTreeNode>()
                         {
