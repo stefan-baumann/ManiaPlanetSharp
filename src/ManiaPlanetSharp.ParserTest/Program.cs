@@ -36,11 +36,11 @@ namespace ManiaPlanetSharp.ParserTest
                         stopwatch.Stop();
 
                         //Create metadata provider and parse body with disabled console output
-                        var console = Console.Out;
-                        Console.SetOut(TextWriter.Null);
+                        //var console = Console.Out;
+                        //Console.SetOut(TextWriter.Null);
                         var metadataProvider = new MapMetadataProvider(file);
                         metadataProvider.ParseBody();
-                        Console.SetOut(console);
+                        //Console.SetOut(console);
 
                         Console.WriteLine("Metadata:");
                         foreach (var property in metadataProvider.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(property => property.Name != "File"))
@@ -48,7 +48,6 @@ namespace ManiaPlanetSharp.ParserTest
                             Console.WriteLine($" - {property.Name}: {property.GetValue(metadataProvider)}");
                         }
 
-                        //var embeddedItems = metadataProvider.GetEmbeddedItemFiles();
                         Console.WriteLine($"Done in {stopwatch.Elapsed.TotalMilliseconds:#0.0}ms (header: {headerTime:#0.0}ms, body: {stopwatch.Elapsed.TotalMilliseconds - headerTime:#0.0}ms).");
                     }
                     catch (ParseException ex)

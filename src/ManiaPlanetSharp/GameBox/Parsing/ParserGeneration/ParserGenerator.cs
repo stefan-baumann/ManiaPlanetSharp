@@ -21,18 +21,21 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             try
             {
 #endif
-            ParameterExpression readerParameter = Expression.Parameter(typeof(GameBoxReader), "reader");
-            ParameterExpression idParameter = Expression.Parameter(typeof(uint), "chunkId");
-            ParameterExpression resultVariable = Expression.Variable(typeof(TChunk), "result");
-            List<ParameterExpression> localVariables = new List<ParameterExpression>() { resultVariable };
-            IEnumerable<Expression> body =
-                new[] {
+                ParameterExpression readerParameter = Expression.Parameter(typeof(GameBoxReader), "reader");
+                ParameterExpression idParameter = Expression.Parameter(typeof(uint), "chunkId");
+                ParameterExpression resultVariable = Expression.Variable(typeof(TChunk), "result");
+                List<ParameterExpression> localVariables = new List<ParameterExpression>() { resultVariable };
+
+                IEnumerable<Expression> fieldParserExpressions = GenerateFieldParserExpressions<TChunk>(resultVariable, readerParameter, localVariables).ToArray();
+                Expression returnExpression = Expression.Label(Expression.Label(typeof(TChunk)), resultVariable);
+                IEnumerable<Expression> localVariableInitializations = new []
+                {
                     Expression.Assign(resultVariable, Expression.New(typeof(TChunk))), //result = new TChunk();
                     Expression.Assign(Expression.Property(resultVariable, nameof(Chunk.Id)), idParameter) //result.Id = chunkId;
-                }
-                .Concat(GenerateFieldParserExpressions<TChunk>(resultVariable, readerParameter, localVariables))
-                .Concat(new[] { Expression.Label(Expression.Label(typeof(TChunk)), resultVariable) });
-            return Expression.Lambda<ChunkParserDelegate<TChunk>>(Expression.Block(localVariables, body), readerParameter, idParameter);
+                };
+
+                IEnumerable<Expression> body = localVariableInitializations.Concat(fieldParserExpressions).Concat(new[] { returnExpression });
+                return Expression.Lambda<ChunkParserDelegate<TChunk>>(Expression.Block(localVariables, body), readerParameter, idParameter);
 #if !DEBUG
             }
             catch (Exception ex)
@@ -49,16 +52,19 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             try
             {
 #endif
-            ParameterExpression readerParameter = Expression.Parameter(typeof(GameBoxReader), "reader");
-            ParameterExpression resultVariable = Expression.Variable(typeof(TStruct), "result");
-            List<ParameterExpression> localVariables = new List<ParameterExpression>() { resultVariable };
-            IEnumerable<Expression> body =
-                new[] {
-                    Expression.Assign(resultVariable, Expression.New(typeof(TStruct))), //result = new TChunk();
-                }
-                .Concat(GenerateFieldParserExpressions<TStruct>(resultVariable, readerParameter, localVariables))
-                .Concat(new[] { Expression.Label(Expression.Label(typeof(TStruct)), resultVariable) });
-            return Expression.Lambda<ParserDelegate<TStruct>>(Expression.Block(localVariables, body), readerParameter);
+                ParameterExpression readerParameter = Expression.Parameter(typeof(GameBoxReader), "reader");
+                ParameterExpression resultVariable = Expression.Variable(typeof(TStruct), "result");
+                List<ParameterExpression> localVariables = new List<ParameterExpression>() { resultVariable };
+
+                IEnumerable<Expression> fieldParserExpressions = GenerateFieldParserExpressions<TStruct>(resultVariable, readerParameter, localVariables).ToArray();
+                Expression returnExpression = Expression.Label(Expression.Label(typeof(TStruct)), resultVariable);
+                IEnumerable<Expression> localVariableInitializations = new []
+                {
+                    Expression.Assign(resultVariable, Expression.New(typeof(TStruct))), //result = new TStruct();
+                };
+
+                IEnumerable<Expression> body = localVariableInitializations.Concat(fieldParserExpressions).Concat(new[] { returnExpression });
+                return Expression.Lambda<ParserDelegate<TStruct>>(Expression.Block(localVariables, body), readerParameter);
 #if !DEBUG
             }
             catch (Exception ex)
@@ -159,13 +165,23 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                     default:
                         throw new NotImplementedException($"Unknown array length source at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
                 }
-                //this.Property = new T[<lengthSource>]
-                yield return CreateAssignExpression(target, field, Expression.NewArrayBounds(field.Property.PropertyType.GetElementType(), Expression.Convert(lengthSource, typeof(int))));
-                //uint iProperty;
-                ParameterExpression index = Expression.Variable(typeof(uint), "i" + field.Property.Name);
-                localVariables.Add(index);
-                //for (iProperty = 0; iProperty < <lengthSource>; iProperty++) { this.Property[iProperty] = <parseExpression>; }
-                yield return CreateForExpression(index, Expression.Constant(0U), lengthSource, CreateArrayAssignExpression(target, field, index, parseExpression));
+                Type singleValueType = field.Property.PropertyType.GetElementType();
+                
+                if (singleValueType == typeof(byte))
+                {
+                    //this.Property = reader.ReadRaw(<lengthSource>)
+                    yield return CreateAssignExpression(target, field, Expression.Call(reader, nameof(GameBoxReader.ReadRaw), Array.Empty<Type>(), Expression.Convert(lengthSource, typeof(int))));
+                }
+                else
+                {
+                    //this.Property = new T[<lengthSource>]
+                    yield return CreateAssignExpression(target, field, Expression.NewArrayBounds(singleValueType, Expression.Convert(lengthSource, typeof(int))));
+                    //uint iProperty;
+                    ParameterExpression index = Expression.Variable(typeof(uint), "i" + field.Property.Name);
+                    localVariables.Add(index);
+                    //for (iProperty = 0; iProperty < <lengthSource>; iProperty++) { this.Property[iProperty] = <parseExpression>; }
+                    yield return CreateForExpression(index, Expression.Constant(0U), lengthSource, CreateArrayAssignExpression(target, field, index, parseExpression));
+                }
             }
 
             yield break;

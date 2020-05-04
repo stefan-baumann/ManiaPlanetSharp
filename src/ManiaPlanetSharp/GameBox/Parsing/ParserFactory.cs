@@ -19,6 +19,8 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         static ParserFactory()
         {
             ParserFactory.InitializePrecompiledParsers();
+
+            ParserFactory.ScanForParseableChunks();
         }
 
         private static bool initialized = false;
@@ -71,7 +73,19 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     }
                 }
             }
+
             initialized = true;
+        }
+
+        public static void ScanForParseableChunks()
+        {
+            foreach (uint parseableId in AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic).SelectMany(a => a.DefinedTypes).Where(t => typeof(Chunk).IsAssignableFrom(t.AsType())).SelectMany(t => t.GetCustomAttributes<ChunkAttribute>().Select(a => a.Id)))
+            {
+                if (!chunkIds.Contains(parseableId))
+                {
+                    chunkIds.Add(parseableId);
+                }
+            }
         }
 
         /// <summary>
@@ -116,7 +130,14 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <returns></returns>
         public static IChunkParser<Chunk> GetChunkParser(uint chunkId)
         {
-            return chunkParsersByID[chunkId];
+            if (ParserFactory.TryGetChunkParser(chunkId, out IChunkParser<Chunk> parser))
+            {
+                return parser;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>

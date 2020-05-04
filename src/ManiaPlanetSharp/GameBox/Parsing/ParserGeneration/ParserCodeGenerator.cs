@@ -18,7 +18,6 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             {
 #endif
             IndentingStringBuilder builder = new IndentingStringBuilder();
-            //builder.AppendLine($"var result = reader.BodyMode ? new {typeof(TChunk).FullName}() {{ Id = reader.GetChunkId() }} : new {typeof(TChunk).FullName}();");
             builder.AppendLine($"var result = new {typeof(TChunk).FullName}() {{ Id = chunkId }};");
 
             GenerateFieldsParseCode<TChunk>(builder);
