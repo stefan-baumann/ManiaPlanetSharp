@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
 {
-    internal static class ParserGenerator
+    public static class ParserGenerator
     {
         /* # Todo
          * - Special treatment for properties of type byte[]
