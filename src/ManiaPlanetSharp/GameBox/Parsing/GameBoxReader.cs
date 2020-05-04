@@ -306,7 +306,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             if (storedIndex > this.LookbackStrings.Count)
             {
                 Debug.WriteLine($"Lookback String with Index {storedIndex} (0x{storedIndex:X8}) could not be found.");
-                return null;
+                return $"[Unknown lookback string #{storedIndex}]";
             }
             else
             {
