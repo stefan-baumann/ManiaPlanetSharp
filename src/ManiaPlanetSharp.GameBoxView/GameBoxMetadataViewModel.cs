@@ -32,43 +32,26 @@ namespace ManiaPlanetSharp.GameBoxView
 
             this.MetadataTreeItems.Add(new FileMetadataTreeNode(this.File));
 
-            if (path.ToLowerInvariant().EndsWith(".map.gbx"))
+            if (this.File.MainClass == ClassId.CGameCtnChallenge)
             {
                 this.FileType = "Map";
-                this.MetadataProvider = new MapMetadataProvider(this.File);
+                var map = new MapMetadataProvider(this.File);
+                this.MetadataProvider = map;
+                this.MetadataTreeItems.Add(new MapMetadataTreeNode(map) { IsExpanded = true });
             }
-            else if (path.ToLowerInvariant().EndsWith(".item.gbx"))
+            else if (this.File.MainClass == ClassId.CGameItemModel)
             {
-                this.FileType = "Item";
-                this.MetadataProvider = new ItemMetadataProvider(this.File);
+                this.FileType = "Item/Block";
+                var item = new ItemMetadataProvider(this.File);
+                this.MetadataProvider = item;
+                this.MetadataTreeItems.Add(new ItemMetadataTreeNode(item) { IsExpanded = true });
             }
-            else if (path.ToLowerInvariant().EndsWith(".block.gbx"))
-            {
-                this.FileType = "Block";
-                this.MetadataProvider = new ItemMetadataProvider(this.File);
-            }
-            else if (path.ToLowerInvariant().EndsWith(".macroblock.gbx"))
+            else if (this.File.MainClass == ClassId.CGameCtnMacroBlockInfo)
             {
                 this.FileType = "Macroblock";
-                this.MetadataProvider = new MacroblockMetadataProvider(this.File);
-            }
-
-            if (this.MetadataProvider != null)
-            {
-                if (this.MetadataProvider is MapMetadataProvider map)
-                {
-                    this.MetadataTreeItems.Add(new MapMetadataTreeNode(map) { IsExpanded = true });
-                }
-                else if (this.MetadataProvider is ItemMetadataProvider item)
-                {
-                    this.MetadataTreeItems.Add(new ItemMetadataTreeNode(item) { IsExpanded = true });
-                }
-                else if (this.MetadataProvider is MacroblockMetadataProvider macroblock)
-                {
-                    this.MetadataTreeItems.Add(new MacroblockMetadataTreeNode(macroblock) { IsExpanded = true });
-                }
-
-                //this.OnPropertyChanged(nameof(this.MetadataTreeItems));
+                var macroblock = new MacroblockMetadataProvider(this.File);
+                this.MetadataProvider = macroblock;
+                this.MetadataTreeItems.Add(new MacroblockMetadataTreeNode(macroblock) { IsExpanded = true });
             }
         }
 
