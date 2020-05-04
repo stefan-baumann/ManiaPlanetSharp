@@ -337,7 +337,9 @@ namespace ManiaPlanetSharp.GameBox
                         }
                         catch (Exception ex)
                         {
+#if DETAILED_CONSOLE_DIAGNOSTICS || DEBUG
                             Console.WriteLine($"GameBox Parser: Encountered Exception of type {ex.GetType()} (\"{ex.Message}\") while parsing body chunk with id 0x{id:X8}.");
+#endif
                         }
                     }
                 }

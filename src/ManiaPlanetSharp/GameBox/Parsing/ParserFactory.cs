@@ -91,7 +91,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <summary>
         /// Clears the cached parsers.
         /// </summary>
-        internal static void ClearParsers()
+        public static void ClearParsers()
         {
             chunkParsers.Clear();
             chunkParsersByID.Clear();
