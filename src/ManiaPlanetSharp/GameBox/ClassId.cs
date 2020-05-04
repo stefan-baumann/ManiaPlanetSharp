@@ -18,7 +18,12 @@ namespace ManiaPlanetSharp.GameBox
 
         public static string GetClassName(uint classId)
         {
-            return Enum.GetName(typeof(ClassId), ClassIds.GetClassId(classId) ?? ClassId.Unknown);
+            return ClassIds.GetClassName(ClassIds.GetClassId(classId));
+        }
+
+        public static string GetClassName(ClassId? classId)
+        {
+            return classId?.ToString() ?? $"Unknown (0x{classId:X8})";
         }
     }
 

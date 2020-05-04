@@ -23,7 +23,7 @@ namespace ManiaPlanetSharp.GameBoxView
         protected override IEnumerable<TextTreeNode> GetNodes()
         {
             yield return new TextTreeNode("Version", File.Version.ToString());
-            yield return new TextTreeNode("Main Class ID", $"0x{File.MainClassID:X8} ({ClassIds.GetClassName(File.MainClassID & ~0xFFFU)})");
+            yield return new TextTreeNode("Main Class ID", ClassIds.GetClassName(File.MainClassId));
             yield return new TextTreeNode("File Format", File.FileFormat.ToString())
             {
                 HideValueWhenExpanded = true,
