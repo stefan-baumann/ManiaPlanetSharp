@@ -171,7 +171,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             yield break;
         }
 
-        private static Dictionary<Type, string> readerMethods = new Dictionary<Type, string>()
+        private static readonly Dictionary<Type, string> readerMethods = new Dictionary<Type, string>()
         {
             { typeof(bool), nameof(GameBoxReader.ReadBool) },
             { typeof(char), nameof(GameBoxReader.ReadChar) },

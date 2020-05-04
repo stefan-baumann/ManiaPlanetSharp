@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace ManiaPlanetSharp.CustomParserCodeGenerationTest
 {
-    class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Debug.WriteLine(ParserCodeGenerator.GenerateChunkParserString<ManiaPlanetSharp.GameBox.Parsing.Chunks.VisualModelChunk>());
         }

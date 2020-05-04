@@ -201,7 +201,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
 
         //Pre-allocated buffer 
         private const int stringReadBufferLength = 256;
-        private byte[] stringReadBuffer = new byte[stringReadBufferLength];
+        private readonly byte[] stringReadBuffer = new byte[stringReadBufferLength];
         /// <summary>
         /// Reads a string of a specified length.
         /// </summary>
@@ -488,12 +488,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         {
             public LookbackStringContext(GameBoxReader reader)
             {
-                if (reader == null)
-                {
-                    throw new ArgumentNullException(nameof(reader));
-                }
-
-                this.Reader = reader;
+                this.Reader = reader ?? throw new ArgumentNullException(nameof(reader));
 
                 this.LookbackStringVersion = this.Reader.LookbackStringVersion;
                 this.LookbackStrings = this.Reader.LookbackStrings;

@@ -84,9 +84,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             chunkIds.Clear();
         }
 
-        private static ConcurrentDictionary<Type, IChunkParser<Chunk>> chunkParsers = new ConcurrentDictionary<Type, IChunkParser<Chunk>>();
-        private static Dictionary<uint, IChunkParser<Chunk>> chunkParsersByID = new Dictionary<uint, IChunkParser<Chunk>>();
-        private static HashSet<uint> chunkIds = new HashSet<uint>(ParserFactory.GetParseableIds());
+        private static readonly ConcurrentDictionary<Type, IChunkParser<Chunk>> chunkParsers = new ConcurrentDictionary<Type, IChunkParser<Chunk>>();
+        private static readonly Dictionary<uint, IChunkParser<Chunk>> chunkParsersByID = new Dictionary<uint, IChunkParser<Chunk>>();
+        private static readonly HashSet<uint> chunkIds = new HashSet<uint>(GetParseableIds());
 
         /// <summary>
         /// Returns a parser for the specified chunk type either from the precompiled parsers or the cache of previously dynamically generated parsers or generates one dynamically.
@@ -162,7 +162,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
 
 
 
-        private static ConcurrentDictionary<Type, IParser<object>> structParsers = new ConcurrentDictionary<Type, IParser<object>>();
+        private static readonly ConcurrentDictionary<Type, IParser<object>> structParsers = new ConcurrentDictionary<Type, IParser<object>>();
 
         public static CustomStructParser<TStruct> GetCustomStructParser<TStruct>()
             where TStruct : new()

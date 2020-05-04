@@ -21,8 +21,6 @@ namespace ManiaPlanetSharp.GameBoxView
     public class GameBoxMetadataViewModel
         : INotifyPropertyChanged
     {
-        private const string NotAvailable = "not available";
-
         public GameBoxMetadataViewModel()
         { }
 

@@ -146,7 +146,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 string lengthSource;
                 switch (field.ArrayLengthSource)
                 {
-                    case AutomaticArrayLengthSource a:
+                    case AutomaticArrayLengthSource _:
                         lengthSource = "reader.ReadUInt32()";
                         break;
                     case FixedArrayLengthSource fixedLengthSource:
@@ -175,7 +175,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             }
         }
 
-        private static Dictionary<Type, string> readerMethods = new Dictionary<Type, string>()
+        private static readonly Dictionary<Type, string> readerMethods = new Dictionary<Type, string>()
         {
             { typeof(bool), nameof(GameBoxReader.ReadBool) },
             { typeof(byte), nameof(GameBoxReader.ReadByte) },

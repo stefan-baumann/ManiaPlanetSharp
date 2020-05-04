@@ -9,6 +9,6 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         : Chunk
     {
         [Property]
-        FileReference DefaultSkin { get; set; } //Might be node
+        public FileReference DefaultSkin { get; set; } //Might be node
     }
 }

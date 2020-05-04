@@ -41,7 +41,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             }
         }
 
-        private Dictionary<Type, Node[]> headerNodes = new Dictionary<Type, Node[]>();
+        private readonly Dictionary<Type, Node[]> headerNodes = new Dictionary<Type, Node[]>();
         protected TChunk[] GetHeaderNodes<TChunk>()
             where TChunk : Node
         {
@@ -264,7 +264,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                         }
                     }
                 }
-                return default(TValue);
+                return default;
             }
         }
 
@@ -303,7 +303,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                         }
                     }
                 }
-                return default(TValue);
+                return default;
             }
         }
     }

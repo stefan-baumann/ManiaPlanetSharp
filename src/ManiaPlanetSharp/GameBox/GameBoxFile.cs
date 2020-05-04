@@ -49,10 +49,10 @@ namespace ManiaPlanetSharp.GameBox
         [EditorBrowsable(EditorBrowsableState.Never)]
         public string ReadMagicString(GameBoxReader reader)
         {
-            string magicString = reader.ReadString(3);
+            string magicString = (reader ?? throw new ArgumentNullException(nameof(reader))).ReadString(3);
             if (magicString != "GBX")
             {
-                throw new ArgumentException("The magic string is invalid.", nameof(MagicString));
+                throw new InvalidDataException("The magic string is invalid.");
             }
             return magicString;
         }
@@ -110,6 +110,11 @@ namespace ManiaPlanetSharp.GameBox
         [EditorBrowsable(EditorBrowsableState.Never)]
         public Node[] ParseHeaderChunks(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             Node[] headerChunks = new Node[this.HeaderChunkCount];
             CustomStructParser<HeaderEntry> headerEntryParser = ParserFactory.GetCustomStructParser<HeaderEntry>();
             long start = reader.Stream.Position;
@@ -170,6 +175,11 @@ namespace ManiaPlanetSharp.GameBox
         [EditorBrowsable(EditorBrowsableState.Never)]
         public ReferenceTableExternalNode ParseReferenceTableExternalNode(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             ReferenceTableExternalNode node = new ReferenceTableExternalNode() { FlagsU = reader.ReadUInt32() };
             if (node.Flags.HasFlag(ReferenceTableExternalNodeFlags.Flag3))
             {
@@ -222,6 +232,11 @@ namespace ManiaPlanetSharp.GameBox
         [EditorBrowsable(EditorBrowsableState.Never)]
         public byte[] ReadBodyData(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+            
             Debug.WriteLine("Reading GameBox body data...");
             if (this.BodyCompressed)
             {
@@ -255,6 +270,7 @@ namespace ManiaPlanetSharp.GameBox
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         public IEnumerable<Node> ParseBody()
         {
             List<Chunk> chunks = new List<Chunk>();

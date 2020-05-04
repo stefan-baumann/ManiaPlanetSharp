@@ -110,7 +110,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         private bool TryAdvanceUntilChunkStart(GameBoxReader reader, uint chunkId, int maxDistance = 1000)
         {
-            long start = start = reader.Stream.Position;
+            long start = reader.Stream.Position;
             for (long offset = 0; offset < maxDistance && reader.Stream.Position < reader.Stream.Length; offset++)
             {
                 reader.Stream.Position = start + offset;
