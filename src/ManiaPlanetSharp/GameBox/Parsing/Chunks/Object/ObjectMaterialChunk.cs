@@ -9,9 +9,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         : Chunk
     {
         [Property(SpecialPropertyType.NodeReference)]
-        Node StemMaterial { get; set; }
+        public Node StemMaterial { get; set; }
 
         [Property(SpecialPropertyType.NodeReference)]
-        Node StemBumpMaterial { get; set; }
+        public Node StemBumpMaterial { get; set; }
     }
 }

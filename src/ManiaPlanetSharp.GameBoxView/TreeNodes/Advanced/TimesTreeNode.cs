@@ -9,6 +9,7 @@ namespace ManiaPlanetSharp.GameBoxView
             : base(name, author)
         {
             this.Author = author;
+            this.Score = score;
             this.Gold = gold;
             this.Silver = silver;
             this.Bronze = bronze;

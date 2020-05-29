@@ -21,11 +21,14 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             set
             {
                 this.xmlString = value;
-                XmlSerializer serializer = new XmlSerializer(typeof(ReplayCommunityRoot));
-                using (StringReader stringReader = new StringReader(this.xmlString.Replace("&", "&amp;")))
-                {
-                    this.Root = (ReplayCommunityRoot)serializer.Deserialize(stringReader);
-                }
+				if (this.xmlString != null)
+				{
+					XmlSerializer serializer = new XmlSerializer(typeof(ReplayCommunityRoot));
+					using (StringReader stringReader = new StringReader(this.xmlString.Replace("&", "&amp;")))
+					{
+						this.Root = (ReplayCommunityRoot)serializer.Deserialize(stringReader);
+					}
+				}
             }
         }
 

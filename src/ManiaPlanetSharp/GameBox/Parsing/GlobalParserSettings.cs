@@ -41,9 +41,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             }
         }
 
-        private static bool useDynamicallyCompiledChunkParsers = false;
+        private static bool useDynamicallyCompiledChunkParsers = true;
         /// <summary>
-        /// Specifies whether dynamically generated and compiled parsers should be used. This is primarily for development and testing purposes.
+        /// Specifies whether dynamically generated and compiled parsers should be used if no precompiled parser is available (or they are disabled).
         /// </summary>
         public static bool UseDynamicallyCompiledChunkParsers
         {
@@ -59,6 +59,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     if (!UseDynamicallyCompiledChunkParsers)
                     {
                         ParserFactory.ClearParsers();
+                        ParserFactory.InitializePrecompiledParsers();
+                    }
+                    else
+                    {
+                        ParserFactory.ScanForParseableChunks();
                     }
                 }
             }

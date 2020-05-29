@@ -27,15 +27,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
     : byte
     {
         EndMarker = 0,
-        [Obsolete("", false)]
         CampaignOld = 1,
-        [Obsolete("", false)]
         Puzzle = 2,
-        [Obsolete("", false)]
         Retro = 3,
-        [Obsolete("", false)]
         TimeAttack = 4,
-        [Obsolete("", false)]
         Rounds = 5,
         InProgress = 6,
         Campaign = 7,

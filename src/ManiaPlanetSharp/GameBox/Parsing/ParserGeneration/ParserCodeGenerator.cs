@@ -1,6 +1,7 @@
 ﻿using ManiaPlanetSharp.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -17,7 +18,6 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             {
 #endif
             IndentingStringBuilder builder = new IndentingStringBuilder();
-            //builder.AppendLine($"var result = reader.BodyMode ? new {typeof(TChunk).FullName}() {{ Id = reader.GetChunkId() }} : new {typeof(TChunk).FullName}();");
             builder.AppendLine($"var result = new {typeof(TChunk).FullName}() {{ Id = chunkId }};");
 
             GenerateFieldsParseCode<TChunk>(builder);
@@ -145,11 +145,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                 string lengthSource;
                 switch (field.ArrayLengthSource)
                 {
-                    case AutomaticArrayLengthSource a:
+                    case AutomaticArrayLengthSource _:
                         lengthSource = "reader.ReadUInt32()";
                         break;
                     case FixedArrayLengthSource fixedLengthSource:
-                        lengthSource = fixedLengthSource.Length.ToString();
+                        lengthSource = fixedLengthSource.Length.ToString(CultureInfo.InvariantCulture);
                         break;
                     case PropertyArrayLengthSource propertyLengthSource:
                         lengthSource = $"(uint)result.{propertyLengthSource.DependentProperty}";
@@ -174,7 +174,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
             }
         }
 
-        private static Dictionary<Type, string> readerMethods = new Dictionary<Type, string>()
+        private static readonly Dictionary<Type, string> readerMethods = new Dictionary<Type, string>()
         {
             { typeof(bool), nameof(GameBoxReader.ReadBool) },
             { typeof(byte), nameof(GameBoxReader.ReadByte) },

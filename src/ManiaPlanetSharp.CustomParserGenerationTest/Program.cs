@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,8 +18,8 @@ namespace ManiaPlanetSharp.CustomParserGenerationTest
         public static void Main(string[] args)
         {
             var types = AppDomain.CurrentDomain.GetAssemblies().SelectMany(a => a.DefinedTypes);
-            var chunks = types.Where(t => typeof(Chunk).IsAssignableFrom(t) && t != typeof(Chunk));
-            var structs = types.Where(t => t.GetCustomAttribute<CustomStructAttribute>() != null);
+            var chunks = types.Where(t => typeof(Chunk).IsAssignableFrom(t) && t != typeof(Chunk) && t.DeclaredConstructors.Any(c => c.IsPublic && c.GetParameters().Length == 0));
+            var structs = types.Where(t => t.GetCustomAttribute<CustomStructAttribute>() != null && t.DeclaredConstructors.Any(c => c.IsPublic && c.GetParameters().Length == 0));
             var chunkFactory = typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetChunkParser), new Type[] { });
             var structFactory = typeof(ParserFactory).GetMethod(nameof(ParserFactory.GetCustomStructParser), BindingFlags.Public | BindingFlags.Static);
 
@@ -39,12 +40,19 @@ namespace ManiaPlanetSharp.CustomParserGenerationTest
                 {
                     factoryMethod = chunkFactory.MakeGenericMethod(matchingType);
 
+                    Console.WriteLine("Code generation:");
                     Console.WriteLine(typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GenerateChunkParserString), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(matchingType).Invoke(null, null));
+                    Console.WriteLine("\nExpression Tree:");
+                    Console.WriteLine((string)typeof(Expression).GetProperty("DebugView", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(typeof(ParserGenerator).GetMethod(nameof(ParserGenerator.GenerateChunkParserExpression), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(matchingType).Invoke(null, null)));
                 }
                 else if (structs.Contains(matchingType))
                 {
                     factoryMethod = structFactory.MakeGenericMethod(matchingType);
+
+                    Console.WriteLine("Code generation:");
                     Console.WriteLine(typeof(ParserCodeGenerator).GetMethod(nameof(ParserCodeGenerator.GenerateStructParserString), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(matchingType).Invoke(null, null));
+                    Console.WriteLine("\nExpression Tree:");
+                    Console.WriteLine((string)typeof(Expression).GetProperty("DebugView", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(typeof(ParserGenerator).GetMethod(nameof(ParserGenerator.GenerateStructParserExpression), BindingFlags.Static | BindingFlags.Public).MakeGenericMethod(matchingType).Invoke(null, null)));
                 }
                 else
                 {

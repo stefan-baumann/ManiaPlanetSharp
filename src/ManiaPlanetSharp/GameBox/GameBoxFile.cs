@@ -49,10 +49,10 @@ namespace ManiaPlanetSharp.GameBox
         [EditorBrowsable(EditorBrowsableState.Never)]
         public string ReadMagicString(GameBoxReader reader)
         {
-            string magicString = reader.ReadString(3);
+            string magicString = (reader ?? throw new ArgumentNullException(nameof(reader))).ReadString(3);
             if (magicString != "GBX")
             {
-                throw new ArgumentException("The magic string is invalid.", nameof(MagicString));
+                throw new InvalidDataException("The magic string is invalid.");
             }
             return magicString;
         }
@@ -80,7 +80,9 @@ namespace ManiaPlanetSharp.GameBox
         public char Unused { get; set; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 3)]
-        public uint MainClassID { get; set; }
+        public uint MainClassId { get; set; }
+
+        public ClassId? MainClass => ClassIds.GetClassId(this.MainClassId);
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6)]
         public uint UserDataSize { get; set; }
@@ -110,6 +112,11 @@ namespace ManiaPlanetSharp.GameBox
         [EditorBrowsable(EditorBrowsableState.Never)]
         public Node[] ParseHeaderChunks(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             Node[] headerChunks = new Node[this.HeaderChunkCount];
             CustomStructParser<HeaderEntry> headerEntryParser = ParserFactory.GetCustomStructParser<HeaderEntry>();
             long start = reader.Stream.Position;
@@ -170,6 +177,11 @@ namespace ManiaPlanetSharp.GameBox
         [EditorBrowsable(EditorBrowsableState.Never)]
         public ReferenceTableExternalNode ParseReferenceTableExternalNode(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             ReferenceTableExternalNode node = new ReferenceTableExternalNode() { FlagsU = reader.ReadUInt32() };
             if (node.Flags.HasFlag(ReferenceTableExternalNodeFlags.Flag3))
             {
@@ -222,6 +234,11 @@ namespace ManiaPlanetSharp.GameBox
         [EditorBrowsable(EditorBrowsableState.Never)]
         public byte[] ReadBodyData(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+            
             Debug.WriteLine("Reading GameBox body data...");
             if (this.BodyCompressed)
             {
@@ -255,6 +272,7 @@ namespace ManiaPlanetSharp.GameBox
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         public IEnumerable<Node> ParseBody()
         {
             List<Chunk> chunks = new List<Chunk>();
@@ -265,65 +283,63 @@ namespace ManiaPlanetSharp.GameBox
                 {
                     stream.Position = offset;
                     uint id = reader.ReadUInt32();
-                    if (ParserFactory.IsParseableChunkId(id))
+                    if (ParserFactory.IsParseableChunkId(id) && ParserFactory.TryGetChunkParser(id, out var parser))
                     {
-                        if (ParserFactory.TryGetChunkParser(id, out var parser))
+                        try
                         {
-                            try
+                            //Compared to the solution via the lambda that was commented out below, this saves a lot (up to multiple million in big files) allocations
+                            bool skippable = false;
+                            foreach (var parserId in parser.ParseableIds)
                             {
-                                //Compared to the solution via the lambda that was commented out below, this saves a lot (up to multiple million in big files) allocations
-                                bool skippable = false;
-                                foreach (var parserId in parser.ParseableIds)
+                                if (parserId.Item1 == id)
                                 {
-                                    if (parserId.Item1 == id)
-                                    {
-                                        skippable = parserId.Item2;
-                                        break;
-                                    }
+                                    skippable = parserId.Item2;
+                                    break;
                                 }
-                                //If skippable
-                                if (skippable) //(parser.ParseableIds.First(p => p.Item1 == id).Item2)
+                            }
+                            //If skippable
+                            if (skippable) //(parser.ParseableIds.First(p => p.Item1 == id).Item2)
+                            {
+                                if (reader.ReadUInt32() != GameBoxReader.SkipMarker)
                                 {
-                                    if (reader.ReadUInt32() != GameBoxReader.SkipMarker)
+#if DETAILED_CONSOLE_DIAGNOSTICS || DEBUG
+                                    Console.WriteLine($"Expected skip marker in chunk with id 0x{id:X8}.");
+#endif
+                                    continue;
+                                }
+                                uint size = reader.ReadUInt32();
+                                var start = reader.Stream.Position;
+                                try
+                                {
+                                    var result = parser.Parse(reader, id);
+
+                                    if (reader.Stream.Position != start + size)
                                     {
 #if DETAILED_CONSOLE_DIAGNOSTICS || DEBUG
-                                        Console.WriteLine($"Expected skip marker in chunk with id 0x{id:X8}.");
+                                        Console.WriteLine($"GameBox Parser: Reader for skippable chunk with id 0x{id:X8} did not read the correct length. Adjusting read position.");
 #endif
-                                        continue;
-                                    }
-                                    uint size = reader.ReadUInt32();
-                                    var start = reader.Stream.Position;
-                                    try
-                                    {
-                                        var result = parser.Parse(reader, id);
-
-                                        if (reader.Stream.Position != start + size)
-                                        {
-#if DETAILED_CONSOLE_DIAGNOSTICS || DEBUG
-                                            Console.WriteLine($"GameBox Parser: Reader for skippable chunk with id 0x{id:X8} did not read the correct length. Adjusting read position.");
-#endif
-
-                                            offset = start + size - 1;
-                                        }
-
-                                        chunks.Add(result);
-                                    }
-                                    catch
-                                    {
                                         offset = start + size - 1;
-                                        throw;
                                     }
-                                }
-                                else
-                                {
-                                    chunks.Add(parser.Parse(reader, id));
-                                }
 
+                                    chunks.Add(result);
+                                }
+                                catch
+                                {
+                                    offset = start + size - 1;
+                                    throw;
+                                }
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                Console.WriteLine($"GameBox Parser: Encountered Exception of type {ex.GetType()} (\"{ex.Message}\") while parsing body chunk with id 0x{id:X8}.");
+                                chunks.Add(parser.Parse(reader, id));
                             }
+
+                        }
+                        catch (Exception ex)
+                        {
+#if DETAILED_CONSOLE_DIAGNOSTICS || DEBUG
+                            Console.WriteLine($"GameBox Parser: Encountered Exception of type {ex.GetType()} (\"{ex.Message}\") while parsing body chunk with id 0x{id:X8}.");
+#endif
                         }
                     }
                 }

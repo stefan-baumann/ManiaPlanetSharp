@@ -19,6 +19,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public byte[] ReadThumbnailData(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             uint thumbnailSize = reader.ReadUInt32();
             reader.ReadString("<Thumbnail.jpg>".Length);
             var thumbnailData = reader.ReadRaw((int)thumbnailSize);
@@ -28,6 +33,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public string ReadComment(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             reader.ReadString("<Comments>".Length);
             var comment = reader.ReadString();
             reader.ReadString("</Comments>".Length);

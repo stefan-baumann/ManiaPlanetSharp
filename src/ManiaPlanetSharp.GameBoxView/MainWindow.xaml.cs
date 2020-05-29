@@ -41,15 +41,8 @@ namespace ManiaPlanetSharp.GameBoxView
                 if (files?.Length == 1 && files[0].ToLowerInvariant().EndsWith(".gbx"))
                 {
                     e.Handled = true;
-                    try
-                    {
-                        this.DataContext = new GameBoxMetadataViewModel(files[0]);
-                        GC.Collect();
-                    }
-                    catch (Exception ex)
-                    {
-                        throw;
-                    }
+                    this.DataContext = new GameBoxMetadataViewModel(files[0]);
+                    GC.Collect();
                 }
             }
         }

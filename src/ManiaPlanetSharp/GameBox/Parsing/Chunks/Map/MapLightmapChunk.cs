@@ -23,6 +23,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public LightmapFrame ParseLightmapFrame(GameBoxReader reader)
         {
+            if (reader == null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
             LightmapFrame lightmapFrame = new LightmapFrame();
             lightmapFrame.Image1 = reader.ReadRaw((int)reader.ReadUInt32());
             if (this.Version >= 3) lightmapFrame.Image2 = reader.ReadRaw((int)reader.ReadUInt32());

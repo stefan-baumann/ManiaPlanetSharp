@@ -83,19 +83,17 @@ namespace ManiaPlanetSharp.GameBoxView
 
         protected ImageSource ImageSourceFromImage(System.Drawing.Image source)
         {
-            using (var ms = new MemoryStream())
-            {
-                source.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-                ms.Position = 0;
+            using var ms = new MemoryStream();
+            source.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            ms.Position = 0;
 
-                var bi = new BitmapImage();
-                bi.BeginInit();
-                bi.CacheOption = BitmapCacheOption.OnLoad;
-                bi.StreamSource = ms;
-                bi.EndInit();
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.StreamSource = ms;
+            bi.EndInit();
 
-                return bi;
-            }
+            return bi;
         }
     }
 }

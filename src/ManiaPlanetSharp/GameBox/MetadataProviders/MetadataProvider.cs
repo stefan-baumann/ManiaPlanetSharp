@@ -41,7 +41,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             }
         }
 
-        private Dictionary<Type, Node[]> headerNodes = new Dictionary<Type, Node[]>();
+        private readonly Dictionary<Type, Node[]> headerNodes = new Dictionary<Type, Node[]>();
         protected TChunk[] GetHeaderNodes<TChunk>()
             where TChunk : Node
         {
@@ -106,6 +106,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
 
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>")]
         public interface IBufferedChunkValue<out TChunk, TValue>
             where TChunk : Chunk
         {
@@ -120,6 +121,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             TValue GetValue();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1034:Nested types should not be visible", Justification = "<Pending>")]
         public abstract class BufferedChunkValue<TChunk, TValue>
             : IBufferedChunkValue<TChunk, TValue>
             where TChunk : Chunk
@@ -214,9 +216,10 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
             protected abstract TValue GetValueInternal();
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2225:Operator overloads have named alternates", Justification = "<Pending>")]
             public static implicit operator TValue(BufferedChunkValue<TChunk, TValue> bufferedValue)
             {
-                return bufferedValue.GetBufferedValue();
+                return bufferedValue != null ? bufferedValue.GetBufferedValue() : default;
             }
         }
 
@@ -248,7 +251,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             {
                 var chunks = this.Provider.GetHeaderNodes<TChunk>();
 #if DEBUG
-                Console.WriteLine($"[Buffered Value][Info] {this.Name}: from {typeof(TChunk)} (Header): {chunks?.Length.ToString() ?? "no"} chunks found.");
+                Console.WriteLine($"[Buffered Value][Info] {this.Name}: from {typeof(TChunk)} (Header): {chunks?.Length ?? 0} chunks found.");
 #endif
                 foreach (TChunk chunk in chunks ?? Array.Empty<TChunk>())
                 {
@@ -261,7 +264,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                         }
                     }
                 }
-                return default(TValue);
+                return default;
             }
         }
 
@@ -287,7 +290,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             {
                 var chunks = this.Provider.GetBodyNodes<TChunk>();
 #if DEBUG
-                Console.WriteLine($"[Buffered Value][Info] {this.Name}: from {typeof(TChunk)} (Body): {chunks?.Length.ToString() ?? "no"} chunks found.");
+                Console.WriteLine($"[Buffered Value][Info] {this.Name}: from {typeof(TChunk)} (Body): {chunks?.Length ?? 0} chunks found.");
 #endif
                 foreach (TChunk chunk in chunks ?? Array.Empty<TChunk>())
                 {
@@ -300,7 +303,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                         }
                     }
                 }
-                return default(TValue);
+                return default;
             }
         }
     }

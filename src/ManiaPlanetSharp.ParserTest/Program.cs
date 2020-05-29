@@ -22,41 +22,38 @@ namespace ManiaPlanetSharp.ParserTest
                 string path = Console.ReadLine();
                 if (path.StartsWith("\"") && path.EndsWith("\""))
                 {
-                    path = path.Substring(1, path.Length - 2);
+                    path = path[1..^1];
                 }
                 if (File.Exists(path))
                 {
-                    using (MemoryStream stream = new MemoryStream(File.ReadAllBytes(path)))
+                    using MemoryStream stream = new MemoryStream(File.ReadAllBytes(path));
+                    try
                     {
-                        try
+                        Stopwatch stopwatch = Stopwatch.StartNew();
+                        GameBoxFile file = GameBoxFile.Parse(stream);
+                        double headerTime = stopwatch.Elapsed.TotalMilliseconds;
+                        var chunks = file.ParseBody();
+                        stopwatch.Stop();
+
+                        //Create metadata provider and parse body with disabled console output
+                        //var console = Console.Out;
+                        //Console.SetOut(TextWriter.Null);
+                        var metadataProvider = new MapMetadataProvider(file);
+                        metadataProvider.ParseBody();
+                        //Console.SetOut(console);
+
+                        Console.WriteLine("Metadata:");
+                        foreach (var property in metadataProvider.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(property => property.Name != "File"))
                         {
-                            Stopwatch stopwatch = Stopwatch.StartNew();
-                            GameBoxFile file = GameBoxFile.Parse(stream);
-                            double headerTime = stopwatch.Elapsed.TotalMilliseconds;
-                            var chunks = file.ParseBody();
-                            stopwatch.Stop();
-
-                            //Create metadata provider and parse body with disabled console output
-                            var console = Console.Out;
-                            Console.SetOut(TextWriter.Null);
-                            var metadataProvider = new MapMetadataProvider(file);
-                            metadataProvider.ParseBody();
-                            Console.SetOut(console);
-
-                            Console.WriteLine("Metadata:");
-                            foreach (var property in metadataProvider.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(property => property.Name != "File"))
-                            {
-                                Console.WriteLine($" - {property.Name}: {property.GetValue(metadataProvider)}");
-                            }
-
-                            //var embeddedItems = metadataProvider.GetEmbeddedItemFiles();
-                            Console.WriteLine($"Done in {stopwatch.Elapsed.TotalMilliseconds:#0.0}ms (header: {headerTime:#0.0}ms, body: {stopwatch.Elapsed.TotalMilliseconds - headerTime:#0.0}ms).");
+                            Console.WriteLine($" - {property.Name}: {property.GetValue(metadataProvider)}");
                         }
-                        catch (ParseException ex)
-                        {
-                            Console.WriteLine(ex.Message);
-                            Console.WriteLine(ex.InnerException.ToString());
-                        }
+
+                        Console.WriteLine($"Done in {stopwatch.Elapsed.TotalMilliseconds:#0.0}ms (header: {headerTime:#0.0}ms, body: {stopwatch.Elapsed.TotalMilliseconds - headerTime:#0.0}ms).");
+                    }
+                    catch (ParseException ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        Console.WriteLine(ex.InnerException.ToString());
                     }
                 }
                 else

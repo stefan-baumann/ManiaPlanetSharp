@@ -38,7 +38,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
     {
         public FixedArrayLengthSource(int length)
         {
-            if (length < 0) throw new ArgumentOutOfRangeException();
+            if (length < 0) throw new ArgumentOutOfRangeException(nameof(length));
             this.Length = length;
         }
 

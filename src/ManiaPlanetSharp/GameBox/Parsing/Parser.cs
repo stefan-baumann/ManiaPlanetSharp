@@ -12,6 +12,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
     /// Base interface for parsers. For most cases, you should inherit from <c>ChunkParser&lt;TChunk&rt;</c> or <c>CustomStructParser&lt;TStruct&rt;</c> instead.
     /// </summary>
     /// <typeparam name="T">The type that is parsed by this parser.</typeparam>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "<Pending>")]
     public interface IParser<out T>
     { }
 
@@ -76,13 +77,15 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             : this()
         {
             this.ParserExpression = expression;
-            this.CompiledParser = expression.Compile();
+            this.CompiledParser = expression?.Compile();
         }
+
 
         /// <summary>
         /// Generates a parser for the specified chunk type dynamically, compiles and returns it. If you don't want to compile a new parser every time or use the precompiled parsers, use the <c>ParserFactory</c> class instead.
         /// </summary>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "<Pending>")]
         public static ChunkParser<TChunk> GenerateParser()
         {
             var parser = new ChunkParser<TChunk>(ParserGenerator.GenerateChunkParserExpression<TChunk>());
@@ -165,13 +168,15 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             : this()
         {
             this.ParserExpression = expression;
-            this.CompiledParser = expression.Compile();
+            this.CompiledParser = expression?.Compile();
         }
+
 
         /// <summary>
         /// Generates a parser for the specified struct type dynamically, compiles and returns it. If you don't want to compile a new parser every time or use the precompiled parsers, use the <c>ParserFactory</c> class instead.
         /// </summary>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1000:Do not declare static members on generic types", Justification = "<Pending>")]
         public static CustomStructParser<TStruct> GenerateParser()
         {
             return new CustomStructParser<TStruct>(ParserGenerator.GenerateStructParserExpression<TStruct>());
