@@ -63,7 +63,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property, Array]
         public byte[] MapData { get; set; }
 
-        public GameBoxFile ParseMap()
+        [Property, CustomParserMethod(nameof(ParseMap))]
+        public GameBoxFile MapFile { get; set; }
+
+        public GameBoxFile ParseMap(GameBoxReader reader)
         {
             if (this.MapData == null)
             {

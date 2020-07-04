@@ -41,12 +41,19 @@ namespace ManiaPlanetSharp.GameBoxView
                         {
                             Nodes = new ObservableCollection<TextTreeNode>(content.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(property => property.DeclaringType == content.GetType()).Select(property =>
                             {
-                                var text = property.GetValue(content)?.ToString() ?? "null";
-                                if (string.IsNullOrWhiteSpace(text))
+                                if (property.GetValue(content)?.GetType () == typeof(GameBoxFile))
                                 {
-                                    text = $"\"{text}\"";
+                                    return new FileMetadataTreeNode((GameBoxFile)property.GetValue(content));
                                 }
-                                return new TextTreeNode(property.Name, text);
+                                else
+                                {
+                                    var text = property.GetValue(content)?.ToString() ?? "null";
+                                    if (string.IsNullOrWhiteSpace(text))
+                                    {
+                                        text = $"\"{text}\"";
+                                    }
+                                    return new TextTreeNode(property.Name, text);
+                                }
                             }))
                         });
                     }
