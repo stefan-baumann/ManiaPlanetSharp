@@ -1,6 +1,7 @@
 ﻿using ManiaPlanetSharp.GameBox;
 using ManiaPlanetSharp.GameBox.MetadataProviders;
 using ManiaPlanetSharp.GameBox.Parsing;
+using ManiaPlanetSharp.GameBoxView.TreeNodes.Advanced;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -45,9 +46,7 @@ namespace ManiaPlanetSharp.GameBoxView
                                 if (property.GetValue(content)?.GetType () == typeof(GameBoxFile))
                                 {
                                     var file = (GameBoxFile)property.GetValue(content);
-                                    var provider = new MapMetadataProvider(file);
-                                    this.Nodes.Add(new MapMetadataTreeNode(provider));
-                                    return new FileMetadataTreeNode(file);
+                                    return new EmbeddedMapTreeNode(property.Name, file);
                                 }
                                 else
                                 {
