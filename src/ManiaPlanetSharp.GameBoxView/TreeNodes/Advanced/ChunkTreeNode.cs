@@ -1,5 +1,7 @@
 ﻿using ManiaPlanetSharp.GameBox;
+using ManiaPlanetSharp.GameBox.MetadataProviders;
 using ManiaPlanetSharp.GameBox.Parsing;
+using ManiaPlanetSharp.GameBoxView.TreeNodes.Advanced;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -41,12 +43,20 @@ namespace ManiaPlanetSharp.GameBoxView
                         {
                             Nodes = new ObservableCollection<TextTreeNode>(content.GetType().GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance).Where(property => property.DeclaringType == content.GetType()).Select(property =>
                             {
-                                var text = property.GetValue(content)?.ToString() ?? "null";
-                                if (string.IsNullOrWhiteSpace(text))
+                                if (property.GetValue(content)?.GetType () == typeof(GameBoxFile))
                                 {
-                                    text = $"\"{text}\"";
+                                    var file = (GameBoxFile)property.GetValue(content);
+                                    return new EmbeddedMapTreeNode(property.Name, file);
                                 }
-                                return new TextTreeNode(property.Name, text);
+                                else
+                                {
+                                    var text = property.GetValue(content)?.ToString() ?? "null";
+                                    if (string.IsNullOrWhiteSpace(text))
+                                    {
+                                        text = $"\"{text}\"";
+                                    }
+                                    return new TextTreeNode(property.Name, text);
+                                }
                             }))
                         });
                     }
