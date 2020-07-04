@@ -6,7 +6,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
     public class CheckpointEntry
     {
         [Property]
-        public uint Time { get; set; }
+        public uint TimeU { get; set; }
+
+        public TimeSpan Time { get => TimeSpan.FromMilliseconds(TimeU); }
 
         [Property]
         public uint Flags { get; set; }
@@ -16,10 +18,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
     public class GhostCheckpointEntriesChunk
         : Chunk
     {
-        [Property]
-        public uint CheckpointEntryCount { get; set; }
-
-        [Property, Array(nameof(CheckpointEntryCount))]
+        [Property, Array]
         public CheckpointEntry[] CheckpointEntries { get; set; }
     }
 }
