@@ -172,7 +172,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <summary>
         /// The maximum length of string that will be parsed automatically.
         /// </summary>
-        public int MaxStringLength { get; set; } = 16384;
+        public int MaxStringLength { get; set; } = 200000;
 
         /// <summary>
         /// Reads a string that is preceded by a 32-bit unsigned integer stating its length. This will throw a <c>InvalidDataException</c> for strings that exceed the length specified in <c>GameBoxReader.MaxStringLength</c> to prevent massive allocations caused by wrongly parsed strings. If you don't want this behaviour, use <c>GameBoxReader.ReadLongString()</c> instead.
