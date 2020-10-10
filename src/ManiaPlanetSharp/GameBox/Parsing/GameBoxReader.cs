@@ -278,7 +278,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     case 23: return "Lagoon256";
                     case 24: return "Stadium4";
                     case 25: return "Stadium256";
-                    case 26: return "TMNext";
+                    case 26: return "Trackmania";
 
                     case 100: return "History";
                     case 101: return "Society";

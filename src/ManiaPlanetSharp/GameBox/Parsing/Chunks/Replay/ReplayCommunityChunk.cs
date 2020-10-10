@@ -84,10 +84,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 	public class ReplayCommunityTimes
 	{
 		[XmlAttribute(AttributeName = "best")]
-		public int Best { get; set; }
+		public int BestU { get; set; }
 
 		[XmlIgnore()]
-		public TimeSpan BestTimeSpan { get => TimeSpan.FromMilliseconds(this.Best); }
+		public TimeSpan Best { get => TimeSpan.FromMilliseconds(this.BestU); }
 
 		[XmlAttribute(AttributeName = "respawns")]
 		public int Respawns { get; set; }
@@ -119,7 +119,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 		public ReplayCommunityMap Map { get; set; }
 
 		[XmlElement(ElementName = "desc")]
-		public ReplayCommunityDescription Desciption { get; set; }
+		public ReplayCommunityDescription Description { get; set; }
 
 		[XmlElement(ElementName = "playermodel")]
 		public ReplayCommunityPlayermodel Playermodel { get; set; }
