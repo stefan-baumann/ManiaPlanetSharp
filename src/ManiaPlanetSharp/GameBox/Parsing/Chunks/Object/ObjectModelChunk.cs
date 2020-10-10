@@ -123,7 +123,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             return false;
         }
 
-        private const int maximumStringLength = 250;
+        private const int maximumStringLength = 3000;
         private bool TryFindString(GameBoxReader reader, Func<string, bool> condition, out string result, int maxDistance = 500, int minimumStringLength = 10) //Shortest possible name: A.Mesh.Gbx (10 characters)
         {
             long start = reader.Stream.Position;
