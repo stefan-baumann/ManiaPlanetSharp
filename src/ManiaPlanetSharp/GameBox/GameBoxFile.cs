@@ -273,8 +273,14 @@ namespace ManiaPlanetSharp.GameBox
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
-        public IEnumerable<Node> ParseBody()
+        private List<Chunk> bodyChunksCache = null;
+        public IEnumerable<Node> ParseBody(bool forceReParse = false)
         {
+            if (this.bodyChunksCache != null && !forceReParse)
+            {
+                return this.bodyChunksCache;
+            }
+
             List<Chunk> chunks = new List<Chunk>();
             using (MemoryStream stream = new MemoryStream(this.GetUncompressedBodyData()))
             using (GameBoxReader reader = new GameBoxReader(stream) { BodyMode = true })
@@ -345,7 +351,7 @@ namespace ManiaPlanetSharp.GameBox
                 }
             }
 
-            return chunks;
+            return this.bodyChunksCache = chunks;
         }
 
 #endregion
