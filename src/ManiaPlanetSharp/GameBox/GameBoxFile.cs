@@ -338,6 +338,7 @@ namespace ManiaPlanetSharp.GameBox
                             else
                             {
                                 chunks.Add(parser.Parse(reader, id));
+                                offset = stream.Position;
                             }
 
                         }
