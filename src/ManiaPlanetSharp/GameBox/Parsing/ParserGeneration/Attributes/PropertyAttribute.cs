@@ -9,6 +9,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
     {
         LookbackString,
         NodeReference,
+        LongString,
         //CustomStruct
     }
 
