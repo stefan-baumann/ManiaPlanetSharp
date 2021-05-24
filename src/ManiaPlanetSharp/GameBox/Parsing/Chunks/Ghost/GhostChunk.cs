@@ -30,7 +30,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property, Array(nameof(ControlEntryCount))]
         public GhostControlEntry[] ControlEntries { get; set; }
 
-        [Property]
+        [Property(SpecialPropertyType.LongString)]
         public string GameVersion { get; set; }
 
         [Property]

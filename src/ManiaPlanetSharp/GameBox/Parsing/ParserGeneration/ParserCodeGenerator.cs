@@ -105,6 +105,14 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                         }
                         parseCode = "reader.ReadLookbackString()";
                         break;
+                    case SpecialPropertyType.LongString:
+                        if (singleValueType != typeof(string))
+                        {
+                            throw new InvalidOperationException($"Property marked as longstring is not of type string at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
+                        }
+
+                        parseCode = "reader.ReadLongString()";
+                        break;
                     case SpecialPropertyType.NodeReference:
                         if (!typeof(Node).IsAssignableFrom(singleValueType))
                         {
