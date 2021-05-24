@@ -221,6 +221,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.ParserGeneration
                         }
                         //reader.ReadLookbackString();
                         return Expression.Call(reader, nameof(GameBoxReader.ReadLookbackString), null);
+                    case SpecialPropertyType.LongString:
+                        if (singleValueType != typeof(string))
+                        {
+                            throw new InvalidOperationException($"Property marked as longstring is not of type string at {field.Property.DeclaringType.Name}.{field.Property.Name}.");
+                        }
+
+                        return Expression.Call(reader, nameof(GameBoxReader.ReadLongString), null);
                     case SpecialPropertyType.NodeReference:
                         if (!typeof(Node).IsAssignableFrom(singleValueType))
                         {
