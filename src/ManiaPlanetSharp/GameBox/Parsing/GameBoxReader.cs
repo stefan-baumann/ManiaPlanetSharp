@@ -359,27 +359,25 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             }
             if (!this.Nodes.ContainsKey(index))
             {
-                //this.Nodes.Add(index, this.ReadBodyChunk());
                 uint classId = this.ReadUInt32();
                 List<Chunk> chunks = new List<Chunk>();
                 for (uint chunkId = this.ReadUInt32(); this.Stream.Position + 4 < this.Stream.Length && chunkId != EndMarkerClassId && chunkId != 0; chunkId = this.ReadUInt32())
                 {
-                    chunks.Add(this.ReadBodyChunk(chunkId));
+                    var start = this.Stream.Position;
+                    try
+                    {
+                        chunks.Add(this.ReadBodyChunk(chunkId));
+                    }
+                    catch (Exception ex)
+                    {
+                        this.Stream.Position = start;
+                        throw new Exception($"Encountered error while reading node reference chunk 0x{chunkId:X8}/{ClassIds.GetClassName(chunkId & 0xFFFFF000)} inside node of type 0x{classId:X8}/{ClassIds.GetClassName(classId & 0xFFFFF000)}.", ex);
+                    }
                 }
 
                 this.Nodes.Add(index, new Node(classId, chunks));
             }
             return this.Nodes[index];
-        }
-
-        protected IEnumerable<Chunk> ReadNodeReferenceChunks()
-        {
-            uint classId = this.ReadUInt32();
-            for (uint chunkId = this.ReadUInt32(); this.Stream.Position + 4 < this.Stream.Length && chunkId != EndMarkerClassId && chunkId != 0; chunkId = this.ReadUInt32())
-            {
-                yield return this.ReadBodyChunk(chunkId);
-            }
-            yield break;
         }
 
         /// <summary>
@@ -437,7 +435,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     }
                 }
             }
-            throw new NotImplementedException($"Cannot parse chunk with id 0x{id:X8}0x/{ClassIds.GetClassName(id & 0xFFFFF000)}");
+            throw new NotImplementedException($"Cannot parse chunk with id 0x{id:X8}/{ClassIds.GetClassName(id & 0xFFFFF000)}");
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
