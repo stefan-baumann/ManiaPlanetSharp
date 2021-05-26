@@ -62,6 +62,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             {
                 for (int i = 0; i < blocks.Length; i++)
                 {
+                    uint peek = reader.ReadUInt32();
+                    reader.Stream.Position -= 4;
+                    if ((peek & 0xC0000000) == 0)
+                    {
+                        break;
+                    }
+
                     Block block = blockParser.Parse(reader);
 
                     if (block.Flags.HasFlag(BlockFlags.Null))
@@ -74,7 +81,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Console.WriteLine("GameBox Parser: Could not successfully parse map blocks.");
                 reader.Stream.Position = start;
@@ -107,7 +114,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public uint FlagsU { get; set; }
         public BlockFlags Flags => (BlockFlags)this.FlagsU;
         
-        [Property, Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
+        [Property(SpecialPropertyType.LookbackString), Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
         public string Author { get; set; }
 
         [Property(SpecialPropertyType.NodeReference), Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
