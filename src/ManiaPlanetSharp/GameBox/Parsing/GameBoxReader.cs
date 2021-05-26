@@ -183,7 +183,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             uint length = this.ReadUInt32();
             if (length > this.MaxStringLength)
             {
-                throw new InvalidDataException("The specified string length exceeds the specified maximum string length.");
+                throw new InvalidDataException($"The specified string length exceeds the specified maximum string length. Found string of length {length}.");
             }
 
             return this.ReadString((int)length);
@@ -359,23 +359,41 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             }
             if (!this.Nodes.ContainsKey(index))
             {
-                this.Nodes.Add(index, this.ReadBodyChunk());
+                //this.Nodes.Add(index, this.ReadBodyChunk());
+                uint classId = this.ReadUInt32();
+                List<Chunk> chunks = new List<Chunk>();
+                for (uint chunkId = this.ReadUInt32(); this.Stream.Position + 4 < this.Stream.Length && chunkId != EndMarkerClassId && chunkId != 0; chunkId = this.ReadUInt32())
+                {
+                    chunks.Add(this.ReadBodyChunk(chunkId));
+                }
+
+                this.Nodes.Add(index, new Node(classId, chunks));
             }
             return this.Nodes[index];
+        }
+
+        protected IEnumerable<Chunk> ReadNodeReferenceChunks()
+        {
+            uint classId = this.ReadUInt32();
+            for (uint chunkId = this.ReadUInt32(); this.Stream.Position + 4 < this.Stream.Length && chunkId != EndMarkerClassId && chunkId != 0; chunkId = this.ReadUInt32())
+            {
+                yield return this.ReadBodyChunk(chunkId);
+            }
+            yield break;
         }
 
         /// <summary>
         /// Reads a chunk from the body of a GameBox file.
         /// </summary>
         /// <returns></returns>
-        public Chunk ReadBodyChunk()
+        public Chunk ReadBodyChunk(uint? chunkId = null)
         {
             if (!this.BodyMode)
             {
                 throw new InvalidOperationException($"{nameof(ReadBodyChunk)} can only be performed on the body of a gbx file.");
             }
 
-            uint id = this.ReadUInt32();
+            uint id = chunkId ?? this.ReadUInt32();
             for (; id == 0; id = this.ReadUInt32()) ;
             if (id == EndMarkerClassId)
             {

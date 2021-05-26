@@ -107,17 +107,17 @@ namespace ManiaPlanetSharp.GameBox
         }
 
         [Property, CustomParserMethod(nameof(ParseHeaderChunks)), Condition(nameof(HeaderChunkCount), ConditionOperator.GreaterThan, 0)]
-        public Node[] HeaderChunks { get; set; } = Array.Empty<Node>();
+        public Chunk[] HeaderChunks { get; set; } = Array.Empty<Chunk>();
 
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Node[] ParseHeaderChunks(GameBoxReader reader)
+        public Chunk[] ParseHeaderChunks(GameBoxReader reader)
         {
             if (reader == null)
             {
                 throw new ArgumentNullException(nameof(reader));
             }
 
-            Node[] headerChunks = new Node[this.HeaderChunkCount];
+            Chunk[] headerChunks = new Chunk[this.HeaderChunkCount];
             CustomStructParser<HeaderEntry> headerEntryParser = ParserFactory.GetCustomStructParser<HeaderEntry>();
             long start = reader.Stream.Position;
             for (uint i = 0, offset = 0; i < this.HeaderChunkCount; i++)
@@ -274,7 +274,7 @@ namespace ManiaPlanetSharp.GameBox
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1031:Do not catch general exception types", Justification = "<Pending>")]
         private List<Chunk> bodyChunksCache = null;
-        public IEnumerable<Node> ParseBody(bool forceReParse = false)
+        public IEnumerable<Chunk> ParseBody(bool forceReParse = false)
         {
             if (this.bodyChunksCache != null && !forceReParse)
             {

@@ -17,9 +17,9 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         {
             this.File = file ?? throw new ArgumentNullException(nameof(file));
 
-            this.headerNodes = this.File.HeaderChunks?
-                .Where(node => node.GetType() != typeof(UnknownChunk))
-                .GroupBy(node => node.GetType())
+            this.headerChunks = this.File.HeaderChunks?
+                .Where(chunk => chunk.GetType() != typeof(UnknownChunk))
+                .GroupBy(chunk => chunk.GetType())
                 .ToDictionary(group => group.Key, group => group.ToArray());
         }
 
@@ -32,37 +32,37 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public void ParseBody()
         {
-            if (this.bodyNodes == null)
+            if (this.bodyChunks == null)
             {
-                this.bodyNodes = this.File.ParseBody()
-                    .Where(node => node.GetType() != typeof(UnknownChunk))
-                    .GroupBy(node => node.GetType())
+                this.bodyChunks = this.File.ParseBody()
+                    .Where(chunk => chunk.GetType() != typeof(UnknownChunk))
+                    .GroupBy(chunk => chunk.GetType())
                     .ToDictionary(group => group.Key, group => group.ToArray());
             }
         }
 
-        private readonly Dictionary<Type, Node[]> headerNodes = new Dictionary<Type, Node[]>();
-        protected TChunk[] GetHeaderNodes<TChunk>()
-            where TChunk : Node
+        private readonly Dictionary<Type, Chunk[]> headerChunks = new Dictionary<Type, Chunk[]>();
+        protected TChunk[] GetHeaderChunks<TChunk>()
+            where TChunk : Chunk
         {
-            if (this.headerNodes?.ContainsKey(typeof(TChunk)) ?? false)
+            if (this.headerChunks?.ContainsKey(typeof(TChunk)) ?? false)
             {
-                return this.headerNodes[typeof(TChunk)].OfType<TChunk>().ToArray();
+                return this.headerChunks[typeof(TChunk)].OfType<TChunk>().ToArray();
             }
             return null;
         }
 
-        private Dictionary<Type, Node[]> bodyNodes;
-        protected TChunk[] GetBodyNodes<TChunk>()
-            where TChunk : Node
+        private Dictionary<Type, Chunk[]> bodyChunks;
+        protected TChunk[] GetBodyChunks<TChunk>()
+            where TChunk : Chunk
         {
-            if (this.bodyNodes == null)
+            if (this.bodyChunks == null)
             {
                 this.ParseBody();
             }
-            if (this.bodyNodes.ContainsKey(typeof(TChunk)))
+            if (this.bodyChunks.ContainsKey(typeof(TChunk)))
             {
-                return this.bodyNodes[typeof(TChunk)].OfType<TChunk>().ToArray();
+                return this.bodyChunks[typeof(TChunk)].OfType<TChunk>().ToArray();
             }
             return null;
         }
@@ -249,7 +249,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
             protected override TValue GetValueInternal()
             {
-                var chunks = this.Provider.GetHeaderNodes<TChunk>();
+                var chunks = this.Provider.GetHeaderChunks<TChunk>();
 #if DEBUG
                 Console.WriteLine($"[Buffered Value][Info] {this.Name}: from {typeof(TChunk)} (Header): {chunks?.Length ?? 0} chunks found.");
 #endif
@@ -288,7 +288,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
             protected override TValue GetValueInternal()
             {
-                var chunks = this.Provider.GetBodyNodes<TChunk>();
+                var chunks = this.Provider.GetBodyChunks<TChunk>();
 #if DEBUG
                 Console.WriteLine($"[Buffered Value][Info] {this.Name}: from {typeof(TChunk)} (Body): {chunks?.Length ?? 0} chunks found.");
 #endif

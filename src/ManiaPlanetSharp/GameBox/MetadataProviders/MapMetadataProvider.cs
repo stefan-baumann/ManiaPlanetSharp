@@ -172,7 +172,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public EmbeddedItemFile[] GetEmbeddedItemFiles()
         {
-            return this.GetBodyNodes<MapEmbeddedItemsChunk>()?.FirstOrDefault()?.GetEmbeddedItemFiles().ToArray();
+            return this.GetBodyChunks<MapEmbeddedItemsChunk>()?.FirstOrDefault()?.GetEmbeddedItemFiles().ToArray();
         }
 
         public Image GenerateThumbnailImage()
