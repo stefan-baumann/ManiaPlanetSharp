@@ -60,7 +60,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public virtual bool? IsMultilap => this.GetBufferedHeaderValue((MapDescriptionChunk c) => (bool?)c.Multilap);
 
-        public virtual int? Laps => this.GetBufferedHeaderValue((MapDescriptionChunk c) => (int?)c.Laps)
+        public virtual int? Laps => this.GetBufferedHeaderValue((MapDescriptionChunk c) => ((int?)c.Laps).Modify(i => i == 0 ? null : i))
             .IfNull((MapCommunityChunk c) => c.Root?.Description?.LapCount.Modify(i => i == 0 ? 1 : i));
 
         public virtual int? DisplayCost => this.GetBufferedHeaderValue((MapDescriptionChunk c) => (int?)c.Cost)

@@ -74,7 +74,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                     MapStyle = description.Attribute("mapstyle")?.Value,
                     Validated = description.Attribute("validated")?.Value == "1",
                     LapCount = int.TryParse(description.Attribute("nblaps")?.Value ?? string.Empty, out int i1) ? i1 : 0,
-                    DisplayCost = int.TryParse(description.Attribute("displaycost")?.Value ?? string.Empty, out int i2) ? i2 : 0,
+                    DisplayCost = int.TryParse(description.Attribute("displaycost")?.Value ?? description.Attribute("price")?.Value ?? string.Empty, out int i2) ? i2 : 0,
                     Mod = description.Attribute("mod")?.Value,
                     HasGhostBlocks = description.Attribute("hasghostblocks")?.Value == "1"
                 };
@@ -164,15 +164,15 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public string MapStyle { get; set; }
 
-        public bool Validated { get; set; }
+        public bool? Validated { get; set; }
 
-        public int LapCount { get; set; }
+        public int? LapCount { get; set; }
 
-        public int DisplayCost { get; set; }
+        public int? DisplayCost { get; set; }
 
         public string Mod { get; set; }
 
-        public bool HasGhostBlocks { get; set; }
+        public bool? HasGhostBlocks { get; set; }
     }
 
     public class MapCommunityPlayerModel
