@@ -144,7 +144,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// <returns><c>true</c>, if a parser could be found or generated; <c>false</c> if no parser is available.</returns>
         public static bool TryGetChunkParser(uint chunkId, out IChunkParser<Chunk> parser)
         {
-            if (chunkParsersByID.TryGetValue(chunkId, out parser))
+            if (chunkParsersByID.TryGetValue(ClassIds.MapId(chunkId), out parser))
             {
                 return true;
             }
@@ -155,7 +155,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     .SelectMany(a => a.DefinedTypes)
                     .Where(t => typeof(Chunk).IsAssignableFrom(t.AsType()))
                     .SelectMany(t => t.GetCustomAttributes<ChunkAttribute>().Select(a => Tuple.Create(t, a.Id)))
-                    .FirstOrDefault(t => t.Item2 == chunkId)
+                    .FirstOrDefault(t => t.Item2 == ClassIds.MapId(chunkId))
                     .Item1?.AsType();
                 if (chunkType != null)
                 {
@@ -174,7 +174,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
 
         public static bool IsParseableChunkId(uint id)
         {
-            return chunkIds.Contains(id);
+            return chunkIds.Contains(id) || chunkIds.Contains(ClassIds.MapId(id));
         }
 
 
