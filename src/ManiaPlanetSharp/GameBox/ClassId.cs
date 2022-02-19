@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace ManiaPlanetSharp.GameBox
 {
@@ -18,12 +19,210 @@ namespace ManiaPlanetSharp.GameBox
 
         public static string GetClassName(uint classId)
         {
-            return ClassIds.GetClassName(ClassIds.GetClassId(classId));
+            if (ClassIds.TryMapToNewEngine(classId, out uint mappedClassId))
+            {
+                return ClassIds.GetClassName(ClassIds.GetClassId(mappedClassId));
+            }
+            else
+            {
+                return ClassIds.GetClassName(ClassIds.GetClassId(classId));
+            }
         }
 
         public static string GetClassName(ClassId? classId)
         {
             return classId?.ToString() ?? $"Unknown (0x{classId:X8})";
+        }
+
+        private static Dictionary<uint, uint> mappings { get; } = new Dictionary<uint, uint>()
+        {
+            [0x0301C000] = 0x2E002000,
+            [0x03031000] = 0x090F4000,
+            [0x0313B000] = 0x2E009000,
+            [0x0900D000] = 0x0900F000,
+            [0x09063000] = 0x09026000,
+            [0x21080000] = 0x24003000,
+            [0x21089000] = 0x2404A000,
+            [0x2108D000] = 0x2403F000,
+            [0x24003000] = 0x03043000,
+            [0x24004000] = 0x03033000,
+            [0x24005000] = 0x0304E000,
+            [0x24006000] = 0x03036000,
+            [0x24007000] = 0x03057000,
+            [0x24008000] = 0x03058000,
+            [0x24009000] = 0x030D4000,
+            [0x2400A000] = 0x0301A000,
+            [0x2400B000] = 0x03044000,
+            [0x2400C000] = 0x0305B000,
+            [0x2400D000] = 0x0301F000,
+            [0x2400E000] = 0x0301D000,
+            [0x2400F000] = 0x0301E000,
+            [0x24011000] = 0x0305A000,
+            [0x24012000] = 0x030D1000,
+            [0x24019000] = 0x030CE000,
+            [0x2401A000] = 0x03039000,
+            [0x2401B000] = 0x03092000,
+            [0x2401C000] = 0x0305C000,
+            [0x2401D000] = 0x0305D000,
+            [0x2401E000] = 0x0305E000,
+            [0x2401F000] = 0x03038000,
+            [0x24020000] = 0x0304F000,
+            [0x24021000] = 0x03050000,
+            [0x24022000] = 0x03051000,
+            [0x24023000] = 0x03052000,
+            [0x24024000] = 0x03053000,
+            [0x24025000] = 0x03054000,
+            [0x24027000] = 0x0302D000,
+            [0x24028000] = 0x030CB000,
+            [0x24029000] = 0x03055000,
+            [0x2402A000] = 0x030BB000,
+            [0x2402B000] = 0x030D2000,
+            [0x2402C000] = 0x0305F000,
+            [0x2402D000] = 0x0307E000,
+            [0x24033000] = 0x030D3000,
+            [0x24034000] = 0x0308D000,
+            [0x24038000] = 0x03090000,
+            [0x24039000] = 0x0308F000,
+            [0x2403A000] = 0x03059000,
+            [0x2403B000] = 0x030CC000,
+            [0x2403C000] = 0x0301B000,
+            [0x2403E000] = 0x0301C000,
+            [0x2403F000] = 0x03093000,
+            [0x24040000] = 0x0303B000,
+            [0x24046000] = 0x03035000,
+            [0x24047000] = 0x03047000,
+            [0x24048000] = 0x030AF000,
+            [0x24049000] = 0x030E0000,
+            [0x2404A000] = 0x0308C000,
+            [0x2404D000] = 0x0308A000,
+            [0x2404E000] = 0x03002000,
+            [0x2404F000] = 0x03073000,
+            [0x24050000] = 0x0303A000,
+            [0x24052000] = 0x030AE000,
+            [0x24053000] = 0x030C9000,
+            [0x24054000] = 0x03045000,
+            [0x24059000] = 0x030B8000,
+            [0x2405A000] = 0x03080000,
+            [0x2405D000] = 0x030B1000,
+            [0x2405E000] = 0x03086000,
+            [0x2405F000] = 0x03081000,
+            [0x24061000] = 0x03078000,
+            [0x24062000] = 0x03078000,
+            [0x24063000] = 0x03087000,
+            [0x24064000] = 0x03056000,
+            [0x24065000] = 0x0307F000,
+            [0x24066000] = 0x03085000,
+            [0x24067000] = 0x030A2000,
+            [0x24068000] = 0x030A8000,
+            [0x24069000] = 0x0307C000,
+            [0x2406A000] = 0x03077000,
+            [0x2406B000] = 0x03082000,
+            [0x2406C000] = 0x030B2000,
+            [0x2406D000] = 0x03084000,
+            [0x2406F000] = 0x030A7000,
+            [0x24070000] = 0x030A0000,
+            [0x24071000] = 0x0308B000,
+            [0x24072000] = 0x03094000,
+            [0x24073000] = 0x030CD000,
+            [0x24075000] = 0x030A9000,
+            [0x24076000] = 0x03079000,
+            [0x24077000] = 0x0307A000,
+            [0x2407A000] = 0x030A1000,
+            [0x2407B000] = 0x030B3000,
+            [0x2407C000] = 0x030B4000,
+            [0x2407D000] = 0x030B5000,
+            [0x2407E000] = 0x03093000,
+            [0x24081000] = 0x030A5000,
+            [0x24082000] = 0x030AA000,
+            [0x24083000] = 0x030AB000,
+            [0x24084000] = 0x030A3000,
+            [0x24088000] = 0x030A4000,
+            [0x24089000] = 0x030A6000,
+            [0x2408A000] = 0x030AD000,
+            [0x2408B000] = 0x0309F000,
+            [0x24091000] = 0x0307D000,
+            [0x24094000] = 0x030AC000,
+            [0x24095000] = 0x03095000,
+            [0x24097000] = 0x030DE000,
+            [0x24098000] = 0x030DF000,
+            [0x24099000] = 0x0309A000,
+            [0x2409A000] = 0x030BC000,
+            [0x2409B000] = 0x03048000,
+            [0x240A0000] = 0x0308E000,
+            [0x240A1000] = 0x030BE000,
+            [0x240A2000] = 0x0309B000,
+            [0x240A3000] = 0x0309C000,
+            [0x240A4000] = 0x030B9000,
+            [0x240A5000] = 0x030BA000,
+            [0x240A6000] = 0x030BF000,
+            [0x240A8000] = 0x030BD000,
+            [0x240A9000] = 0x030DB000,
+            [0x240AB000] = 0x0303C000,
+            [0x240AC000] = 0x030C1000,
+            [0x240AD000] = 0x03096000,
+            [0x240AE000] = 0x03097000,
+            [0x240AF000] = 0x030C3000,
+            [0x240B0000] = 0x030C4000,
+            [0x240B1000] = 0x030D0000,
+            [0x240B2000] = 0x030D7000,
+            [0x240B3000] = 0x030C6000,
+            [0x240B4000] = 0x030CF000,
+            [0x240B5000] = 0x0308C000,
+            [0x240B6000] = 0x030C0000,
+            [0x240B7000] = 0x030DC000,
+            [0x240B8000] = 0x03098000,
+            [0x240B9000] = 0x030B6000,
+            [0x240BA000] = 0x030B7000,
+            [0x240BB000] = 0x030C5000,
+            [0x240BC000] = 0x030D8000,
+            [0x240BD000] = 0x03046000,
+            [0x240C0000] = 0x03089000,
+            [0x240C1000] = 0x030DD000,
+            [0x240C2000] = 0x030D6000,
+            [0x240C3000] = 0x030C8000,
+            [0x240C5000] = 0x030D5000,
+            [0x240C7000] = 0x03088000,
+            [0x240C8000] = 0x030D9000,
+            [0x240C9000] = 0x03099000,
+            [0x240CA000] = 0x030CA000,
+            [0x240CB000] = 0x030C2000,
+            [0x240CC000] = 0x03091000,
+            [0x240CD000] = 0x030DA000,
+            [0x240CE000] = 0x030C7000,
+            [0x240CF000] = 0x03083000,
+            [0x0301A000] = 0x2E001000,
+        };
+
+        public static uint MapToNewEngine(uint classId)
+        {
+            if (ClassIds.mappings.ContainsKey(classId & 0xFFFFF000))
+            {
+                return ClassIds.mappings[classId & 0xFFFFF000] + (classId & 0xFFF);
+            }
+            else
+            {
+                return classId;
+            }
+        }
+
+        public static bool TryMapToNewEngine(uint classId, out uint mappedClassId)
+        {
+            if (ClassIds.mappings.ContainsKey(classId & 0xFFFFF000))
+            {
+                mappedClassId = ClassIds.mappings[classId & 0xFFFFF000] + (classId & 0xFFF);
+                return true;
+            }
+            else
+            {
+                mappedClassId = classId;
+                return false;
+            }
+        }
+
+        public static IEnumerable<uint> GetReverseMappings(uint classId)
+        {
+            uint baseClassId = classId & 0xFFFFF000;
+            return ClassIds.mappings.Where(kvp => kvp.Value == baseClassId).Select(kvp => kvp.Key + (classId & 0xFFF));
         }
     }
 

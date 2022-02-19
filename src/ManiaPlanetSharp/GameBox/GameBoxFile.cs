@@ -82,7 +82,7 @@ namespace ManiaPlanetSharp.GameBox
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 3)]
         public uint MainClassId { get; set; }
 
-        public ClassId? MainClass => ClassIds.GetClassId(this.MainClassId);
+        public ClassId? MainClass => ClassIds.GetClassId(ClassIds.MapToNewEngine(this.MainClassId));
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 6)]
         public uint UserDataSize { get; set; }

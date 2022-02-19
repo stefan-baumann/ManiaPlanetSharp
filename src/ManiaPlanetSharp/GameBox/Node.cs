@@ -86,7 +86,14 @@ namespace ManiaPlanetSharp.GameBox
         /// </summary>
         public override string ToString()
         {
-            return $"{this.GetType().Name} (0x{this.Id:X8}/{this.GetClassName()})";
+            if (ClassIds.TryMapToNewEngine(this.Id, out uint mappedId))
+            {
+                return $"{this.GetType().Name} (0x{this.Id:X8} -> 0x{mappedId:X8}/{this.GetClassName()})";
+            }
+            else
+            {
+                return $"{this.GetType().Name} (0x{this.Id:X8}/{this.GetClassName()})";
+            }
         }
     }
 }

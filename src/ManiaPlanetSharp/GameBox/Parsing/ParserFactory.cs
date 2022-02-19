@@ -61,6 +61,15 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                             {
                                 chunkParsersByID.Add(chunkId.Item1, parser.Value);
                                 chunkIds.Add(chunkId.Item1);
+                                foreach (uint mappableChunkId in ClassIds.GetReverseMappings(chunkId.Item1))
+                                {
+                                    if (chunkParsersByID.ContainsKey(mappableChunkId))
+                                    {
+                                        throw new InvalidOperationException($"Reverse Mapped Id {mappableChunkId} (from {chunkId.Item1}) for {parser.Value} already in dict for {chunkParsersByID[mappableChunkId]}. This might indicate ");
+                                    }
+                                    chunkParsersByID.Add(mappableChunkId, parser.Value);
+                                    chunkIds.Add(mappableChunkId);
+                                }
                             }
                         }
                     }
@@ -80,6 +89,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                 if (!chunkIds.Contains(parseableId))
                 {
                     chunkIds.Add(parseableId);
+                    foreach (uint mappableChunkId in ClassIds.GetReverseMappings(parseableId))
+                    {
+                        chunkIds.Add(mappableChunkId);
+                    }
                 }
             }
         }
@@ -114,6 +127,15 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                 {
                     chunkParsersByID.Add(chunkId.Item1, parser);
                     chunkIds.Add(chunkId.Item1);
+                    foreach (uint mappableChunkId in ClassIds.GetReverseMappings(chunkId.Item1))
+                    {
+                        if (chunkParsersByID.ContainsKey(mappableChunkId))
+                        {
+                            throw new InvalidOperationException($"Reverse Mapped Id {mappableChunkId} (from {chunkId.Item1}) for {parser} already in dict for {chunkParsersByID[mappableChunkId]}. This might indicate ");
+                        }
+                        chunkParsersByID.Add(mappableChunkId, parser);
+                        chunkIds.Add(mappableChunkId);
+                    }
                 }
                 return parser;
             });
@@ -150,13 +172,14 @@ namespace ManiaPlanetSharp.GameBox.Parsing
             }
             else if (GlobalParserSettings.UseDynamicallyCompiledChunkParsers)
             {
+                chunkId = ClassIds.MapToNewEngine(chunkId);
                 Type chunkType = AppDomain.CurrentDomain.GetAssemblies()
                     .Where(p => !p.IsDynamic)
                     .SelectMany(a => a.DefinedTypes)
                     .Where(t => typeof(Chunk).IsAssignableFrom(t.AsType()))
                     .SelectMany(t => t.GetCustomAttributes<ChunkAttribute>().Select(a => Tuple.Create(t, a.Id)))
                     .FirstOrDefault(t => t.Item2 == chunkId)
-                    .Item1?.AsType();
+                    ?.Item1?.AsType();
                 if (chunkType != null)
                 {
                     parser = (IChunkParser<Chunk>)typeof(ChunkParser<>).MakeGenericType(chunkType).GetMethod("GenerateParser", BindingFlags.Public | BindingFlags.Static).Invoke(null, null);
