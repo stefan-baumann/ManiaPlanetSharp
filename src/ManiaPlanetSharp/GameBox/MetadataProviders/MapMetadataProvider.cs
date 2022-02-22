@@ -1,4 +1,5 @@
 ﻿using ManiaPlanetSharp.GameBox.Parsing.Chunks;
+using ManiaPlanetSharp.GameBox.Parsing.Utils;
 using ManiaPlanetSharp.Utilities;
 using System;
 using System.Collections.Generic;
@@ -125,6 +126,18 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
         public virtual string TimeOfDay => this.GetBufferedHeaderValue((MapCommonChunk c) => c.DecorationTimeOfDay)
             .IfNullBody((MapChunk c) => c.TimeOfDay)
             .IgnoreIfEmpty();
+
+        /// <summary>
+        /// Sometimes, the time of day string might be something like "30x30Sunrise", "20x60" or "Simple". This function returns the time of day, mapped to their respective underlying time of day names, if possible.
+        /// </summary>
+        public virtual string GetMappedTimeOfDay()
+        {
+            if (ParsedValueMappings.TryMapTimeOfDay(this.TimeOfDay, out string mappedTimeOfDay))
+            {
+                return mappedTimeOfDay;
+            }
+            return this.TimeOfDay;
+        }
 
         public virtual string DecorationEnvironment => this.GetBufferedHeaderValue((MapCommonChunk c) => c.DecorationEnvironment)
             .IfNullBody((MapChunk c) => c.DecorationEnvironment)
