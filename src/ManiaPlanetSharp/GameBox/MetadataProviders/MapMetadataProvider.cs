@@ -97,6 +97,27 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             .IfNullBody((MapVehicleChunk c) => c.Name)
             .IgnoreIfEmpty();
 
+        /// <summary>
+        /// Infers the environment the vehicle originates from. This results in mapping e.g. "SportCar" to "Island" or "Vehicles\SnowCar.Item.Gbx". Empty vehicle names will also be inferred to the environment the map was built in.
+        /// </summary>
+        public virtual bool TryInferVehicleSourceEnvironment(out string inferredEnvironment)
+        {
+            if (string.IsNullOrWhiteSpace(this.Vehicle))
+            {
+                inferredEnvironment = this.Environment;
+                return true;
+            }
+
+            if (ParsedValueMappings.TryMapVehicleToSourceEnvironment(this.Vehicle, out string mappedEnvironment))
+            {
+                inferredEnvironment = mappedEnvironment;
+                return true;
+            }
+
+            inferredEnvironment = null;
+            return false;
+        }
+
         public virtual string VehicleAuthor => this.GetBufferedBodyValue((MapVehicleChunk c) => c.Author)
             .IgnoreIfEmpty();
 

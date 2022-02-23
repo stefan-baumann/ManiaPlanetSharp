@@ -39,7 +39,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
              *     10x150Night -> Night 
              */
 
-            if (timeOfDay == null)
+            if (string.IsNullOrWhiteSpace(timeOfDay))
             {
                 mappedTimeOfDay = null;
                 return false;
@@ -65,6 +65,55 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
             }
 
             mappedTimeOfDay = null;
+            return false;
+        }
+
+        private static Regex mapVehicleStrippingRegex = new Regex(@"^(Vehicles\\)?(?<Vehicle>.*?)(\.Item\.Gbx)?$");
+        private static Dictionary<string, string> mapVehicleToSourceEnvironmentMappings = new Dictionary<string, string>()
+        {
+            //TMUF Mappings
+            ["BayCar"] = "Bay",
+            ["SnowCar"] = "Snow",
+            ["StadiumCar"] = "Stadium",
+            //["Rally"] = "Rally",
+            ["CoastCar"] = "Coast",
+            ["American"] = "Desert",
+            ["SportCar"] = "Island",
+
+            //TM2 Default Mappings
+            ["CanyonCar"] = "Canyon",
+            ["StadiumCar"] = "Stadium",
+            ["ValleyCar"] = "Valley",
+            ["LagoonCar"] = "Lagoon",
+
+            //TM2 Included TMUF Cars
+            ["DesertCar"] = "Desert",
+            ["RallyCar"] = "Rally",
+            ["IslandCar"] = "Island",
+        };
+        public static bool TryMapVehicleToSourceEnvironment(string vehicle, out string mappedEnvironment)
+        {
+            if (string.IsNullOrWhiteSpace(vehicle))
+            {
+                mappedEnvironment = null;
+                return false;
+            }
+
+            if (ParsedValueMappings.mapVehicleToSourceEnvironmentMappings.ContainsKey(vehicle))
+            {
+                mappedEnvironment = ParsedValueMappings.mapVehicleToSourceEnvironmentMappings[vehicle];
+                return true;
+            }
+
+            //Only try to strip vehicle name if direct match was not successful
+            vehicle = ParsedValueMappings.mapVehicleStrippingRegex.Match(vehicle).Groups["Vehicle"].Value;
+            if (ParsedValueMappings.mapVehicleToSourceEnvironmentMappings.ContainsKey(vehicle))
+            {
+                mappedEnvironment = ParsedValueMappings.mapVehicleToSourceEnvironmentMappings[vehicle];
+                return true;
+            }
+
+            mappedEnvironment = null;
             return false;
         }
     }
