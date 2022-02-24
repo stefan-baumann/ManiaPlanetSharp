@@ -36,7 +36,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
              *     10x150Sunrise -> Sunrise
              *     10x150 -> Day
              *     10x150Sunset -> Sunset
-             *     10x150Night -> Night 
+             *     10x150Night -> Night
+             * 
+             * TMS has a trailing spaces after the regular mood name
              */
 
             if (string.IsNullOrWhiteSpace(timeOfDay))
@@ -61,6 +63,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
                 }
                 mappedTimeOfDay = match.Groups["Mood"].Value;
                 mappedTimeOfDay = char.ToUpperInvariant(mappedTimeOfDay[0]) + mappedTimeOfDay.Substring(1); // Make sure to capitalize the first character for consistency
+                return true;
+            }
+
+            var timeOfDayTrimmed = timeOfDay.Trim();
+            if (timeOfDayTrimmed != timeOfDay)
+            {
+                mappedTimeOfDay = timeOfDayTrimmed;
                 return true;
             }
 
