@@ -26,7 +26,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ManiaExchange\" />
+    <Compile Remove="ManiaExchange\**" />
+    <EmbeddedResource Remove="ManiaExchange\**" />
+    <None Remove="ManiaExchange\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -46,7 +48,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(SolutionDir)$(TargetName).dll&quot;&#xD;&#xA;" />
+    <Exec Command="copy /Y &quot;$(TargetDir)$(TargetName).dll&quot; &quot;$(ProjectDir)..\$(TargetName).dll&quot;&#xD;&#xA;" />
   </Target>
 
 </Project>
