@@ -184,19 +184,19 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
     {
         public int Bronze { get; set; }
 
-        public TimeSpan BronzeTimeSpan { get => TimeSpan.FromMilliseconds(this.Bronze); }
+        public TimeSpan? BronzeTimeSpan { get => this.Bronze != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.Bronze) : null; }
 
         public int Silver { get; set; }
 
-        public TimeSpan SilverTimeSpan { get => TimeSpan.FromMilliseconds(this.Silver); }
+        public TimeSpan? SilverTimeSpan { get => this.Silver != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.Silver) : null; }
 
         public int Gold { get; set; }
 
-        public TimeSpan GoldTimeSpan { get => TimeSpan.FromMilliseconds(this.Gold); }
+        public TimeSpan? GoldTimeSpan { get => this.Gold != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.Gold) : null; }
 
         public int AuthorTime { get; set; }
 
-        public TimeSpan AuthorTimeSpan { get => TimeSpan.FromMilliseconds(this.AuthorTime); }
+        public TimeSpan? AuthorTimeSpan { get => this.AuthorTime != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.AuthorTime) : null; }
 
         public int AuthorScore { get; set; }
     }

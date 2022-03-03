@@ -12,12 +12,12 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Obsolete("Raw Value, use GbxTimeLimitClass.TimeLimit instead", false)]
         public uint TimeLimitU { get; set; }
 
-        public TimeSpan TimeLimit { get => TimeSpan.FromMilliseconds(this.TimeLimitU); }
+        public TimeSpan? TimeLimit { get => this.TimeLimitU != uint.MaxValue ? (TimeSpan?)TimeSpan.FromMilliseconds(this.TimeLimitU) : null; }
 
         [Property]
         [Obsolete("Raw Value, use MapTimelimitChunk.AuthorTime instead", false)]
         public uint AuthorTimeU { get; set; }
 
-        public TimeSpan AuthorTime { get => TimeSpan.FromMilliseconds(this.AuthorTimeU); }
+        public TimeSpan? AuthorTime { get => this.AuthorTimeU != uint.MaxValue ? (TimeSpan?)TimeSpan.FromMilliseconds(this.AuthorTimeU) : null; }
     }
 }
