@@ -264,7 +264,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                         }
                     }
                 }
-                return default;
+                return default(TValue);
             }
         }
 
@@ -303,7 +303,7 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                         }
                     }
                 }
-                return default;
+                return default(TValue);
             }
         }
     }

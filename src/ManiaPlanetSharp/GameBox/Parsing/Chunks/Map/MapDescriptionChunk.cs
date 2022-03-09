@@ -37,22 +37,22 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 1)]
         public uint BronzeTime { get; set; }
 
-        public TimeSpan BronzeTimeSpan { get => TimeSpan.FromMilliseconds(this.BronzeTime); }
+        public TimeSpan? BronzeTimeSpan { get => this.BronzeTime != uint.MaxValue ? (TimeSpan?)TimeSpan.FromMilliseconds(this.BronzeTime) : null; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 1)]
         public uint SilverTime { get; set; }
 
-        public TimeSpan SilverTimeSpan { get => TimeSpan.FromMilliseconds(this.SilverTime); }
+        public TimeSpan? SilverTimeSpan { get => this.SilverTime != uint.MaxValue ? (TimeSpan?)TimeSpan.FromMilliseconds(this.SilverTime) : null; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 1)]
         public uint GoldTime { get; set; }
 
-        public TimeSpan GoldTimeSpan { get => TimeSpan.FromMilliseconds(this.GoldTime); }
+        public TimeSpan? GoldTimeSpan { get => this.GoldTime != uint.MaxValue ? (TimeSpan?)TimeSpan.FromMilliseconds(this.GoldTime) : null; }
 
         [Property, Condition(nameof(Version), ConditionOperator.GreaterThanOrEqual, 1)]
         public uint AuthorTime { get; set; }
 
-        public TimeSpan AuthorTimeSpan { get => TimeSpan.FromMilliseconds(this.AuthorTime); }
+        public TimeSpan? AuthorTimeSpan { get => this.AuthorTime != uint.MaxValue ? (TimeSpan?)TimeSpan.FromMilliseconds(this.AuthorTime) : null; }
 
         [Property, Condition(nameof(Version), ConditionOperator.Equal, 2)]
         public byte Unknown2 { get; set; }
