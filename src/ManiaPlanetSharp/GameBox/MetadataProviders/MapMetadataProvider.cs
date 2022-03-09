@@ -69,6 +69,14 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public virtual bool? Validated => this.GetBufferedHeaderValue((MapCommunityChunk c) => c.Root?.Description?.Validated);
 
+        /// <summary>
+        /// Infers the validation state of the map. For pre-ManiaPlanet maps, the validation state can not be read from the file directly and has to be inferred from the presence of an author time instead.
+        /// </summary>
+        public virtual bool InferValidationState()
+        {
+            return this.Validated ?? this.AuthorTime != null;
+        }
+
         public virtual string TypeFull => this.GetBufferedHeaderValue((MapCommonChunk c) => c.Type)
             .IgnoreIfEmpty();
 

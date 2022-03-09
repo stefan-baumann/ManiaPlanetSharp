@@ -47,7 +47,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                 ExecutableVersion = document.Root.Attribute("exever")?.Value,
                 ExecutableBuildDate = document.Root.Attribute("exebuild")?.Value,
                 Title = document.Root.Attribute("title")?.Value,
-                Lightmap = int.TryParse(document.Root.Attribute("lightmap")?.Value ?? string.Empty, out int i0) ? i0 : 0
+                Lightmap = int.TryParse(document.Root.Attribute("lightmap")?.Value ?? string.Empty, out int i0) ? (int?)i0 : null
             };
 
             var identity = document.Root.Element("ident");
@@ -72,11 +72,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                     Type = description.Attribute("type")?.Value,
                     MapType = description.Attribute("maptype")?.Value,
                     MapStyle = description.Attribute("mapstyle")?.Value,
-                    Validated = description.Attribute("validated")?.Value == "1",
-                    LapCount = int.TryParse(description.Attribute("nblaps")?.Value ?? string.Empty, out int i1) ? i1 : 0,
-                    DisplayCost = int.TryParse(description.Attribute("displaycost")?.Value ?? string.Empty, out int i2) ? i2 : 0,
+                    Validated = description.Attribute("validated") != null ? (bool?)(description.Attribute("validated").Value == "1") : null,
+                    LapCount = int.TryParse(description.Attribute("nblaps")?.Value ?? string.Empty, out int i1) ? (int?)i1 : null,
+                    DisplayCost = int.TryParse(description.Attribute("displaycost")?.Value ?? string.Empty, out int i2) ? (int?)i2 : null,
                     Mod = description.Attribute("mod")?.Value,
-                    HasGhostBlocks = description.Attribute("hasghostblocks")?.Value == "1"
+                    HasGhostBlocks = description.Attribute("hasghostblocks") != null ? (bool?)(description.Attribute("hasghostblocks").Value == "1") : null
                 };
             }
 
@@ -94,11 +94,11 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
             {
                 root.Times = new MapCommunityTimes()
                 {
-                    Bronze = int.TryParse(times.Attribute("bronze")?.Value ?? string.Empty, out int i1) ? i1 : 0,
-                    Silver = int.TryParse(times.Attribute("silver")?.Value ?? string.Empty, out int i2) ? i2 : 0,
-                    Gold = int.TryParse(times.Attribute("gold")?.Value ?? string.Empty, out int i3) ? i3 : 0,
-                    AuthorTime = int.TryParse(times.Attribute("authortime")?.Value ?? string.Empty, out int i4) ? i4 : 0,
-                    AuthorScore = int.TryParse(times.Attribute("authorscore")?.Value ?? string.Empty, out int i5) ? i5 : 0,
+                    Bronze = int.TryParse(times.Attribute("bronze")?.Value ?? string.Empty, out int i1) ? (int?)i1 : null,
+                    Silver = int.TryParse(times.Attribute("silver")?.Value ?? string.Empty, out int i2) ? (int?)i2 : null,
+                    Gold = int.TryParse(times.Attribute("gold")?.Value ?? string.Empty, out int i3) ? (int?)i3 : null,
+                    AuthorTime = int.TryParse(times.Attribute("authortime")?.Value ?? string.Empty, out int i4) ? (int?)i4 : null,
+                    AuthorScore = int.TryParse(times.Attribute("authorscore")?.Value ?? string.Empty, out int i5) ? (int?)i5 : null,
                 };
             }
 
@@ -138,7 +138,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public string Title { get; set; }
 
-        public int Lightmap { get; set; }
+        public int? Lightmap { get; set; }
     }
 
     public class MapCommunityIdentity
@@ -164,15 +164,15 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         public string MapStyle { get; set; }
 
-        public bool Validated { get; set; }
+        public bool? Validated { get; set; }
 
-        public int LapCount { get; set; }
+        public int? LapCount { get; set; }
 
-        public int DisplayCost { get; set; }
+        public int? DisplayCost { get; set; }
 
         public string Mod { get; set; }
 
-        public bool HasGhostBlocks { get; set; }
+        public bool? HasGhostBlocks { get; set; }
     }
 
     public class MapCommunityPlayerModel
@@ -182,23 +182,23 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
     public class MapCommunityTimes
     {
-        public int Bronze { get; set; }
+        public int? Bronze { get; set; }
 
-        public TimeSpan? BronzeTimeSpan { get => this.Bronze != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.Bronze) : null; }
+        public TimeSpan? BronzeTimeSpan { get => this.Bronze != null && this.Bronze != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.Bronze.Value) : null; }
 
-        public int Silver { get; set; }
+        public int? Silver { get; set; }
 
-        public TimeSpan? SilverTimeSpan { get => this.Silver != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.Silver) : null; }
+        public TimeSpan? SilverTimeSpan { get => this.Silver != null && this.Silver != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.Silver.Value) : null; }
 
-        public int Gold { get; set; }
+        public int? Gold { get; set; }
 
-        public TimeSpan? GoldTimeSpan { get => this.Gold != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.Gold) : null; }
+        public TimeSpan? GoldTimeSpan { get => this.Gold != null && this.Gold != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.Gold.Value) : null; }
 
-        public int AuthorTime { get; set; }
+        public int? AuthorTime { get; set; }
 
-        public TimeSpan? AuthorTimeSpan { get => this.AuthorTime != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.AuthorTime) : null; }
+        public TimeSpan? AuthorTimeSpan { get => this.AuthorTime != null && this.AuthorTime != -1 ? (TimeSpan?)TimeSpan.FromMilliseconds(this.AuthorTime.Value) : null; }
 
-        public int AuthorScore { get; set; }
+        public int? AuthorScore { get; set; }
     }
 
     public class MapCommunityDependency
