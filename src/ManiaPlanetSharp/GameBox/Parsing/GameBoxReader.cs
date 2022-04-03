@@ -21,10 +21,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         /// Initializes a new instance of the <see cref="GameBoxStreamReader"/> class.
         /// </summary>
         /// <param name="stream">The stream the GameBox data is read from.</param>
-        public GameBoxReader(Stream stream)
+        public GameBoxReader(Stream stream, bool leaveOpen = false)
         {
             this.Stream = stream;
-            this.Reader = new BinaryReader(stream);
+            this.Reader = new BinaryReader(stream, Encoding.Default, leaveOpen);
         }
 
 
@@ -321,6 +321,20 @@ namespace ManiaPlanetSharp.GameBox.Parsing
         public LookbackStringContext GetNewLookbackStringContext()
         {
             return new LookbackStringContext(this);
+        }
+
+        /// <summary>
+        /// Returns a <c>GameBoxReader</c> instance with a shared lookbackstring context but a limited number of bytes it can parse. Bytes that are not parsed by the nested reader are still consumed by the outer reader.
+        /// </summary>
+        /// <param name="length">The number of bytes to consume from the outside and provide to the inside reader.</param>
+        /// <returns></returns>
+        public GameBoxReader GetNestedLengthLimitedReader(int length)
+        {
+            byte[] data = this.ReadRaw(length);
+            MemoryStream ms = new MemoryStream(data);
+            GameBoxReader nestedReader = new GameBoxReader(ms) { BodyMode = this.BodyMode, LookbackStrings = this.LookbackStrings, LookbackStringVersion = this.LookbackStringVersion, MaxStringLength = this.MaxStringLength, Nodes = this.Nodes };
+
+            return nestedReader;
         }
 
         /// <summary>
