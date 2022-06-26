@@ -111,6 +111,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                     Url = dep.Attribute("url")?.Value
                 }).ToList();
             }
+            else root.Dependencies = new List<MapCommunityDependency>();
 
             return root;
         }
