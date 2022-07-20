@@ -68,7 +68,7 @@ namespace ManiaPlanetSharp.GameBoxView
             yield return new TextTreeNode("Display Cost", Map.DisplayCost?.ToString() ?? NotAvailable);
             yield return new TextTreeNode("Validated", Map.Validated != null ? Map.Validated.Value ? "True" : "False" : NotAvailable);
 
-            yield return new DecorationTreeNode("Decoration", Map.TimeOfDay, Map.DecorationEnvironment, Map.DecorationEnvironmentAuthor, Map.Size);
+            yield return new DecorationTreeNode("Decoration", Map.TimeOfDay, Map.GetMappedTimeOfDay(), Map.DecorationEnvironment, Map.DecorationEnvironmentAuthor, Map.Size);
 
             var embeddedItemFiles = Map.GetEmbeddedItemFiles();
             yield return new TextTreeNode("Embedded Items", $"{Map.EmbeddedItems?.Length ?? 0} embedded item{(Map.EmbeddedItems?.Length == 1 ? "" : "s")}")

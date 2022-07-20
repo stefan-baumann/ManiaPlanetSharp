@@ -8,7 +8,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
 {
     public static class ParsedValueMappings
     {
-        private static Regex timeOfDayMappingRegex = new Regex(@"^\d+x\d+(?<Mood>[Ss]unrise|[Ss]unset|[Nn]ight)?$");
+        private static Regex timeOfDayMappingRegex = new Regex(@"^((?<Modifier>[A-Za-z]*)(\d+x\d+))?(?!$)(?<Mood>[Ss]unrise|[Ss]unset|[Nn]ight|[Dd]ay|$|^)(\d+x?\d*)?$");
         public static bool TryMapTimeOfDay(string timeOfDay, out string mappedTimeOfDay)
         {
             /* Real Mappings from TMUF:
@@ -39,6 +39,22 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
              *     10x150Night -> Night
              * 
              * TMS has a trailing spaces after the regular mood name
+             * 
+             * Mappings from TM2 (arbritary):
+             *      Day48 -> Day
+             *      64x64Night -> Night
+             *      Sunset48 -> Sunset
+             *      Sunrise48 -> Sunrise
+             *      64x64Night -> Night
+             *      Day -> Day
+             * 
+             * Mappings from TM3 (arbritary):
+             *      48x48Day -> Day
+             *      Sunset16x12 -> Sunset
+             *      Night16x12 -> Night
+             *      NoStadium48x48Day -> Day
+             *      NoStadium48x48Night -> Night
+             *      etc.
              */
 
             if (string.IsNullOrWhiteSpace(timeOfDay))
