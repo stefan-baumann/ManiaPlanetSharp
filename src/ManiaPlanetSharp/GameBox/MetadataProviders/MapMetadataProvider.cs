@@ -147,6 +147,9 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
             .IfNull((MapCommunityChunk c) => c.Root?.Times?.AuthorTimeSpan)
             .IfNullBody((MapTimelimitChunk c) => c.AuthorTime);
 
+        public virtual TimeSpan? TimeLimit => this.GetBufferedHeaderValue((MapTimelimitTimeChunk c) => (TimeSpan?)c.TimeLimit)
+            .IfNull((MapTimelimitChunk c) => (TimeSpan?)c.TimeLimit);
+
         public virtual int? AuthorScore => this.GetBufferedHeaderValue((MapDescriptionChunk c) => (int?)c.AuthorScore)
             .IfNull((MapCommunityChunk c) => c.Root?.Times?.AuthorScore);
 

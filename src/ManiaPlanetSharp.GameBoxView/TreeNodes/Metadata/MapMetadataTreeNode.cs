@@ -46,7 +46,7 @@ namespace ManiaPlanetSharp.GameBoxView
 
             yield return new TextTreeNode("Thumbnail") { Nodes = new ObservableCollection<TextTreeNode>() { new ImageTreeNode(this.ImageSourceFromImage(Map.GenerateThumbnailImage()), new Size(256, 256)) } };
 
-            yield return new TimesTreeNode("Author Time", Map.AuthorTime, Map.AuthorScore, Map.GoldTime, Map.SilverTime, Map.BronzeTime);
+            yield return new TimesTreeNode("Author Time", Map.AuthorTime, Map.AuthorScore, Map.GoldTime, Map.SilverTime, Map.BronzeTime, Map.TimeLimit);
 
             yield return new TextTreeNode("Checkpoints", Map.Checkpoints?.ToString() ?? NotAvailable);
             yield return new TextTreeNode("Multilap", Map.IsMultilap != null ? Map.IsMultilap.Value ? $"True ({Map.Laps ?? 0} lap{(Map.Laps == 1 ? "" : "s")})" : "False" : NotAvailable)

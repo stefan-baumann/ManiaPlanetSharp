@@ -5,7 +5,7 @@ namespace ManiaPlanetSharp.GameBoxView
     public class TimesTreeNode
         : TimeTreeNode
     {
-        public TimesTreeNode(string name, TimeSpan? author, int? score, TimeSpan? gold, TimeSpan? silver, TimeSpan? bronze)
+        public TimesTreeNode(string name, TimeSpan? author, int? score, TimeSpan? gold, TimeSpan? silver, TimeSpan? bronze, TimeSpan? limit)
             : base(name, author)
         {
             this.Author = author;
@@ -13,6 +13,7 @@ namespace ManiaPlanetSharp.GameBoxView
             this.Gold = gold;
             this.Silver = silver;
             this.Bronze = bronze;
+            this.Limit = limit;
 
             this.HideValueWhenExpanded = true;
 
@@ -21,6 +22,7 @@ namespace ManiaPlanetSharp.GameBoxView
             this.Nodes.Add(new TimeTreeNode("Gold Time", this.Gold));
             this.Nodes.Add(new TimeTreeNode("Silver Time", this.Silver));
             this.Nodes.Add(new TimeTreeNode("Bronze Time", this.Bronze));
+            this.Nodes.Add(new TimeTreeNode("Time Limit", this.Limit));
         }
 
         public virtual TimeSpan? Author { get; private set; }
@@ -28,6 +30,7 @@ namespace ManiaPlanetSharp.GameBoxView
         public virtual TimeSpan? Gold { get; private set; }
         public virtual TimeSpan? Silver { get; private set; }
         public virtual TimeSpan? Bronze { get; private set; }
+        public virtual TimeSpan? Limit { get; private set; }
 
         public override TimeSpan? Time => this.Author;
 
