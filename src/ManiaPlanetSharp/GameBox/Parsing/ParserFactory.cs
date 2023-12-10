@@ -84,7 +84,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
 
         public static void ScanForParseableChunks()
         {
-            foreach (uint parseableId in AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.IsDynamic).SelectMany(a => a.DefinedTypes).Where(t => typeof(Chunk).IsAssignableFrom(t.AsType())).SelectMany(t => t.GetCustomAttributes<ChunkAttribute>().Select(a => a.Id)))
+            foreach (uint parseableId in AppDomain.CurrentDomain.GetAssemblies().Where(p => !p.FullName.StartsWith("system.", StringComparison.InvariantCultureIgnoreCase) && !p.FullName.StartsWith("microsoft.", StringComparison.InvariantCultureIgnoreCase) && !p.IsDynamic).SelectMany(a => a.DefinedTypes).Where(t => typeof(Chunk).IsAssignableFrom(t.AsType())).SelectMany(t => t.GetCustomAttributes<ChunkAttribute>().Select(a => a.Id)))
             {
                 if (!chunkIds.Contains(parseableId))
                 {
