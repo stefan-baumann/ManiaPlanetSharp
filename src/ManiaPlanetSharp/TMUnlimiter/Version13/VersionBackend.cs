@@ -253,6 +253,8 @@ namespace ManiaPlanetSharp.TMUnlimiter.Version13
             while ( blockCount-- != 0 )
             {
                 BlockData blockData = new BlockData( reader.ReadUInt32() );
+                this.BlocksData.Add( blockData );
+
                 BlockFlags blockFlags = ( BlockFlags )reader.ReadUInt16();
 
                 // outside boundaries
