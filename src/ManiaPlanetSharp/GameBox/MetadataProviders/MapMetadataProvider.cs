@@ -1,5 +1,7 @@
 ﻿using ManiaPlanetSharp.GameBox.Parsing.Chunks;
+using ManiaPlanetSharp.GameBox.Parsing.Chunks.TMUnlimiter;
 using ManiaPlanetSharp.GameBox.Parsing.Utils;
+using ManiaPlanetSharp.TMUnlimiter;
 using ManiaPlanetSharp.Utilities;
 using System;
 using System.Collections.Generic;
@@ -210,7 +212,15 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
 
         public virtual ulong? LightmapCacheUid => this.GetBufferedHeaderValue((MapCommonChunk c) => c?.LightmapCacheUid);
 
+        public virtual ChallengeBackend ChallengeBackend => this.GetBufferedBodyValue((ChallengeBackendChunkGen5 c) => c.ChallengeBackend)
+            .IfNull((ChallengeBackendChunkGen4 c) => c.ChallengeBackend)
+            .IfNull((ChallengeBackendChunkGen3 c) => c.ChallengeBackend)
+            .IfNull((ChallengeBackendChunkGen2 c) => c.ChallengeBackend)
+            .IfNull((ChallengeBackendChunkGen1 c) => c.ChallengeBackend);
 
+        public virtual ParameterSet[] LegacyParameterSets => this.GetBodyNodes<LegacyParameterSetChunk>()?.Where(chunk => chunk?.ParameterSet != null)?.Select(chunk => chunk?.ParameterSet)?.ToArray();
+
+        public virtual LegacyScript[] LegacyScripts => this.GetBodyNodes<LegacyScriptChunk>()?.Where(chunk => chunk?.LegacyScript != null)?.Select(chunk => chunk?.LegacyScript)?.ToArray();
 
         public EmbeddedItemFile[] GetEmbeddedItemFiles()
         {
