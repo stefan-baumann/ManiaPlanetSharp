@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using ManiaPlanetSharp.GameBox.Types;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
@@ -184,6 +184,12 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                         result.Text = reader.ReadString();
                         result.PackDesc = reader.ReadFileReference();
                         result.ParentPackDesc = reader.ReadFileReference();
+                        break;
+                    }
+                    case 0x03_059_003u:
+                    {
+                        reader.ReadUInt32(); // Version, at the time of implementation - not used
+                        result.ForegroundPackDesc = reader.ReadFileReference();
                         break;
                     }
                     default:
