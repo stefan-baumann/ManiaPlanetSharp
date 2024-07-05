@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using ManiaPlanetSharp.GameBox.Types;
+using SharpCompress.Readers;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
@@ -96,7 +97,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
                     if ( block.Flags.HasFlag( BlockFlags.HasWaypointSpecialProperty ) )
                     {
-                        throw new NotSupportedException( "Cannot read block - Node references are not properly supported in ManiaPlanetSharp" );
+                        block.WaypointSpecialProperty = ReadWaypointSpecialPropertyRef( reader );
                     }
 
                     if ( block.Flags.HasFlag( BlockFlags.HasSquareCardEventIds ) )
@@ -195,6 +196,74 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                     default:
                     {
                         throw new NotSupportedException( $"Unsupported CGameCtnBlockSkin chunk: {chunkId:X8}" );
+                    }
+                }
+
+                chunkId = reader.ReadUInt32();
+            }
+            while ( chunkId != GameBoxReader.EndMarkerClassId );
+
+            return result;
+        }
+
+        private WaypointSpecialPropertyChunk ReadWaypointSpecialPropertyRef(GameBoxReader reader)
+        {
+            // (instanceIndex) No instance expected to be read.
+            if ( reader.ReadUInt32() == uint.MaxValue )
+            {
+                return null;
+            }
+
+            // (classId) Reference to an existing CGameWaypointSpecialProperty instance. Since we cannot
+            // maintain a list of instances instantiated from there, we simply return null.
+            if ( reader.ReadUInt32() != 0x2e_009_000u )
+            {
+                reader.Stream.Seek( -4, System.IO.SeekOrigin.Current );
+                return null;
+            }
+
+            WaypointSpecialPropertyChunk result = new WaypointSpecialPropertyChunk();
+            uint chunkId = reader.ReadUInt32();
+
+            do
+            {
+                switch ( chunkId )
+                {
+                    case 0x2e_009_000u:
+                    {
+                        result.Version = reader.ReadUInt32();
+
+                        switch ( result.Version )
+                        {
+                            case 1:
+                            {
+                                result.Spawn = reader.ReadUInt32();
+                                result.Order = reader.ReadUInt32();
+                                break;
+                            }
+                            case 2:
+                            {
+                                result.Tag = reader.ReadString();
+                                result.Order = reader.ReadUInt32();
+                                break;
+                            }
+                        }
+
+                        break;
+                    }
+                    case 0x2e_009_001u: // (skippable)
+                    {
+                        if ( reader.ReadUInt32() != GameBoxReader.SkipMarker )
+                        {
+                            throw new Exception( "CGameWaypointSpecialProperty 0x001 chunk is missing PIKS" );
+                        }
+
+                        reader.Skip( reader.ReadInt32() );
+                        break;
+                    }
+                    default:
+                    {
+                        throw new NotSupportedException( $"Unsupported CGameWaypointSpecialProperty chunk: {chunkId:X8}" );
                     }
                 }
 
