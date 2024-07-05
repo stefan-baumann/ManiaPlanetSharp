@@ -245,9 +245,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                 LookbackStrings.Add(newString);
                 return newString;
             }
-            if (index == uint.MaxValue) //?
+            if (index == uint.MaxValue)
             {
-                return string.Empty;
+                return "Unassigned";
             }
             if ((index & 0x3fffffff) == index)
             {
