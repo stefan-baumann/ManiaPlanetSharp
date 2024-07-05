@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using ManiaPlanetSharp.GameBox.Parsing.ParserGeneration;
+using ManiaPlanetSharp.GameBox.Types;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
@@ -53,24 +50,83 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
             var start = reader.Stream.Position;
 
-            //The block struct can be parsed by the automatically generated parser
-            CustomStructParser<Block> blockParser = ParserFactory.GetCustomStructParser<Block>();
-
             //This count of blocks that specified the length of the array does not count blocks with empty flags, so we have to read them one by one and check if they are actually counted
             Block[] blocks = new Block[reader.ReadUInt32()];
             try
             {
                 for (int i = 0; i < blocks.Length; i++)
                 {
-                    Block block = blockParser.Parse(reader);
+                    Block block = blocks[i] = new Block();
 
-                    if (block.Flags.HasFlag(BlockFlags.Null))
+                    block.Name = reader.ReadLookbackString();
+                    block.Rotation = reader.ReadByte();
+                    block.X = reader.ReadByte();
+                    block.Y = reader.ReadByte();
+                    block.Z = reader.ReadByte();
+
+                    if ( Version > 0 )
                     {
-                        i--; //Ignore parsed block
+                        block.FlagsU = reader.ReadUInt32();
                     }
                     else
                     {
-                        blocks[i] = block;
+                        block.FlagsU = reader.ReadUInt16();
+                    }
+
+                    if ( block.Flags.HasFlag( BlockFlags.HasSkin ) )
+                    {
+                        block.Author = reader.ReadLookbackString();
+                        block.Skin = ReadSkinRef( reader );
+                    }
+
+                    if ( Version <= 1 )
+                    {
+                        continue;
+                    }
+                    else if ( Version >= 6 )
+                    {
+                        block.X--;
+                        block.Z--;
+                    }
+
+                    if ( block.Flags.HasFlag( BlockFlags.HasPhyCharSpecialProperty ) )
+                    {
+                        throw new NotSupportedException( "Cannot read block - Node references are not properly supported in ManiaPlanetSharp" );
+                    }
+
+                    if ( block.Flags.HasFlag( BlockFlags.HasWaypointSpecialProperty ) )
+                    {
+                        throw new NotSupportedException( "Cannot read block - Node references are not properly supported in ManiaPlanetSharp" );
+                    }
+
+                    if ( block.Flags.HasFlag( BlockFlags.HasSquareCardEventIds ) )
+                    {
+                        block.SquareCardEventIds = new SquareCardEventIds[reader.ReadUInt32()];
+
+                        for ( uint squareCardEventIdIndex = 0; squareCardEventIdIndex < block.SquareCardEventIds.Length; squareCardEventIdIndex++ )
+                        {
+                            var squareCardEventId = block.SquareCardEventIds[ squareCardEventIdIndex ];
+                            squareCardEventId.Unknown01 = reader.ReadInt32();
+                            squareCardEventId.Unknown02 = reader.ReadInt32();
+                            squareCardEventId.Unknown03 = new (string, string, string)[reader.ReadUInt32()];
+
+                            for ( uint eventIdIndex = 0; eventIdIndex < squareCardEventId.Unknown03.Length; eventIdIndex++ )
+                            {
+                                squareCardEventId.Unknown03[ eventIdIndex ] =
+                                (
+                                    reader.ReadLookbackString(),
+                                    reader.ReadLookbackString(),
+                                    reader.ReadLookbackString()
+                                );
+                            }
+                        }
+                    }
+
+                    if ( block.Flags.HasFlag( BlockFlags.HasDecal ) )
+                    {
+                        block.DecalId = reader.ReadLookbackString();
+                        block.DecalIntensity = reader.ReadInt32();
+                        block.DecalVariant = reader.ReadInt32();
                     }
                 }
             }
@@ -83,46 +139,101 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
             return blocks;
         }
+
+        // This function takes care of the nod reference, which is expected to be a CGameCtnBlockSkin instance.
+        // In the case of referencing the already instantiated CGameCtnBlockSkin instance, it simply returns null
+        // as we cannot maintain a list of instantiated instances from there. This approach makes reading
+        // consistent at the cost of a less accurate block representation (lack of block skin information).
+        private GameCtnBlockSkin ReadSkinRef( GameBoxReader reader )
+        {
+            // (instanceIndex) No instance expected to be read.
+            if ( reader.ReadUInt32() == uint.MaxValue )
+            {
+                return null;
+            }
+
+            // (classId) Reference to an existing CGameCtnBlockSkin instance. Since we cannot
+            // maintain a list of instances instantiated from there, we simply return null.
+            if ( reader.ReadUInt32() != 0x03_059_000u )
+            {
+                reader.Stream.Seek( -4, System.IO.SeekOrigin.Current );
+                return null;
+            }
+
+            GameCtnBlockSkin result = new GameCtnBlockSkin();
+            uint chunkId = reader.ReadUInt32();
+
+            do
+            {
+                switch ( chunkId )
+                {
+                    case 0x03_059_000u:
+                    {
+                        result.Text = reader.ReadString();
+                        reader.ReadString(); // ignored string
+                        break;
+                    }
+                    case 0x03_059_001u:
+                    {
+                        result.Text = reader.ReadString();
+                        result.PackDesc = reader.ReadFileReference();
+                        break;
+                    }
+                    case 0x03_059_002u:
+                    {
+                        result.Text = reader.ReadString();
+                        result.PackDesc = reader.ReadFileReference();
+                        result.ParentPackDesc = reader.ReadFileReference();
+                        break;
+                    }
+                    default:
+                    {
+                        throw new NotSupportedException( $"Unsupported CGameCtnBlockSkin chunk: {chunkId:X8}" );
+                    }
+                }
+
+                chunkId = reader.ReadUInt32();
+            }
+            while ( chunkId != GameBoxReader.EndMarkerClassId );
+
+            return result;
+        }
     }
 
-    [CustomStruct]
+    public class SquareCardEventIds
+    {
+        public int Unknown01 { get; set; }
+        public int Unknown02 { get; set; }
+        public (string, string, string)[] Unknown03 { get; set; }
+    }
+
     public class Block
     {
-        [Property(SpecialPropertyType.LookbackString)]
         public string Name { get; set; }
-
-        [Property]
         public byte Rotation { get; set; }
-
-        [Property]
         public byte X { get; set; }
-
-        [Property]
         public byte Y { get; set; }
-
-        [Property]
         public byte Z { get; set; }
-
-        [Property]
         public uint FlagsU { get; set; }
         public BlockFlags Flags => (BlockFlags)this.FlagsU;
-        
-        [Property, Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
         public string Author { get; set; }
-
-        [Property(SpecialPropertyType.NodeReference), Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.CustomBlock)]
-        public Node Skin { get; set; }
-        
-        [Property(SpecialPropertyType.NodeReference), Condition(nameof(Block.Flags), ConditionOperator.DoesNotHaveFlag, BlockFlags.Null), Condition(nameof(Block.Flags), ConditionOperator.HasFlag, BlockFlags.HasBlockParameters)]
-        public Node BlockParameters { get; set; }
+        public GameCtnBlockSkin Skin { get; set; }
+        public string DecalId { get; set; }
+        public int DecalIntensity { get; set; }
+        public int DecalVariant { get; set; }
+        public SquareCardEventIds[] SquareCardEventIds { get; set; }
+        public Node PhyCharSpecialProperty { get; set; }
+        public Node WaypointSpecialProperty { get; set; }
     }
 
     [Flags]
     public enum BlockFlags
         : uint
     {
-        Null = uint.MaxValue,
-        CustomBlock = 0x8000,
-        HasBlockParameters = 0x100000
+        HasSkin = 1 << 15,
+        HasDecal = 1 << 17,
+        HasSquareCardEventIds = 1 << 18,
+        HasPhyCharSpecialProperty = 1 << 19,
+        HasWaypointSpecialProperty = 1 << 20
     }
 }
