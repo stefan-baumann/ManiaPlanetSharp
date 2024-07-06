@@ -127,7 +127,7 @@ namespace ManiaPlanetSharp.GameBox
                 {
                     if (ParserFactory.TryGetChunkParser(chunkId, out IChunkParser<Chunk> parser))
                     {
-                        using (GameBoxReader nestedReader = reader.GetNestedLengthLimitedReader((int)this.HeaderChunkEntries[i].ChunkSize))
+                        using (GameBoxReader nestedReader = new GameBoxReader(new MemoryStream(reader.ReadRaw((int)this.HeaderChunkEntries[i].ChunkSize))))
                             headerChunks[i] = parser.Parse(nestedReader, chunkId);
                     }
                     else

@@ -20,6 +20,17 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks.TMUnlimiter
                 // TMUnlimiter 1.1 and 1.2 chunk
                 case 0x03_043_055u:
                 {
+                    // Check that the skip marker has been written (since ManiaPlanet maps) to skip unnecessary exception.
+                    if ( reader.ReadUInt32() == GameBoxReader.SkipMarker )
+                    {
+                        reader.Skip( reader.ReadInt32() );
+                        return null;
+                    }
+                    else
+                    {
+                        reader.Stream.Seek( -4, SeekOrigin.Current );
+                    }
+
                     byte chunkVersion = reader.ReadByte();
 
                     switch ( chunkVersion )
@@ -50,7 +61,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks.TMUnlimiter
                 {
                     ChallengeBackend = new ChallengeBackend( TrackVersion.Unlimiter13 );
 
-                    reader.Stream.Seek( -4, System.IO.SeekOrigin.Current );
+                    reader.Stream.Seek( -4, SeekOrigin.Current );
                     // Chunk size is an unsigned integer, but MemoryStream works on integers instead...
                     int chunkSize = reader.ReadInt32();
 
@@ -73,7 +84,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks.TMUnlimiter
                 case 0x3f_001_002u:
                 case 0x3f_001_003u:
                 {
-                    reader.Stream.Seek( -4, System.IO.SeekOrigin.Current );
+                    reader.Stream.Seek( -4, SeekOrigin.Current );
                     // Chunk size is an unsigned integer, but MemoryStream works on integers instead...
                     int chunkSize = reader.ReadInt32();
 

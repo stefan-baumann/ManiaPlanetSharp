@@ -245,9 +245,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                 LookbackStrings.Add(newString);
                 return newString;
             }
-            if (index == uint.MaxValue) //?
+            if (index == uint.MaxValue)
             {
-                return string.Empty;
+                return "Unassigned";
             }
             if ((index & 0x3fffffff) == index)
             {
@@ -350,7 +350,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                 reference.Checksum = this.ReadRaw(32);
             }
             reference.FilePath = this.ReadString();
-            if (reference.FilePath?.Length > 0 && reference.Version >= 1)
+            if ((reference.FilePath?.Length > 0 && reference.Version >= 1) || reference.Version >= 3)
             {
                 reference.LocatorUrl = this.ReadString();
             }
