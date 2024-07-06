@@ -108,10 +108,10 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                     }
                     case 0x03_05b_001u:
                     {
-                        reader.ReadString(); // ignored
-                        reader.ReadString(); // ignored
-                        reader.ReadString(); // ignored
-                        reader.ReadString(); // ignored
+                        result.Tip = reader.ReadString();
+                        result.Tip = reader.ReadString();
+                        result.Tip = reader.ReadString();
+                        result.Tip = reader.ReadString();
                         break;
                     }
                     case 0x03_05b_002u:
@@ -204,6 +204,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public uint AuthorTime { get; set; }
         public uint TimeLimit { get; set; }
         public uint AuthorScore { get; set; }
+        public string Tip { get; set; }
     }
 
     public enum MapKind
