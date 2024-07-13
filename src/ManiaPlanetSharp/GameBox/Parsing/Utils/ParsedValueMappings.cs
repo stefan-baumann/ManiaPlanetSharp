@@ -89,6 +89,23 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
                 return true;
             }
 
+            // ends with?
+            switch (timeOfDay.ToLowerInvariant())
+            {
+                case var a when a.EndsWith("sunrise"):
+                    mappedTimeOfDay = "Sunrise";
+                    return true;
+                case var b when b.EndsWith("day"):
+                    mappedTimeOfDay = "Day";
+                    return true;
+                case var c when c.EndsWith("sunset"):
+                    mappedTimeOfDay = "Sunset";
+                    return true;
+                case var d when d.EndsWith("night"):
+                    mappedTimeOfDay = "Night";
+                    return true;
+            }
+
             mappedTimeOfDay = null;
             return false;
         }
