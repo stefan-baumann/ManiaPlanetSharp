@@ -5,8 +5,7 @@ using System.Text;
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks.MediaTracker
 {
     [Chunk(0x03029001)]
-    [Chunk(0x03029002)]
-    public class MediaTrackerTrianglesChunk
+    public class MediaTrackerTrianglesChunk001
     : Chunk
     {
         [Property, Array]
@@ -18,7 +17,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks.MediaTracker
         [Property]
         public uint VerticeCount { get; set; }
 
-        [Property, CustomParserMethod(nameof(MediaTrackerTrianglesChunk.ParseVertices))]
+        [Property, CustomParserMethod(nameof(MediaTrackerTrianglesChunk001.ParseVertices))]
         public Vector3D[][] VerticeLocations { get; set; }
 
         public Vector3D[][] ParseVertices(GameBoxReader reader)
@@ -92,5 +91,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks.MediaTracker
     {
         [Property, Array(3)]
         public int[] VerticeIndices { get; set; }
+    }
+
+    [Chunk(0x03029002, Skippable = true)]
+    public class MediaTrackerTrianglesChunk002
+    : Chunk
+    {
+        [Property]
+        public int Unknown { get; set; }
     }
 }
