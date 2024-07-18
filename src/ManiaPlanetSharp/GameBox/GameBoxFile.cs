@@ -294,6 +294,9 @@ namespace ManiaPlanetSharp.GameBox
                     {
                         try
                         {
+                            // Map potentially old chunk id and use remapped chunk id to look up skippable flag.
+                            id = ClassIds.MapToNewEngine( id );
+
                             //Compared to the solution via the lambda that was commented out below, this saves a lot (up to multiple million in big files) allocations
                             bool skippable = false;
                             foreach (var parserId in parser.ParseableIds)
