@@ -155,14 +155,14 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
             // (classId) Reference to an existing CGameCtnBlockSkin instance. Since we cannot
             // maintain a list of instances instantiated from there, we simply return null.
-            if ( reader.ReadUInt32() != 0x03_059_000u )
+            if ( ClassIds.MapToNewEngine( reader.ReadUInt32() ) != 0x03_059_000u )
             {
                 reader.Stream.Seek( -4, System.IO.SeekOrigin.Current );
                 return null;
             }
 
             GameCtnBlockSkin result = new GameCtnBlockSkin();
-            uint chunkId = reader.ReadUInt32();
+            uint chunkId = ClassIds.MapToNewEngine( reader.ReadUInt32() );
 
             do
             {
@@ -199,7 +199,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                     }
                 }
 
-                chunkId = reader.ReadUInt32();
+                chunkId = ClassIds.MapToNewEngine( reader.ReadUInt32() );
             }
             while ( chunkId != GameBoxReader.EndMarkerClassId );
 
@@ -216,14 +216,14 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
             // (classId) Reference to an existing CGameWaypointSpecialProperty instance. Since we cannot
             // maintain a list of instances instantiated from there, we simply return null.
-            if ( reader.ReadUInt32() != 0x2e_009_000u )
+            if ( ClassIds.MapToNewEngine( reader.ReadUInt32() ) != 0x2e_009_000u )
             {
                 reader.Stream.Seek( -4, System.IO.SeekOrigin.Current );
                 return null;
             }
 
             WaypointSpecialPropertyChunk result = new WaypointSpecialPropertyChunk();
-            uint chunkId = reader.ReadUInt32();
+            uint chunkId = ClassIds.MapToNewEngine( reader.ReadUInt32() );
 
             do
             {
@@ -267,7 +267,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
                     }
                 }
 
-                chunkId = reader.ReadUInt32();
+                chunkId = ClassIds.MapToNewEngine( reader.ReadUInt32() );
             }
             while ( chunkId != GameBoxReader.EndMarkerClassId );
 
