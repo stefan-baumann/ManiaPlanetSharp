@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
-    [Chunk(0x0301B000)]
+    //[Chunk(0x0301B000)]
     public class CollectorListChunk
         : Chunk
     {        
