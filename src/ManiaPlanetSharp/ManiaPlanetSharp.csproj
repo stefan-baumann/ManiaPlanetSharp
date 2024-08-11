@@ -32,13 +32,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dynamicweb.WebP" Version="2.0.0" />
+    <PackageReference Include="Dynamicweb.WebP" Version="3.0.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.6">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="sharpcompress" Version="0.24.0" />
-    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+    <PackageReference Include="sharpcompress" Version="0.37.2" />
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
