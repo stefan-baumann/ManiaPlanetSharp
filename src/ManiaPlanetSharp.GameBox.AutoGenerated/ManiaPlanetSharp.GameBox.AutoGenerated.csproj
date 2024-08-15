@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8.0-windows</TargetFramework>
   </PropertyGroup>
 
   <!--<PropertyGroup>
-    <_TransformExe Condition="'$(VisualStudioVersion)' != ''">$(VsInstallRoot)\Common7\IDE\TextTransform.exe</_TransformExe>
+    <_TransformExe Condition="'$(VisualStudioVersion)' != ''">$(VsInstallRoot)\Common7\IDE\TextTransformCore.exe</_TransformExe>
   </PropertyGroup>
 
   <Target Name="TransformOnBuild" AfterTargets="BeforeBuild">
@@ -38,6 +38,8 @@
     <BeforeTransform>CustomPreTransform</BeforeTransform>
     <AfterTransform>CustomPostTransform</AfterTransform>
     <RunPostBuildEvent>Always</RunPostBuildEvent>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <Target Name="CustomPreTransform">
     <Message Text="In CustomPreTransform..." Importance="High" />
@@ -58,6 +60,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>StructParsers.tt</DependentUpon>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.CodeDom" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -93,7 +99,7 @@
   </ItemGroup>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="cd &quot;$(VsInstallRoot)\Common7\IDE\&quot;&#xD;&#xA;echo Generating chunk parsers...&#xD;&#xA;TextTransform.exe -P &quot;$(ProjectDir)..\..\src&quot; &quot;$(ProjectDir)\ChunkParsers.tt&quot;&#xD;&#xA;echo Generating struct parsers...&#xD;&#xA;TextTransform.exe -P &quot;$(ProjectDir)..\..\src&quot; &quot;$(ProjectDir)\StructParsers.tt&quot;" />
+    <Exec Command="cd &quot;$(VsInstallRoot)\Common7\IDE\&quot;&#xD;&#xA;echo Generating chunk parsers...&#xD;&#xA;TextTransformCore.exe -P &quot;$(ProjectDir)..\..\src&quot; &quot;$(ProjectDir)\ChunkParsers.tt&quot;&#xD;&#xA;echo Generating struct parsers...&#xD;&#xA;TextTransformCore.exe -P &quot;$(ProjectDir)..\..\src&quot; &quot;$(ProjectDir)\StructParsers.tt&quot;" />
   </Target>
 
 </Project>
