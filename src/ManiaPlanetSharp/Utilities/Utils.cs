@@ -6,6 +6,8 @@ using System.Reflection;
 using System.Linq;
 using System.Diagnostics;
 using ManiaPlanetSharp.GameBox;
+using SixLabors.ImageSharp.Formats.Png;
+using System.IO;
 
 namespace ManiaPlanetSharp.Utilities
 {
@@ -153,6 +155,24 @@ namespace ManiaPlanetSharp.Utilities
             }
             builder.Append(text);
             return builder.ToString();
+        }
+
+        public static byte[] ImageToArray(this SixLabors.ImageSharp.Image imageIn)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                imageIn.Save(ms, new PngEncoder());
+                return ms.ToArray();
+            }
+        }
+
+        public static System.Drawing.Bitmap ToDrawingBitmap(this byte[] byteArrayIn)
+        {
+            using (MemoryStream ms = new MemoryStream(byteArrayIn))
+            {
+                System.Drawing.Bitmap returnImage = new System.Drawing.Bitmap(ms);
+                return returnImage;
+            }
         }
     }
 }

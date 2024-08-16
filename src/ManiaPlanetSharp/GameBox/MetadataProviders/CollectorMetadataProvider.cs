@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using ManiaPlanetSharp.Utilities;
 
 namespace ManiaPlanetSharp.GameBox.MetadataProviders
 {
@@ -73,9 +74,14 @@ namespace ManiaPlanetSharp.GameBox.MetadataProviders
                 Console.WriteLine($"Unknown collector image flag values {{ {iconChunk.Unknown1}, {iconChunk.Unknown2} }}. Attempting to parse a WebP icon...");
             }
 
-            Bitmap icon = Dynamicweb.WebP.Decoder.Decode(this.IconData);
-            icon.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            return icon;
+            using (SixLabors.ImageSharp.Image iconImage = SixLabors.ImageSharp.Image.Load(this.IconData))
+            {
+                // WebP image is converted into a png image and then saved as a bitmap
+                byte[] pngImage = iconImage.ImageToArray();
+                System.Drawing.Bitmap icon = pngImage.ToDrawingBitmap();
+                icon.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                return icon;
+            }
         }
     }
 }
