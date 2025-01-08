@@ -8,7 +8,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
 {
     public static class ParsedValueMappings
     {
-        private static Regex timeOfDayMappingRegex = new Regex(@"^((?<Modifier>[A-Za-z]*)(\d+x\d+))?(?!$)(?<Mood>[Ss]unrise|[Ss]unset|[Nn]ight|[Dd]ay|$|^)(\d+x?\d*)?$");
+        private static Regex timeOfDayMappingRegex = new Regex(@"^((?<Modifier>[A-Za-z]*)(\d+x\d+))?(?!$)(?<Mood>[Ss]unrise|[Ss]unset|[Nn]ight|[Dd]ay|D$|S$|N$|$|^)(\d+x?\d*)?$");
         public static bool TryMapTimeOfDay(string timeOfDay, out string mappedTimeOfDay)
         {
             /* Real Mappings from TMUF:
@@ -55,6 +55,15 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
              *      NoStadium48x48Day -> Day
              *      NoStadium48x48Night -> Night
              *      etc.
+             *      
+             * Mappings from SMX (arbitrary):
+             *      Water48x48Day -> Day
+             *      Water48x48 -> Day
+             *      Water48x48D -> Day
+             *      Water48x48Sunrise -> Sunrise
+             *      Land48x48D -> Day
+             *      Land48x48S -> Sunset
+             *      
              */
 
             if (string.IsNullOrWhiteSpace(timeOfDay))
@@ -63,7 +72,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
                 return false;
             }
 
-            if (timeOfDay.ToLowerInvariant() == "simple")
+            if (timeOfDay.ToLowerInvariant() == "simple" || timeOfDay == "Water48x48")
             {
                 mappedTimeOfDay = "Day";
                 return true;
@@ -95,13 +104,13 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Utils
                 case var a when a.EndsWith("sunrise"):
                     mappedTimeOfDay = "Sunrise";
                     return true;
-                case var b when b.EndsWith("day"):
+                case var b when b.EndsWith("day") || b.EndsWith("d"):
                     mappedTimeOfDay = "Day";
                     return true;
-                case var c when c.EndsWith("sunset"):
+                case var c when c.EndsWith("sunset") || c.EndsWith("s"):
                     mappedTimeOfDay = "Sunset";
                     return true;
-                case var d when d.EndsWith("night"):
+                case var d when d.EndsWith("night") || d.EndsWith("n"):
                     mappedTimeOfDay = "Night";
                     return true;
             }
