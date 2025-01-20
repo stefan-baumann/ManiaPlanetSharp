@@ -14,36 +14,36 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         [Property]
         public uint EventsDuration { get; set; }
 
-        [Property]
+        [Property, Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public uint Ignored { get; set; }
 
-        [Property(SpecialPropertyType.LookbackString), Array]
+        [Property(SpecialPropertyType.LookbackString), Array, Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public string[] ControlNames { get; set; }
 
         [Property]
-        [EditorBrowsable(EditorBrowsableState.Never)]
+        [EditorBrowsable(EditorBrowsableState.Never), Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public uint ControlEntryCount { get; set; }
 
-        [Property]
+        [Property, Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public uint Unknown { get; set; }
 
-        [Property, Array(nameof(ControlEntryCount))]
+        [Property, Array(nameof(ControlEntryCount)), Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public GhostControlEntry[] ControlEntries { get; set; }
 
-        [Property(SpecialPropertyType.LongString)]
+        [Property(SpecialPropertyType.LongString), Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public string GameVersion { get; set; }
 
-        [Property]
+        [Property, Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public uint ExecutableChecksum { get; set; }
 
-        [Property]
+        [Property, Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public uint OSKind { get; set; }
 
-        [Property]
+        [Property, Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public uint CPUKind { get; set; }
 
         private string raceSettingsXmlString;
-        [Property]
+        [Property, Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public string RaceSettingsXmlString
         {
             get
@@ -63,7 +63,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 
         //public GhostRaceSettingsRoot Root { get; set; }
 
-        [Property]
+        [Property, Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public uint Unknown2 { get; set; }
     }
 
