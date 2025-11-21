@@ -43,7 +43,7 @@ namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
         public uint CPUKind { get; set; }
 
         private string raceSettingsXmlString;
-        [Property, Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
+        [Property(SpecialPropertyType.LongString), Condition(nameof(EventsDuration), ConditionOperator.GreaterThan, 0)]
         public string RaceSettingsXmlString
         {
             get
