@@ -268,6 +268,8 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     case 12: return "Canyon";
                     case 13: return "Lagoon";
                     case 14: return "Deprecated_Arena";
+                    case 15: return "GreenCoast";
+                    case 16: return "RedIsland";
 
                     case 17: return "TMCommon";
                     case 18: return "Canyon4";
@@ -279,6 +281,9 @@ namespace ManiaPlanetSharp.GameBox.Parsing
                     case 24: return "Stadium4";
                     case 25: return "Stadium256";
                     case 26: return "Trackmania";
+
+                    case 28: return "BlueBay";
+                    case 29: return "WhiteShore";
 
                     case 100: return "History";
                     case 101: return "Society";
