@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ManiaPlanetSharp.GameBox.Parsing.Chunks
 {
-    [Chunk(03092015)]
+    [Chunk(0x03092015)]
     public class GhostPlayerMobilIdChunk
         : Chunk
     {
